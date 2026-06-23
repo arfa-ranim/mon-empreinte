@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#F5F0E8"/>
+  <circle cx="100" cy="100" r="85" fill="#E8DFD0" stroke="#8B7355" stroke-width="2"/>
+  <path d="M70 130 C70 100, 85 75, 100 70 C115 75, 130 100, 130 130" stroke="#8B7355" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="85" cy="95" r="8" fill="#C4A77D"/>
+  <circle cx="115" cy="95" r="8" fill="#C4A77D"/>
+  <path d="M88 115 Q100 125 112 115" stroke="#8B7355" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <text x="100" y="165" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#5C4D3C" font-weight="600">ME</text>
+</svg>
