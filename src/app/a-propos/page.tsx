@@ -41,22 +41,40 @@ export default function AProposPage() {
           </div>
 
           <div className="prose prose-earth max-w-none">
-            <p className="text-lg text-earth-700 leading-relaxed text-center mb-10">
-              <strong>{BRAND.name}</strong> est une marque artisanale basée à Tunis, dédiée à la
-              créativité, au fait-main et à l&apos;upcycling. Nous créons des pièces uniques qui
-              racontent une histoire — la vôtre et la nôtre.
+            {/* Quote / tagline */}
+            <div className="bg-peach-light/20 p-6 rounded-2xl mb-10 text-center">
+              <p className="text-lg text-earth-700 leading-relaxed italic font-serif">
+                Chaque création est une empreinte — la nôtre, que nous partageons avec vous.
+              </p>
+            </div>
+
+            <p className="text-earth-600 leading-relaxed mb-6">
+              <strong>{BRAND.name}</strong> est bien plus qu&apos;une marque — c&apos;est un atelier vivant, 
+              un espace de création où chaque pièce raconte une histoire. Basée à Tunis, notre 
+              aventure a commencé avec une simple conviction : <strong>redonner vie aux matières 
+              et célébrer le travail manuel</strong>.
             </p>
 
             <p className="text-earth-600 leading-relaxed mb-6">
-              Fondée sur la passion du travail manuel, notre atelier est un espace où la matière
-              première trouve une seconde vie. Des sacs en macramé aux bougies naturelles, en passant
-              par les textiles upcyclés, chaque produit est conçu avec soin et intention.
+              Nous transformons des matières premières en objets uniques : des 
+              <strong> sacs en macramé</strong> tissés avec soin, des 
+              <strong> bougies naturelles</strong> aux parfums envoûtants, des 
+              <strong> textiles upcyclés</strong> qui deviennent des pièces déco originales. 
+              Chaque création naît dans notre atelier, entre nos mains, avec une attention 
+              particulière pour chaque détail.
+            </p>
+
+            <p className="text-earth-600 leading-relaxed mb-6">
+              Mais {BRAND.name}, c&apos;est aussi des <strong>ateliers créatifs</strong> où vous êtes 
+              invités à mettre la main à la pâte. Que vous soyez débutant ou passionné, nos sessions 
+              sont conçues pour vous inspirer, vous surprendre et vous permettre de repartir avec 
+              votre propre création.
             </p>
 
             <p className="text-earth-600 leading-relaxed mb-12">
-              Nos ateliers créatifs vous invitent à découvrir l&apos;artisanat de vos propres mains.
-              Que vous soyez débutant ou passionné, nos sessions sont conçues pour être accessibles,
-              inspirantes et conviviales.
+              Chaque pièce que vous trouverez ici est une invitation à ralentir, à apprécier 
+              l&apos;artisanat et à porter des objets qui ont une âme. Parce que derrière chaque création, 
+              il y a une histoire — la vôtre et la nôtre.
             </p>
           </div>
 

@@ -16,7 +16,7 @@ export default function Logo({ size = 48, showText = true, className = "" }: Log
         style={{ width: size, height: size }}
       >
         <Image
-          src="/logo.svg"
+          src="/logo.jpeg"
           alt={BRAND.name}
           width={size}
           height={size}
