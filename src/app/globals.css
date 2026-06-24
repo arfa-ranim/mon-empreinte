@@ -14,7 +14,7 @@
   --earth-800: #3D3328;
   --earth-900: #2C2416;
 
-  /* New accent colors */
+  /* Accent colors */
   --peach: #FFB5A0;
   --peach-light: #FFE0D6;
   --mint: #A8D8C8;
@@ -31,6 +31,7 @@
   --shadow-glow: 0 0 30px rgba(255, 181, 160, 0.1);
 }
 
+/* Tailwind v4 Theme Extension */
 @theme inline {
   --color-cream-50: var(--cream-50);
   --color-cream-100: var(--cream-100);
@@ -77,7 +78,7 @@ h1, h2, h3, h4 {
   animation: fade-in 0.6s ease-out forwards;
 }
 
-/* ====== NEW ACCENT CLASSES ====== */
+/* Accent Color Utilities */
 .bg-peach { background-color: var(--peach); }
 .bg-peach-light { background-color: var(--peach-light); }
 .bg-mint { background-color: var(--mint); }
@@ -94,11 +95,10 @@ h1, h2, h3, h4 {
 .border-peach { border-color: var(--peach); }
 .border-mint { border-color: var(--mint); }
 
-/* ====== BUTTON OVERRIDES ====== */
+/* Button Styles */
 .btn-primary {
   background-color: var(--peach);
   color: var(--earth-900);
-  border: none;
   box-shadow: var(--shadow-soft);
   transition: all 0.3s ease;
 }
@@ -106,14 +106,10 @@ h1, h2, h3, h4 {
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(255, 181, 160, 0.3);
 }
-.btn-primary:active {
-  transform: scale(0.98);
-}
 
 .btn-secondary {
   background-color: var(--mint);
   color: var(--earth-800);
-  border: none;
   box-shadow: var(--shadow-mint);
   transition: all 0.3s ease;
 }
@@ -122,64 +118,26 @@ h1, h2, h3, h4 {
   box-shadow: 0 12px 40px rgba(168, 216, 200, 0.3);
 }
 
-.btn-outline {
-  border: 2px solid var(--peach);
-  color: var(--earth-700);
-  background: transparent;
-  transition: all 0.3s ease;
-}
-.btn-outline:hover {
-  background: var(--peach);
-  color: white;
-  transform: translateY(-2px);
-}
-
-/* ====== CARD STYLES ====== */
-.product-card {
+/* Card Styles */
+.product-card, .workshop-card {
   background: var(--warm-white);
   border-radius: 2rem;
-  border: none;
   box-shadow: 0 2px 20px rgba(0,0,0,0.04);
   transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.product-card:hover {
+.product-card:hover, .workshop-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-soft);
 }
 
-.workshop-card {
-  background: var(--warm-white);
-  border-radius: 2rem;
-  border: none;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.04);
-  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  overflow: hidden;
-}
-.workshop-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-mint);
-}
-
-/* left accent strip */
-.workshop-accent {
-  width: 6px;
-  background: var(--mint);
-  border-radius: 4px 0 0 4px;
-}
-
-/* ====== GALLERY ====== */
+/* Gallery Masonry */
 .masonry-grid {
   columns: 1;
   column-gap: 1rem;
 }
 
-@media (min-width: 640px) {
-  .masonry-grid { columns: 2; }
-}
-
-@media (min-width: 1024px) {
-  .masonry-grid { columns: 3; }
-}
+@media (min-width: 640px) { .masonry-grid { columns: 2; } }
+@media (min-width: 1024px) { .masonry-grid { columns: 3; } }
 
 .masonry-item {
   break-inside: avoid;
@@ -189,35 +147,43 @@ h1, h2, h3, h4 {
   background: var(--cream-100);
 }
 
-.masonry-item img {
-  transition: transform 0.5s ease;
-}
-.masonry-item:hover img {
-  transform: scale(1.05);
-}
-.masonry-item .overlay {
-  background: linear-gradient(135deg, rgba(255,181,160,0.3), rgba(168,216,200,0.3));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.masonry-item:hover .overlay {
-  opacity: 1;
+/* Touch & Mobile Improvements */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ====== DECORATIVE FLOATING CIRCLES ====== */
-.floating-shape {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 0;
+.smooth-scroll {
+  scroll-behavior: smooth;
 }
-.floating-shape.peach {
-  background: var(--peach);
+
+/* Safe area for iOS */
+.safe-padding {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
-.floating-shape.mint {
-  background: var(--mint);
+
+.bottom-nav-spacing {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4rem);
 }
-.floating-shape.lavender {
-  background: var(--lavender);
+
+/* Remove the deprecated -webkit-overflow-scrolling to silence the warning */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .table-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Prevent zoom on inputs (iOS) */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }

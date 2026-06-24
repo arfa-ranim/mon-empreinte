@@ -1,43 +1,42 @@
 import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
-import { BRAND } from "@/lib/constants";
+import { getBrandSettings } from "@/lib/settings";
 import Button from "@/components/Button";
 import ProductCard from "@/components/ProductCard";
 import WorkshopCard from "@/components/WorkshopCard";
 import Logo from "@/components/Logo";
 import Link from "next/link";
 import { InstagramIcon } from "@/components/SocialIcons";
-import { SOCIAL_LINKS } from "@/lib/constants";
 
 export const revalidate = 60; 
 
 export default async function HomePage() {
-  const [products, workshops] = await Promise.all([
+  const [products, workshops, settings] = await Promise.all([
     prisma.product.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),
     prisma.workshop.findMany({ orderBy: { createdAt: "desc" }, take: 3 }),
+    getBrandSettings(),
   ]);
 
   return (
     <PublicLayout>
       {/* Hero */}
       <section className="relative bg-gradient-to-b from-cream-100 to-cream-50 py-20 sm:py-28 overflow-hidden">
-        {/* Floating decorative shapes */}
         <div className="floating-shape peach w-48 h-48 top-10 -left-20"></div>
         <div className="floating-shape mint w-64 h-64 bottom-10 -right-20"></div>
         <div className="floating-shape lavender w-32 h-32 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
 
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10 animate-fade-in">
           <div className="flex justify-center mb-6">
-            <Logo size={120} showText={false} />
+            <Logo size={120} showText={false} logoUrl={settings.logo} />
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-earth-800">
-            {BRAND.name}
+            {settings.brandName}
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-earth-600 max-w-2xl mx-auto leading-relaxed">
-            {BRAND.tagline}
+            {settings.tagline}
           </p>
           <p className="mt-3 text-earth-500 max-w-xl mx-auto">
-            {BRAND.description}
+            {settings.description}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button href="/produits" variant="primary">
@@ -85,7 +84,11 @@ export default async function HomePage() {
           </div>
           <div className="space-y-6">
             {workshops.map((workshop) => (
-              <WorkshopCard key={workshop.id} {...workshop} />
+              <WorkshopCard 
+                key={workshop.id} 
+                {...workshop} 
+                date={workshop.date?.toISOString() || null} // <-- convert Date to string
+              />
             ))}
           </div>
           {workshops.length > 0 && (
@@ -108,13 +111,13 @@ export default async function HomePage() {
             Découvrez nos coulisses, nos créations et l&apos;ambiance de nos ateliers
           </p>
           <Link
-            href={SOCIAL_LINKS.instagram}
+            href={settings.instagram}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-earth-700 hover:text-peach font-medium transition-colors"
           >
             <InstagramIcon size={24} />
-            @mon.empreinte.tn
+            @{settings.instagram.split('/').pop() || "mon.empreinte.tn"}
           </Link>
         </div>
       </section>

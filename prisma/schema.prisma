@@ -23,24 +23,38 @@ model Product {
   images      String   @default("[]")
   category    String?
   inStock     Boolean  @default(true)
+  // NEW FIELDS
+  sku         String?   @unique  // Stock keeping unit
+  weight      Float?             // Weight in kg
+  dimensions  String?            // "20x15x10 cm"
+  tags        String?            // Comma-separated tags
+  featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Workshop {
-  id           String   @id @default(cuid())
-  title        String
-  description  String
-  price        Float
-  duration     String
-  images       String   @default("[]")
-  availability String?
-  date         DateTime?
-  startTime    String?  
-  endTime      String? 
-  maxSpots     Int?  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  price           Float
+  duration        String
+  images          String   @default("[]")
+  availability    String?
+  date            DateTime?
+  startTime       String?  
+  endTime         String? 
+  maxSpots        Int?  
+  // NEW FIELDS
+  startDate       DateTime?  // For multi-day workshops
+  endDate         DateTime?  // For multi-day workshops
+  availableSeats  Int?       // Dynamic seat availability
+  status          String?    // "available" | "full" | "cancelled" | "draft"
+  location        String?    // Workshop location
+  materials       String?    // Materials provided
+  skillLevel      String?    // "débutant" | "intermédiaire" | "avancé"
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model ContactMessage {
@@ -49,4 +63,11 @@ model ContactMessage {
   email     String
   message   String
   createdAt DateTime @default(now())
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON string
+  updatedAt DateTime @updatedAt
 }

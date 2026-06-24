@@ -1,7 +1,9 @@
-import { WHATSAPP_NUMBER } from "./constants";
+// lib/whatsapp.ts
 
-export function buildWhatsAppUrl(message: string): string {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+export function buildWhatsAppUrl(number: string, message: string): string {
+  // Clean the number (remove +, spaces, etc.)
+  const cleanNumber = number.replace(/[^0-9]/g, '');
+  return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 }
 
 export function productOrderMessage(title: string, price: number): string {

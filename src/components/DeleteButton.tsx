@@ -25,9 +25,10 @@ export default function DeleteButton({ endpoint }: { endpoint: string }) {
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+      className="p-2 sm:p-2.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 touch-manipulation min-h-11 min-w-11 flex items-center justify-center"
+      aria-label="Supprimer"
     >
-      <Trash2 size={16} />
+      <Trash2 size={18} className="sm:size-4" />
     </button>
   );
 }

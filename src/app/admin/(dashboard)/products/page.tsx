@@ -11,12 +11,15 @@ export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-serif text-3xl font-bold text-earth-800">Produits</h1>
+    <div className="px-2 sm:px-4 md:px-0">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-earth-800">
+          Produits
+        </h1>
         <Link
           href="/admin/products/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-earth-700 text-white rounded-full text-sm font-medium hover:bg-earth-800 transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-earth-700 text-white rounded-full text-sm font-medium hover:bg-earth-800 transition-colors"
         >
           <Plus size={18} />
           Nouveau produit
@@ -24,64 +27,111 @@ export default async function AdminProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <p className="text-earth-500">Aucun produit. Créez votre premier produit.</p>
+        <p className="text-earth-500 text-center py-10">Aucun produit. Créez votre premier produit.</p>
       ) : (
-        <div className="bg-white rounded-2xl border border-earth-100 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-cream-100 text-earth-700">
-              <tr>
-                <th className="text-left p-4 font-medium">Image</th>
-                <th className="text-left p-4 font-medium">Titre</th>
-                <th className="text-left p-4 font-medium hidden sm:table-cell">Catégorie</th>
-                <th className="text-left p-4 font-medium">Prix</th>
-                <th className="text-left p-4 font-medium hidden sm:table-cell">Stock</th>
-                <th className="text-right p-4 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-earth-100">
-              {products.map((product) => {
-                const images = parseImages(product.images);
-                return (
-                  <tr key={product.id} className="hover:bg-cream-50">
-                    <td className="p-4">
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-cream-100">
-                        <Image
-                          src={images[0] || "/placeholder.svg"}
-                          alt=""
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </td>
-                    <td className="p-4 font-medium text-earth-800">{product.title}</td>
-                    <td className="p-4 text-earth-600 hidden sm:table-cell">{product.category || "—"}</td>
-                    <td className="p-4 text-earth-700">{formatPrice(product.price)}</td>
-                    <td className="p-4 hidden sm:table-cell">
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          product.inStock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {product.inStock ? "En stock" : "Rupture"}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/admin/products/${product.id}/edit`}
-                          className="p-2 text-earth-600 hover:text-earth-800 hover:bg-cream-200 rounded-lg transition-colors"
+        <>
+          {/* Desktop Table - hidden on mobile */}
+          <div className="hidden sm:block bg-white rounded-2xl border border-earth-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-cream-100 text-earth-700">
+                <tr>
+                  <th className="text-left p-4 font-medium">Image</th>
+                  <th className="text-left p-4 font-medium">Titre</th>
+                  <th className="text-left p-4 font-medium hidden sm:table-cell">Catégorie</th>
+                  <th className="text-left p-4 font-medium">Prix</th>
+                  <th className="text-left p-4 font-medium hidden md:table-cell">Stock</th>
+                  <th className="text-right p-4 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-earth-100">
+                {products.map((product) => {
+                  const images = parseImages(product.images);
+                  return (
+                    <tr key={product.id} className="hover:bg-cream-50">
+                      <td className="p-4">
+                        <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-cream-100">
+                          <Image
+                            src={images[0] || "/placeholder.svg"}
+                            alt=""
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      </td>
+                      <td className="p-4 font-medium text-earth-800">{product.title}</td>
+                      <td className="p-4 text-earth-600 hidden sm:table-cell">{product.category || "—"}</td>
+                      <td className="p-4 text-earth-700">{formatPrice(product.price)}</td>
+                      <td className="p-4 hidden md:table-cell">
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            product.inStock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                          }`}
                         >
-                          <Pencil size={16} />
-                        </Link>
-                        <DeleteButton endpoint={`/api/products/${product.id}`} />
+                          {product.inStock ? "En stock" : "Rupture"}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            href={`/admin/products/${product.id}/edit`}
+                            className="p-2 text-earth-600 hover:text-earth-800 hover:bg-cream-200 rounded-lg transition-colors"
+                          >
+                            <Pencil size={16} />
+                          </Link>
+                          <DeleteButton endpoint={`/api/products/${product.id}`} />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards - visible only on mobile */}
+          <div className="sm:hidden space-y-4">
+            {products.map((product) => {
+              const images = parseImages(product.images);
+              return (
+                <div key={product.id} className="bg-white rounded-2xl p-4 border border-earth-100 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-cream-100 shrink-0">
+                      <Image
+                        src={images[0] || "/placeholder.svg"}
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-earth-800 truncate">{product.title}</h3>
+                      <p className="text-sm text-earth-600">{product.category || "Sans catégorie"}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="font-semibold text-earth-700">{formatPrice(product.price)}</span>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full ${
+                            product.inStock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {product.inStock ? "En stock" : "Rupture"}
+                        </span>
                       </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Link
+                        href={`/admin/products/${product.id}/edit`}
+                        className="p-2 text-earth-600 hover:text-earth-800 hover:bg-cream-200 rounded-lg transition-colors"
+                      >
+                        <Pencil size={16} />
+                      </Link>
+                      <DeleteButton endpoint={`/api/products/${product.id}`} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );

@@ -1,18 +1,35 @@
 "use client";
 
 import PublicLayout from "@/components/PublicLayout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/SocialIcons";
 import Button from "@/components/Button";
-import { WHATSAPP_DISPLAY, SOCIAL_LINKS } from "@/lib/constants";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+
+interface Settings {
+  whatsappNumber: string;
+  instagram: string;
+  facebook: string;
+  email: string;
+}
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [settings, setSettings] = useState<Settings | null>(null);
 
-  const whatsappUrl = buildWhatsAppUrl("Bonjour ! Je souhaite vous contacter.");
+  useEffect(() => {
+    fetch("/api/settings")
+      .then(res => res.json())
+      .then(data => setSettings(data))
+      .catch(console.error);
+  }, []);
+
+  const whatsappUrl = buildWhatsAppUrl(
+    settings?.whatsappNumber || "21693494954",
+    "Bonjour ! Je souhaite vous contacter."
+  );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -49,12 +66,12 @@ export default function ContactPage() {
 
               <Button href={whatsappUrl} variant="primary" external className="w-full sm:w-auto">
                 <MessageCircle size={20} />
-                WhatsApp — {WHATSAPP_DISPLAY}
+                WhatsApp — {settings?.whatsappNumber ? `+216 ${settings.whatsappNumber.slice(3)}` : "+216 93 494 954"}
               </Button>
 
               <div className="space-y-3">
                 <a
-                  href={SOCIAL_LINKS.instagram}
+                  href={settings?.instagram || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
@@ -63,7 +80,7 @@ export default function ContactPage() {
                   Instagram — @mon.empreinte.tn
                 </a>
                 <a
-                  href={SOCIAL_LINKS.facebook}
+                  href={settings?.facebook || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
@@ -71,6 +88,14 @@ export default function ContactPage() {
                   <FacebookIcon size={22} />
                   Facebook — Mon Empreinte
                 </a>
+                {settings?.email && (
+                  <a
+                    href={`mailto:${settings.email}`}
+                    className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
+                  >
+                    ✉️ {settings.email}
+                  </a>
+                )}
               </div>
             </div>
 

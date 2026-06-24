@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { Clock, Calendar, MessageCircle } from "lucide-react";
-import { parseImages, formatPrice, formatDate } from "@/lib/utils";
+import { parseImages, formatPrice } from "@/lib/utils";
 import { buildWhatsAppUrl, workshopBookingMessage } from "@/lib/whatsapp";
 import Button from "./Button";
+import { WHATSAPP_NUMBER } from "@/lib/constants"; 
 
 interface WorkshopCardProps {
   title: string;
@@ -25,9 +26,11 @@ export default function WorkshopCard({
 }: WorkshopCardProps) {
   const imageList = parseImages(images);
   const imageUrl = imageList[0] || "/placeholder.svg";
-  const whatsappUrl = buildWhatsAppUrl(workshopBookingMessage(title, price, duration));
-
-  // Format date
+  const whatsappUrl = buildWhatsAppUrl(
+  WHATSAPP_NUMBER, 
+  workshopBookingMessage(title, price, duration)
+ );
+// Format date
   const formattedDate = date ? new Date(date).toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'long',
@@ -37,9 +40,9 @@ export default function WorkshopCard({
   return (
     <article className="workshop-card group flex flex-col md:flex-row">
       {/* Mint accent strip */}
-      <div className="workshop-accent flex-shrink-0 hidden md:block"></div>
+      <div className="workshop-accent shrink-0 hidden md:block"></div>
 
-      <div className="relative md:w-2/5 aspect-[4/3] md:aspect-auto min-h-[200px] overflow-hidden bg-cream-100">
+      <div className="relative md:w-2/5 aspect-4/3 md:aspect-auto min-h-50 overflow-hidden bg-cream-100">
         <Image
           src={imageUrl}
           alt={title}
@@ -63,7 +66,7 @@ export default function WorkshopCard({
             </span>
           )}
         </div>
-        <p className="mt-2 text-earth-600 text-sm leading-relaxed flex-grow">{description}</p>
+        <p className="mt-2 text-earth-600 text-sm leading-relaxed grow">{description}</p>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-earth-600">
           {formattedDate && (
             <span className="flex items-center gap-1.5 bg-lavender-light px-3 py-1 rounded-full">

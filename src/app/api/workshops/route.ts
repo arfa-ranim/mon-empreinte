@@ -13,7 +13,15 @@ const workshopSchema = z.object({
   date: z.string().nullable().optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
-  maxSpots: z.number().nullable().optional(), 
+  maxSpots: z.number().nullable().optional(),
+  // NEW FIELDS
+  startDate: z.string().nullable().optional(),
+  endDate: z.string().nullable().optional(),
+  availableSeats: z.number().nullable().optional(),
+  status: z.string().optional(),
+  location: z.string().optional(),
+  materials: z.string().optional(),
+  skillLevel: z.string().optional(),
 });
 
 export async function GET() {
@@ -44,6 +52,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
+    console.error("Workshop creation error:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

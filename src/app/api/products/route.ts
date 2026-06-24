@@ -10,6 +10,12 @@ const productSchema = z.object({
   images: z.array(z.string()).default([]),
   category: z.string().optional(),
   inStock: z.boolean().default(true),
+  // NEW FIELDS
+  sku: z.string().optional(),
+  weight: z.number().nullable().optional(),
+  dimensions: z.string().optional(),
+  tags: z.string().optional(),
+  featured: z.boolean().default(false),
 });
 
 export async function GET() {
@@ -40,6 +46,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
+    console.error("Product creation error:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

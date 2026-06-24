@@ -47,7 +47,7 @@ export default async function GaleriePage() {
                     height={item.type === "workshop" ? 300 : 400}
                     className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-earth-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                  <div className="absolute inset-0 bg-linear-to-t from-earth-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                     <span className="text-white text-sm font-medium">{item.alt}</span>
                   </div>
                 </div>

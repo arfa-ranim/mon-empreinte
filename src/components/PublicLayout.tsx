@@ -1,12 +1,15 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { getBrandSettings } from "@/lib/settings";
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getBrandSettings();
+  
   return (
     <>
-      <Navbar />
+      <Navbar settings={settings} />
       <main className="grow">{children}</main>
-      <Footer />
+      <Footer settings={settings} />
     </>
   );
 }
