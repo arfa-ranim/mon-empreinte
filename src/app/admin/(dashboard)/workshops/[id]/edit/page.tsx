@@ -17,6 +17,7 @@ export default function EditWorkshopPage({ params }: { params: Promise<{ id: str
     price: "",
     duration: "",
     availability: "",
+    date: "", // 👈 ADD THIS
     images: [] as string[],
   });
 
@@ -32,6 +33,7 @@ export default function EditWorkshopPage({ params }: { params: Promise<{ id: str
           price: workshop.price.toString(),
           duration: workshop.duration,
           availability: workshop.availability || "",
+          date: workshop.date ? workshop.date.split("T")[0] : "", // 👈 ADD THIS
           images: parseImages(workshop.images),
         });
       }
@@ -49,6 +51,7 @@ export default function EditWorkshopPage({ params }: { params: Promise<{ id: str
       body: JSON.stringify({
         ...form,
         price: parseFloat(form.price),
+        date: form.date ? new Date(form.date).toISOString() : null, // 👈 ADD THIS
       }),
     });
 
@@ -113,13 +116,27 @@ export default function EditWorkshopPage({ params }: { params: Promise<{ id: str
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-earth-700 mb-1">Disponibilité</label>
-          <input
-            value={form.availability}
-            onChange={(e) => setForm({ ...form, availability: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-          />
+        {/* Date and Availability */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-earth-700 mb-1">Date *</label>
+            <input
+              type="date"
+              required
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-earth-700 mb-1">Disponibilité</label>
+            <input
+              placeholder="ex: Samedis"
+              value={form.availability}
+              onChange={(e) => setForm({ ...form, availability: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+            />
+          </div>
         </div>
 
         <div>
