@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Clock, MessageCircle } from "lucide-react";
-import { parseImages, formatPrice } from "@/lib/utils";
+import { Clock, Calendar, MessageCircle } from "lucide-react";
+import { parseImages, formatPrice, formatDate } from "@/lib/utils";
 import { buildWhatsAppUrl, workshopBookingMessage } from "@/lib/whatsapp";
 import Button from "./Button";
 
@@ -8,8 +8,9 @@ interface WorkshopCardProps {
   title: string;
   description: string;
   price: number;
-  duration: string;
+  duration: string; // "HH:MM - HH:MM"
   images: string;
+  date?: string | null;
   availability?: string | null;
 }
 
@@ -19,11 +20,19 @@ export default function WorkshopCard({
   price,
   duration,
   images,
+  date,
   availability,
 }: WorkshopCardProps) {
   const imageList = parseImages(images);
   const imageUrl = imageList[0] || "/placeholder.svg";
   const whatsappUrl = buildWhatsAppUrl(workshopBookingMessage(title, price, duration));
+
+  // Format date
+  const formattedDate = date ? new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }) : '';
 
   return (
     <article className="workshop-card group flex flex-col md:flex-row">
@@ -38,7 +47,6 @@ export default function WorkshopCard({
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 768px) 100vw, 40vw"
         />
-        {/* Availability badge on image for mobile */}
         {availability && (
           <span className="absolute top-3 right-3 bg-peach-light text-earth-700 text-xs px-3 py-1 rounded-full font-medium shadow-sm md:hidden">
             {availability}
@@ -56,10 +64,16 @@ export default function WorkshopCard({
           )}
         </div>
         <p className="mt-2 text-earth-600 text-sm leading-relaxed flex-grow">{description}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-earth-600">
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-earth-600">
+          {formattedDate && (
+            <span className="flex items-center gap-1.5 bg-lavender-light px-3 py-1 rounded-full">
+              <Calendar size={16} className="text-lavender" />
+              {formattedDate}
+            </span>
+          )}
           <span className="flex items-center gap-1.5 bg-mint-light px-3 py-1 rounded-full">
             <Clock size={16} className="text-mint" />
-            {duration}
+            {duration || "Durée flexible"}
           </span>
           <span className="font-semibold text-earth-800 text-lg">✨ {formatPrice(price)}</span>
         </div>

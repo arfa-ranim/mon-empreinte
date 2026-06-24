@@ -12,9 +12,10 @@ export default function NewWorkshopPage() {
     title: "",
     description: "",
     price: "",
-    duration: "",
+    date: "",
+    startTime: "",
+    endTime: "",
     availability: "",
-    date: "", 
     images: [] as string[],
   });
 
@@ -22,13 +23,21 @@ export default function NewWorkshopPage() {
     e.preventDefault();
     setLoading(true);
 
+    // Combine date + times for display
+    const duration = form.startTime && form.endTime 
+      ? `${form.startTime} - ${form.endTime}`
+      : "";
+
     const res = await fetch("/api/workshops", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...form,
         price: parseFloat(form.price),
-        date: form.date ? new Date(form.date).toISOString() : null, 
+        date: form.date ? new Date(form.date).toISOString() : null,
+        duration: duration,
+        startTime: form.startTime,
+        endTime: form.endTime,
       }),
     });
 
@@ -76,65 +85,80 @@ export default function NewWorkshopPage() {
           />
         </div>
 
-        {/* Price and Duration */}
+        {/* Price */}
+        <div>
+          <label htmlFor="price" className="block text-sm font-medium text-earth-700 mb-1">
+            Prix (DT) *
+          </label>
+          <input
+            id="price"
+            type="number"
+            required
+            min="0"
+            step="0.01"
+            value={form.price}
+            onChange={(e) => setForm({ ...form, price: e.target.value })}
+            className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+          />
+        </div>
+
+        {/* Date */}
+        <div>
+          <label htmlFor="date" className="block text-sm font-medium text-earth-700 mb-1">
+            Date *
+          </label>
+          <input
+            id="date"
+            type="date"
+            required
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+          />
+        </div>
+
+        {/* Time Range */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-earth-700 mb-1">
-              Prix (DT) *
+            <label htmlFor="startTime" className="block text-sm font-medium text-earth-700 mb-1">
+              Heure de début *
             </label>
             <input
-              id="price"
-              type="number"
+              id="startTime"
+              type="time"
               required
-              min="0"
-              step="0.01"
-              value={form.price}
-              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              value={form.startTime}
+              onChange={(e) => setForm({ ...form, startTime: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
             />
           </div>
           <div>
-            <label htmlFor="duration" className="block text-sm font-medium text-earth-700 mb-1">
-              Durée *
+            <label htmlFor="endTime" className="block text-sm font-medium text-earth-700 mb-1">
+              Heure de fin *
             </label>
             <input
-              id="duration"
+              id="endTime"
+              type="time"
               required
-              placeholder="ex: 3 heures"
-              value={form.duration}
-              onChange={(e) => setForm({ ...form, duration: e.target.value })}
+              value={form.endTime}
+              onChange={(e) => setForm({ ...form, endTime: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
             />
           </div>
         </div>
 
-        {/* Date and Availability */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-earth-700 mb-1">
-              Date *
-            </label>
-            <input
-              id="date"
-              type="date"
-              required
-              value={form.date}
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-            />
-          </div>
-          <div>
-            <label htmlFor="availability" className="block text-sm font-medium text-earth-700 mb-1">
-              Disponibilité
-            </label>
-            <input
-              id="availability"
-              placeholder="ex: Samedis"
-              value={form.availability}
-              onChange={(e) => setForm({ ...form, availability: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-            />
-          </div>
+        {/* Availability (optional) */}
+        <div>
+          <label htmlFor="availability" className="block text-sm font-medium text-earth-700 mb-1">
+            Disponibilité (optionnel)
+          </label>
+          <input
+            id="availability"
+            placeholder="ex: Places limitées, sur réservation..."
+            value={form.availability}
+            onChange={(e) => setForm({ ...form, availability: e.target.value })}
+            className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+          />
         </div>
 
         {/* Images */}

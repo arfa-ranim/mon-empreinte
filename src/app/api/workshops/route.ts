@@ -11,6 +11,8 @@ const workshopSchema = z.object({
   images: z.array(z.string()).default([]),
   availability: z.string().optional(),
   date: z.string().nullable().optional(),
+  startTime: z.string().optional(),
+  endTime: z.string().optional(), 
 });
 
 export async function GET() {

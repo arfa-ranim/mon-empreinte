@@ -36,6 +36,8 @@ model Workshop {
   images       String   @default("[]")
   availability String?
   date         DateTime?
+  startTime    String?  
+  endTime      String? 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
