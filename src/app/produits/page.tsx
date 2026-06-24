@@ -2,6 +2,8 @@ import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 
+export const revalidate = 60;
+
 export const metadata = { title: "Produits" };
 
 export default async function ProduitsPage() {

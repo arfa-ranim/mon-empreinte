@@ -9,6 +9,8 @@ import Link from "next/link";
 import { InstagramIcon } from "@/components/SocialIcons";
 import { SOCIAL_LINKS } from "@/lib/constants";
 
+export const revalidate = 60; 
+
 export default async function HomePage() {
   const [products, workshops] = await Promise.all([
     prisma.product.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),

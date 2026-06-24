@@ -2,10 +2,12 @@ import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
 import WorkshopCard from "@/components/WorkshopCard";
 
+export const revalidate = 60;
+
 export const metadata = { title: "Ateliers" };
 
 export default async function AteliersPage() {
-  const workshops = await prisma.workshop.findMany({ orderBy: { createdAt: "desc" } });
+  const workshops = await prisma.workshop.findMany({ orderBy: { date: "asc" } });
 
   return (
     <PublicLayout>

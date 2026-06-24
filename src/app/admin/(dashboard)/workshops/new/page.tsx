@@ -14,21 +14,23 @@ export default function NewWorkshopPage() {
     price: "",
     duration: "",
     availability: "",
+    date: "", 
     images: [] as string[],
   });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
+    async function handleSubmit(e: React.FormEvent) {
+      e.preventDefault();
+      setLoading(true);
 
-    const res = await fetch("/api/workshops", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...form,
-        price: parseFloat(form.price),
-      }),
-    });
+      const res = await fetch("/api/workshops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          price: parseFloat(form.price),
+          date: form.date ? new Date(form.date).toISOString() : null, 
+        }),
+      });
 
     if (res.ok) {
       router.push("/admin/workshops");
@@ -44,6 +46,7 @@ export default function NewWorkshopPage() {
       <h1 className="font-serif text-3xl font-bold text-earth-800 mb-8">Nouvel atelier</h1>
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6 bg-white rounded-2xl p-6 border border-earth-100">
+        {/* Title field */}
         <div>
           <label className="block text-sm font-medium text-earth-700 mb-1">Titre *</label>
           <input
@@ -54,6 +57,7 @@ export default function NewWorkshopPage() {
           />
         </div>
 
+        {/* Description field */}
         <div>
           <label className="block text-sm font-medium text-earth-700 mb-1">Description *</label>
           <textarea
@@ -65,6 +69,7 @@ export default function NewWorkshopPage() {
           />
         </div>
 
+        {/* Price and Duration */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-earth-700 mb-1">Prix (DT) *</label>
@@ -90,16 +95,30 @@ export default function NewWorkshopPage() {
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-earth-700 mb-1">Disponibilité</label>
-          <input
-            placeholder="ex: Samedis"
-            value={form.availability}
-            onChange={(e) => setForm({ ...form, availability: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-          />
+        {/* Date and Availability */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-earth-700 mb-1">Date *</label>
+            <input
+              type="date"
+              required
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-earth-700 mb-1">Disponibilité</label>
+            <input
+              placeholder="ex: Samedis"
+              value={form.availability}
+              onChange={(e) => setForm({ ...form, availability: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+            />
+          </div>
         </div>
 
+        {/* Images */}
         <div>
           <label className="block text-sm font-medium text-earth-700 mb-2">Images</label>
           <ImageUpload images={form.images} onChange={(images) => setForm({ ...form, images })} />
