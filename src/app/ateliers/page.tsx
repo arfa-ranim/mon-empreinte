@@ -7,8 +7,10 @@ export const revalidate = 60;
 export const metadata = { title: "Ateliers" };
 
 export default async function AteliersPage() {
-  const workshops = await prisma.workshop.findMany({ orderBy: { date: "asc" } });
-
+  const workshops = await prisma.workshop.findMany({ orderBy: { 
+      createdAt: "desc"   
+    },
+  });
   return (
     <PublicLayout>
       <section className="py-12 sm:py-16">

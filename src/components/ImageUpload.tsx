@@ -45,10 +45,11 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
         {images.map((url, i) => (
           <div key={url} className="relative w-24 h-24 rounded-lg overflow-hidden border border-earth-200">
             <Image src={url} alt="" fill className="object-cover" />
-            <button
+              <button
               type="button"
               onClick={() => removeImage(i)}
-              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5"
+              aria-label={`Supprimer l'image ${i + 1}`}  
+              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors"
             >
               <X size={14} />
             </button>

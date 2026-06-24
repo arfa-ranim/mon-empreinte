@@ -18,19 +18,19 @@ export default function NewWorkshopPage() {
     images: [] as string[],
   });
 
-    async function handleSubmit(e: React.FormEvent) {
-      e.preventDefault();
-      setLoading(true);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
 
-      const res = await fetch("/api/workshops", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          price: parseFloat(form.price),
-          date: form.date ? new Date(form.date).toISOString() : null, 
-        }),
-      });
+    const res = await fetch("/api/workshops", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...form,
+        price: parseFloat(form.price),
+        date: form.date ? new Date(form.date).toISOString() : null, 
+      }),
+    });
 
     if (res.ok) {
       router.push("/admin/workshops");
@@ -46,10 +46,14 @@ export default function NewWorkshopPage() {
       <h1 className="font-serif text-3xl font-bold text-earth-800 mb-8">Nouvel atelier</h1>
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6 bg-white rounded-2xl p-6 border border-earth-100">
-        {/* Title field */}
+        
+        {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-earth-700 mb-1">Titre *</label>
+          <label htmlFor="title" className="block text-sm font-medium text-earth-700 mb-1">
+            Titre *
+          </label>
           <input
+            id="title"
             required
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -57,10 +61,13 @@ export default function NewWorkshopPage() {
           />
         </div>
 
-        {/* Description field */}
+        {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-earth-700 mb-1">Description *</label>
+          <label htmlFor="description" className="block text-sm font-medium text-earth-700 mb-1">
+            Description *
+          </label>
           <textarea
+            id="description"
             required
             rows={4}
             value={form.description}
@@ -72,8 +79,11 @@ export default function NewWorkshopPage() {
         {/* Price and Duration */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-earth-700 mb-1">Prix (DT) *</label>
+            <label htmlFor="price" className="block text-sm font-medium text-earth-700 mb-1">
+              Prix (DT) *
+            </label>
             <input
+              id="price"
               type="number"
               required
               min="0"
@@ -84,8 +94,11 @@ export default function NewWorkshopPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-earth-700 mb-1">Durée *</label>
+            <label htmlFor="duration" className="block text-sm font-medium text-earth-700 mb-1">
+              Durée *
+            </label>
             <input
+              id="duration"
               required
               placeholder="ex: 3 heures"
               value={form.duration}
@@ -98,8 +111,11 @@ export default function NewWorkshopPage() {
         {/* Date and Availability */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-earth-700 mb-1">Date *</label>
+            <label htmlFor="date" className="block text-sm font-medium text-earth-700 mb-1">
+              Date *
+            </label>
             <input
+              id="date"
               type="date"
               required
               value={form.date}
@@ -108,8 +124,11 @@ export default function NewWorkshopPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-earth-700 mb-1">Disponibilité</label>
+            <label htmlFor="availability" className="block text-sm font-medium text-earth-700 mb-1">
+              Disponibilité
+            </label>
             <input
+              id="availability"
               placeholder="ex: Samedis"
               value={form.availability}
               onChange={(e) => setForm({ ...form, availability: e.target.value })}
@@ -120,7 +139,9 @@ export default function NewWorkshopPage() {
 
         {/* Images */}
         <div>
-          <label className="block text-sm font-medium text-earth-700 mb-2">Images</label>
+          <label className="block text-sm font-medium text-earth-700 mb-2">
+            Images
+          </label>
           <ImageUpload images={form.images} onChange={(images) => setForm({ ...form, images })} />
         </div>
 
