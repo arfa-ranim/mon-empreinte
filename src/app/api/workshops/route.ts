@@ -12,7 +12,8 @@ const workshopSchema = z.object({
   availability: z.string().optional(),
   date: z.string().nullable().optional(),
   startTime: z.string().optional(),
-  endTime: z.string().optional(), 
+  endTime: z.string().optional(),
+  maxSpots: z.number().nullable().optional(), 
 });
 
 export async function GET() {

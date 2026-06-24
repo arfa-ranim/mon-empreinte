@@ -16,6 +16,7 @@ export default function NewWorkshopPage() {
     startTime: "",
     endTime: "",
     availability: "",
+    maxSpots: "",
     images: [] as string[],
   });
 
@@ -36,6 +37,7 @@ export default function NewWorkshopPage() {
         price: parseFloat(form.price),
         date: form.date ? new Date(form.date).toISOString() : null,
         duration: duration,
+        maxSpots: form.maxSpots ? parseInt(form.maxSpots) : null,
         startTime: form.startTime,
         endTime: form.endTime,
       }),
@@ -56,17 +58,19 @@ export default function NewWorkshopPage() {
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6 bg-white rounded-2xl p-6 border border-earth-100">
         
-        {/* Title */}
+        {/* Titre */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-earth-700 mb-1">
             Titre *
           </label>
           <input
             id="title"
+            type="text"
             required
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+            placeholder="ex: Atelier Macramé Débutant"
           />
         </div>
 
@@ -82,72 +86,105 @@ export default function NewWorkshopPage() {
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300 resize-none"
+            placeholder="Décrivez votre atelier..."
           />
         </div>
 
-        {/* Price */}
-        <div>
-          <label htmlFor="price" className="block text-sm font-medium text-earth-700 mb-1">
-            Prix (DT) *
+        {/* Date & Heure */}
+        <div className="space-y-4">
+          <h3 className="font-serif text-lg font-semibold text-earth-800">Date & Heure</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="date" className="block text-sm font-medium text-earth-700 mb-1">
+                Date *
+              </label>
+              <input
+                id="date"
+                type="date"
+                required
+                value={form.date}
+                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+              />
+            </div>
+            <div>
+              <label htmlFor="startTime" className="block text-sm font-medium text-earth-700 mb-1">
+                Heure de début *
+              </label>
+              <input
+                id="startTime"
+                type="time"
+                required
+                value={form.startTime}
+                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+              />
+            </div>
+            <div>
+              <label htmlFor="endTime" className="block text-sm font-medium text-earth-700 mb-1">
+                Heure de fin *
+              </label>
+              <input
+                id="endTime"
+                type="time"
+                required
+                value={form.endTime}
+                onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Prix & Visuel */}
+        <div className="space-y-4">
+          <h3 className="font-serif text-lg font-semibold text-earth-800">Prix & Visuel</h3>
+          
+          <div>
+            <label htmlFor="price" className="block text-sm font-medium text-earth-700 mb-1">
+              Prix par personne (DT) *
+            </label>
+            <input
+              id="price"
+              type="number"
+              required
+              min="0"
+              step="0.01"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+              placeholder="ex: 60"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-earth-700 mb-2">
+              Ajouter une image de l atelier (JPG/PNG)
+            </label>
+            <ImageUpload images={form.images} onChange={(images) => setForm({ ...form, images })} />
+          </div>
+        </div>
+
+        {/* Places ouvertes sur Warshati */}
+        <div className="space-y-2">
+          <label htmlFor="maxSpots" className="block text-sm font-medium text-earth-700 mb-1">
+            Places ouvertes sur Warshati
           </label>
           <input
-            id="price"
+            id="maxSpots"
             type="number"
-            required
-            min="0"
-            step="0.01"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
+            min="1"
+            value={form.maxSpots}
+            onChange={(e) => setForm({ ...form, maxSpots: e.target.value })}
             className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
+            placeholder="ex: 6"
           />
+          <p className="text-xs text-earth-500">
+            Indique le nombre de places que tu réserves aux participants venant de Warshati. Si tes places se remplissent ailleurs, pense à mettre l atelier en pause ou à le marquer complet.
+          </p>
         </div>
 
-        {/* Date */}
-        <div>
-          <label htmlFor="date" className="block text-sm font-medium text-earth-700 mb-1">
-            Date *
-          </label>
-          <input
-            id="date"
-            type="date"
-            required
-            value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-          />
-        </div>
-
-        {/* Time Range */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="startTime" className="block text-sm font-medium text-earth-700 mb-1">
-              Heure de début *
-            </label>
-            <input
-              id="startTime"
-              type="time"
-              required
-              value={form.startTime}
-              onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-            />
-          </div>
-          <div>
-            <label htmlFor="endTime" className="block text-sm font-medium text-earth-700 mb-1">
-              Heure de fin *
-            </label>
-            <input
-              id="endTime"
-              type="time"
-              required
-              value={form.endTime}
-              onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
-            />
-          </div>
-        </div>
-
-        {/* Availability (optional) */}
+        {/* Disponibilité (optional) */}
         <div>
           <label htmlFor="availability" className="block text-sm font-medium text-earth-700 mb-1">
             Disponibilité (optionnel)
@@ -159,14 +196,6 @@ export default function NewWorkshopPage() {
             onChange={(e) => setForm({ ...form, availability: e.target.value })}
             className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
           />
-        </div>
-
-        {/* Images */}
-        <div>
-          <label className="block text-sm font-medium text-earth-700 mb-2">
-            Images
-          </label>
-          <ImageUpload images={form.images} onChange={(images) => setForm({ ...form, images })} />
         </div>
 
         <div className="flex gap-4">

@@ -38,6 +38,7 @@ model Workshop {
   date         DateTime?
   startTime    String?  
   endTime      String? 
+  maxSpots     Int?  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
