@@ -12,7 +12,7 @@ export default function Logo({ size = 48, showText = true, className = "" }: Log
   return (
     <Link href="/" className={`flex items-center gap-3 group ${className}`}>
       <div
-        className="relative rounded-full overflow-hidden border-2 border-earth-300 shadow-sm group-hover:shadow-md transition-shadow bg-cream-100 flex-shrink-0"
+        className="relative rounded-full overflow-hidden border-2 border-earth-300 shadow-sm group-hover:shadow-glow transition-shadow bg-cream-100 flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
         style={{ width: size, height: size }}
       >
         <Image

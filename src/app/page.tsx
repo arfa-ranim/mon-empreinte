@@ -18,8 +18,13 @@ export default async function HomePage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="relative bg-gradient-to-b from-cream-100 to-cream-50 py-20 sm:py-28">
-        <div className="max-w-4xl mx-auto px-4 text-center animate-fade-in">
+      <section className="relative bg-gradient-to-b from-cream-100 to-cream-50 py-20 sm:py-28 overflow-hidden">
+        {/* Floating decorative shapes */}
+        <div className="floating-shape peach w-48 h-48 top-10 -left-20"></div>
+        <div className="floating-shape mint w-64 h-64 bottom-10 -right-20"></div>
+        <div className="floating-shape lavender w-32 h-32 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 animate-fade-in">
           <div className="flex justify-center mb-6">
             <Logo size={120} showText={false} />
           </div>
@@ -104,7 +109,7 @@ export default async function HomePage() {
             href={SOCIAL_LINKS.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-earth-700 hover:text-earth-900 font-medium transition-colors"
+            className="inline-flex items-center gap-2 text-earth-700 hover:text-peach font-medium transition-colors"
           >
             <InstagramIcon size={24} />
             @mon.empreinte.tn

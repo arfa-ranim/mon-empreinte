@@ -19,9 +19,9 @@ export default function ProductCard({ id, title, price, images, category }: Prod
   const whatsappUrl = buildWhatsAppUrl(productOrderMessage(title, price));
 
   return (
-    <article className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-earth-100">
+    <article className="product-card group">
       <Link href={`/produits/${id}`} className="block">
-        <div className="relative aspect-square overflow-hidden bg-cream-100">
+        <div className="relative aspect-square overflow-hidden rounded-t-2xl bg-cream-100">
           <Image
             src={imageUrl}
             alt={title}
@@ -30,19 +30,27 @@ export default function ProductCard({ id, title, price, images, category }: Prod
             sizes="(max-width: 768px) 100vw, 33vw"
           />
           {category && (
-            <span className="absolute top-3 left-3 bg-white/90 text-earth-700 text-xs px-3 py-1 rounded-full">
+            <span className="absolute top-3 left-3 bg-lavender-light text-earth-700 text-xs px-3 py-1 rounded-full font-medium shadow-sm">
               {category}
             </span>
           )}
+          {/* Decorative subtle icon */}
+          <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-xs bg-white/80 px-2 py-1 rounded-full text-earth-500">
+              ✨ Détail
+            </span>
+          </div>
         </div>
       </Link>
       <div className="p-5">
         <Link href={`/produits/${id}`}>
-          <h3 className="font-serif text-lg font-semibold text-earth-800 hover:text-earth-600 transition-colors">
+          <h3 className="font-serif text-lg font-semibold text-earth-800 hover:text-peach transition-colors">
             {title}
           </h3>
         </Link>
-        <p className="mt-1 text-earth-600 font-medium">{formatPrice(price)}</p>
+        <p className="mt-1 text-earth-600 font-medium">
+          <span className="text-gold-800">✨</span> {formatPrice(price)}
+        </p>
         <div className="mt-4">
           <Button href={whatsappUrl} variant="whatsapp" external className="w-full text-xs py-2.5">
             <MessageCircle size={16} />

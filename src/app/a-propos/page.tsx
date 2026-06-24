@@ -10,18 +10,24 @@ const values = [
     title: "Authenticité",
     description:
       "Chaque création est unique et porte l'empreinte de l'artisan. Nous valorisons le travail manuel et la qualité.",
+    color: "bg-peach-light",
+    iconColor: "text-peach",
   },
   {
     icon: Sparkles,
     title: "Créativité",
     description:
       "Nous encourageons l'expression personnelle à travers nos ateliers et nos créations originales.",
+    color: "bg-mint-light",
+    iconColor: "text-mint",
   },
   {
     icon: Leaf,
     title: "Durabilité",
     description:
       "L'upcycling et le respect de l'environnement sont au cœur de notre démarche artisanale.",
+    color: "bg-lavender-light",
+    iconColor: "text-lavender",
   },
 ];
 
@@ -63,9 +69,9 @@ export default function AProposPage() {
               return (
                 <div
                   key={value.title}
-                  className="bg-white rounded-2xl p-6 text-center border border-earth-100 shadow-sm"
+                  className={`${value.color} rounded-2xl p-6 text-center border border-earth-100 shadow-sm hover:shadow-md transition-shadow`}
                 >
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-cream-200 text-earth-700 mb-4">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-white ${value.iconColor} mb-4`}>
                     <Icon size={24} />
                   </div>
                   <h3 className="font-serif text-lg font-semibold text-earth-800">{value.title}</h3>

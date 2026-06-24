@@ -13,9 +13,9 @@ interface ButtonProps {
 }
 
 const variants = {
-  primary: "bg-earth-700 text-white hover:bg-earth-800",
-  secondary: "bg-cream-200 text-earth-800 hover:bg-cream-300",
-  outline: "border-2 border-earth-700 text-earth-700 hover:bg-earth-700 hover:text-white",
+  primary: "btn-primary text-earth-900",
+  secondary: "btn-secondary text-earth-800",
+  outline: "btn-outline",
   whatsapp: "bg-[#25D366] text-white hover:bg-[#1da851]",
 };
 

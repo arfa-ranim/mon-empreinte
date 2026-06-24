@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Existing colors */
   --cream-50: #FDFBF7;
   --cream-100: #F5F0E8;
   --cream-200: #E8DFD0;
@@ -12,6 +13,22 @@
   --earth-700: #5C4D3C;
   --earth-800: #3D3328;
   --earth-900: #2C2416;
+
+  /* New accent colors */
+  --peach: #FFB5A0;
+  --peach-light: #FFE0D6;
+  --mint: #A8D8C8;
+  --mint-light: #D6F0E8;
+  --lavender: #D4C5F9;
+  --lavender-light: #EEE8FC;
+  --gold: #F0DBA8;
+  --gold-light: #F9F0D8;
+  --warm-white: #FFFCF8;
+
+  /* Shadows */
+  --shadow-soft: 0 8px 30px rgba(255, 181, 160, 0.15);
+  --shadow-mint: 0 8px 30px rgba(168, 216, 200, 0.2);
+  --shadow-glow: 0 0 30px rgba(255, 181, 160, 0.1);
 }
 
 @theme inline {
@@ -26,6 +43,17 @@
   --color-earth-700: var(--earth-700);
   --color-earth-800: var(--earth-800);
   --color-earth-900: var(--earth-900);
+
+  --color-peach: var(--peach);
+  --color-peach-light: var(--peach-light);
+  --color-mint: var(--mint);
+  --color-mint-light: var(--mint-light);
+  --color-lavender: var(--lavender);
+  --color-lavender-light: var(--lavender-light);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-warm-white: var(--warm-white);
+
   --font-serif: var(--font-cormorant);
   --font-sans: var(--font-nunito);
 }
@@ -49,6 +77,97 @@ h1, h2, h3, h4 {
   animation: fade-in 0.6s ease-out forwards;
 }
 
+/* ====== NEW ACCENT CLASSES ====== */
+.bg-peach { background-color: var(--peach); }
+.bg-peach-light { background-color: var(--peach-light); }
+.bg-mint { background-color: var(--mint); }
+.bg-mint-light { background-color: var(--mint-light); }
+.bg-lavender { background-color: var(--lavender); }
+.bg-lavender-light { background-color: var(--lavender-light); }
+.bg-gold { background-color: var(--gold); }
+.bg-gold-light { background-color: var(--gold-light); }
+
+.text-peach { color: var(--peach); }
+.text-mint { color: var(--mint); }
+.text-lavender { color: var(--lavender); }
+
+.border-peach { border-color: var(--peach); }
+.border-mint { border-color: var(--mint); }
+
+/* ====== BUTTON OVERRIDES ====== */
+.btn-primary {
+  background-color: var(--peach);
+  color: var(--earth-900);
+  border: none;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(255, 181, 160, 0.3);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background-color: var(--mint);
+  color: var(--earth-800);
+  border: none;
+  box-shadow: var(--shadow-mint);
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(168, 216, 200, 0.3);
+}
+
+.btn-outline {
+  border: 2px solid var(--peach);
+  color: var(--earth-700);
+  background: transparent;
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  background: var(--peach);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ====== CARD STYLES ====== */
+.product-card {
+  background: var(--warm-white);
+  border-radius: 2rem;
+  border: none;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-soft);
+}
+
+.workshop-card {
+  background: var(--warm-white);
+  border-radius: 2rem;
+  border: none;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+}
+.workshop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-mint);
+}
+
+/* left accent strip */
+.workshop-accent {
+  width: 6px;
+  background: var(--mint);
+  border-radius: 4px 0 0 4px;
+}
+
+/* ====== GALLERY ====== */
 .masonry-grid {
   columns: 1;
   column-gap: 1rem;
@@ -65,4 +184,40 @@ h1, h2, h3, h4 {
 .masonry-item {
   break-inside: avoid;
   margin-bottom: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--cream-100);
+}
+
+.masonry-item img {
+  transition: transform 0.5s ease;
+}
+.masonry-item:hover img {
+  transform: scale(1.05);
+}
+.masonry-item .overlay {
+  background: linear-gradient(135deg, rgba(255,181,160,0.3), rgba(168,216,200,0.3));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.masonry-item:hover .overlay {
+  opacity: 1;
+}
+
+/* ====== DECORATIVE FLOATING CIRCLES ====== */
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+.floating-shape.peach {
+  background: var(--peach);
+}
+.floating-shape.mint {
+  background: var(--mint);
+}
+.floating-shape.lavender {
+  background: var(--lavender);
 }

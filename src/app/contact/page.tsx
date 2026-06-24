@@ -47,7 +47,7 @@ export default function ContactPage() {
             <div className="space-y-6">
               <h2 className="font-serif text-xl font-semibold text-earth-800">Nous joindre</h2>
 
-              <Button href={whatsappUrl} variant="whatsapp" external className="w-full sm:w-auto">
+              <Button href={whatsappUrl} variant="primary" external className="w-full sm:w-auto">
                 <MessageCircle size={20} />
                 WhatsApp — {WHATSAPP_DISPLAY}
               </Button>
@@ -87,7 +87,7 @@ export default function ContactPage() {
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300 bg-cream-50"
+                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50"
                 />
               </div>
 
@@ -101,7 +101,7 @@ export default function ContactPage() {
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300 bg-cream-50"
+                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50"
                 />
               </div>
 
@@ -115,7 +115,7 @@ export default function ContactPage() {
                   rows={5}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300 bg-cream-50 resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50 resize-none"
                 />
               </div>
 
