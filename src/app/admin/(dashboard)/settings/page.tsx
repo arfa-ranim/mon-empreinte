@@ -5,9 +5,10 @@ import Button from "@/components/Button";
 import ImageUpload from "@/components/ImageUpload";
 import {
   Building, Mail, Phone, MapPin,
-  Globe, MessageCircle, Save, ChevronDown, ChevronUp,
-  Instagram, Facebook
+  Globe, MessageCircle, Save, ChevronDown, ChevronUp
 } from "lucide-react";
+import { InstagramIcon, FacebookIcon } from "@/components/SocialIcons";
+import { toast } from "sonner";
 
 interface Settings {
   brandName: string;
@@ -97,10 +98,11 @@ export default function AdminSettingsPage() {
     });
 
     if (res.ok) {
+      toast.success("Paramètres enregistrés avec succès ! ✅");
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } else {
-      alert("Erreur lors de l'enregistrement");
+      toast.error("Erreur lors de l'enregistrement");
     }
     setLoading(false);
   }
@@ -275,7 +277,7 @@ export default function AdminSettingsPage() {
                     Instagram
                   </label>
                   <div className="relative">
-                    <Instagram className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" size={18} />
+                    <InstagramIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" />
                     <input
                       id="instagram"
                       value={settings.instagram}
@@ -290,7 +292,7 @@ export default function AdminSettingsPage() {
                     Facebook
                   </label>
                   <div className="relative">
-                    <Facebook className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" size={18} />
+                    <FacebookIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" />
                     <input
                       id="facebook"
                       value={settings.facebook}

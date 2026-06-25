@@ -6,6 +6,7 @@ import { MessageCircle, Send } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/SocialIcons";
 import Button from "@/components/Button";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { toast } from "sonner";
 
 interface Settings {
   whatsappNumber: string;
@@ -16,7 +17,7 @@ interface Settings {
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState<Settings | null>(null);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function ContactPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("loading");
+    setLoading(true);
 
     const res = await fetch("/api/contact", {
       method: "POST",
@@ -42,11 +43,12 @@ export default function ContactPage() {
     });
 
     if (res.ok) {
-      setStatus("success");
+      toast.success("Message envoyé avec succès ! 📨");
       setForm({ name: "", email: "", message: "" });
     } else {
-      setStatus("error");
+      toast.error("Erreur lors de l'envoi. Réessayez.");
     }
+    setLoading(false);
   }
 
   return (
@@ -144,17 +146,11 @@ export default function ContactPage() {
                 />
               </div>
 
-              <Button type="submit" disabled={status === "loading"} className="w-full">
+              <Button type="submit" disabled={loading} className="w-full">
                 <Send size={18} />
-                {status === "loading" ? "Envoi..." : "Envoyer"}
+                {loading ? "Envoi..." : "Envoyer"}
               </Button>
 
-              {status === "success" && (
-                <p className="text-green-600 text-sm text-center">Message envoyé avec succès !</p>
-              )}
-              {status === "error" && (
-                <p className="text-red-600 text-sm text-center">Erreur lors de l&apos;envoi. Réessayez.</p>
-              )}
             </form>
           </div>
         </div>

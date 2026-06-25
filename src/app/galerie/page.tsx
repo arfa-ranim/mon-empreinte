@@ -2,6 +2,8 @@ import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import { parseImages } from "@/lib/utils";
+import EmptyState from "@/components/EmptyState"; // ← ADD THIS
+import { GalleryIcon } from "@/components/icons/EmptyIcons"; // ← ADD THIS
 
 export const metadata = { title: "Galerie" };
 
@@ -31,8 +33,13 @@ export default async function GaleriePage() {
             </p>
           </div>
 
+          {/* ← REPLACE THIS CONDITIONAL */}
           {galleryItems.length === 0 ? (
-            <p className="text-center text-earth-500 py-20">La galerie sera bientôt remplie.</p>
+            <EmptyState
+              title="Galerie vide"
+              description="Ajoutez des images à vos produits et ateliers pour remplir la galerie."
+              icon={<GalleryIcon size={80} />}
+            />
           ) : (
             <div className="masonry-grid">
               {galleryItems.map((item, i) => (

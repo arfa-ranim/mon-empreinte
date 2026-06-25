@@ -4,18 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
+import { toast } from "sonner";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     const res = await fetch("/api/auth/login", {
       method: "POST",
@@ -24,11 +23,12 @@ export default function AdminLoginPage() {
     });
 
     if (res.ok) {
+      toast.success("Bienvenue ! 🎉");
       router.push("/admin");
       router.refresh();
     } else {
       const data = await res.json();
-      setError(data.error || "Erreur de connexion");
+      toast.error(data.error || "Erreur de connexion");
     }
     setLoading(false);
   }
@@ -71,8 +71,6 @@ export default function AdminLoginPage() {
               className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-earth-300"
             />
           </div>
-
-          {error && <p className="text-red-600 text-sm">{error}</p>}
 
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? "Connexion..." : "Se connecter"}

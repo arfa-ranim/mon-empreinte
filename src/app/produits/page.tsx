@@ -1,13 +1,35 @@
 import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
+import Pagination from "@/components/Pagination";
+import { ProductsGridSkeleton } from "@/components/Skeleton";
+import { Suspense } from "react";
+import EmptyState from "@/components/EmptyState";
+import { ProductIcon } from "@/components/icons/EmptyIcons";
 
 export const revalidate = 60;
-
 export const metadata = { title: "Produits" };
 
-export default async function ProduitsPage() {
-  const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
+export default async function ProduitsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || "1");
+  const limit = 12;
+  const skip = (currentPage - 1) * limit;
+
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.product.count(),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
 
   return (
     <PublicLayout>
@@ -21,13 +43,20 @@ export default async function ProduitsPage() {
           </div>
 
           {products.length === 0 ? (
-            <p className="text-center text-earth-500 py-20">Aucun produit pour le moment.</p>
+            <EmptyState
+              title="Aucun produit disponible"
+              description="Revenez bientôt pour découvrir nos nouvelles créations artisanales."
+              icon={<ProductIcon size={80} />}
+            />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <ProductCard key={product.id} {...product} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} {...product} />
+                ))}
+              </div>
+              <Pagination currentPage={currentPage} totalPages={totalPages} />
+            </>
           )}
         </div>
       </section>

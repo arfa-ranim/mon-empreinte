@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import Button from "@/components/Button";
 import { 
-  Calendar, Users, DollarSign, Image as ImageIcon, 
-  MapPin, Package, AlertCircle, CheckCircle, XCircle,
+  Calendar, DollarSign, Image as ImageIcon, 
+  AlertCircle, CheckCircle,
   ChevronDown, ChevronUp
 } from "lucide-react";
-// Clock removed (unused)
+import { toast } from "sonner";
+import { useValidation } from "@/hooks/useValidation";
 
-// --- Types ---
 interface WorkshopFormData {
+  [key: string]: string | string[];
+
   title: string;
   description: string;
   price: string;
@@ -53,13 +55,7 @@ interface WorkshopFormProps {
   workshopId?: string;
 }
 
-// --- SectionHeader component (moved outside to avoid render-time creation) ---
-const SectionHeader = ({
-  title,
-  icon,
-  isOpen,
-  onToggle,
-}: {
+const SectionHeader = ({ title, icon, isOpen, onToggle }: {
   title: string;
   icon: React.ReactNode;
   isOpen: boolean;
@@ -78,11 +74,164 @@ const SectionHeader = ({
   </button>
 );
 
-// --- Main Component ---
+const FormField = ({
+  label,
+  id,
+  type = "text",
+  value,
+  onChange,
+  onBlur,
+  error,
+  touched,
+  required,
+  placeholder,
+  rows,
+  options,
+  className = "",
+  min,
+  max,
+  step,
+  maxLength,
+  showCharCount,
+}: {
+  label: string;
+  id: string;
+  type?: string;
+  value: string | number | boolean | string[];
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  onBlur?: () => void;
+  error?: string;
+  touched?: boolean;
+  required?: boolean;
+  placeholder?: string;
+  rows?: number;
+  options?: { label: string; value: string }[];
+  className?: string;
+  min?: string | number;
+  max?: string | number;
+  step?: string | number;
+  maxLength?: number;
+  showCharCount?: boolean;
+}) => {
+  const isError = touched && !!error;
+  const isValid =
+    touched &&
+    !error &&
+    (Array.isArray(value) ? value.length > 0 : Boolean(value));
+
+  return (
+    <div className={className}>
+      <label htmlFor={id} className="block text-sm font-medium text-earth-700 mb-1">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+
+      {type === "select" ? (
+        <select
+          id={id}
+          value={Array.isArray(value) ? value[0] || "" : String(value)}
+          onChange={onChange as React.ChangeEventHandler<HTMLSelectElement>}
+          onBlur={onBlur}
+          className={`w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm ${
+            isError
+              ? "border-red-400 ring-2 ring-red-200"
+              : isValid
+              ? "border-green-400 ring-2 ring-green-200"
+              : "border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent"
+          }`}
+          aria-label={label}
+          aria-invalid={isError}                   
+          aria-describedby={isError ? `${id}-error` : undefined}
+        >
+          {options?.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      ) : type === "textarea" ? (
+        <>
+          <textarea
+            id={id}
+            rows={rows || 4}
+            value={Array.isArray(value) ? value.join(", ") : String(value)}
+            onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            className={`w-full px-4 py-3 rounded-lg border transition-all resize-none text-base sm:text-sm ${
+              isError
+                ? "border-red-400 ring-2 ring-red-200"
+                : isValid
+                ? "border-green-400 ring-2 ring-green-200"
+                : "border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent"
+            }`}
+            aria-invalid={isError}                  
+            aria-describedby={isError ? `${id}-error` : undefined}
+          />
+          {showCharCount && maxLength && (
+            <div className={`char-counter ${String(value).length >= maxLength ? "limit" : ""}`}>
+              {String(value).length || 0} / {maxLength}
+            </div>
+          )}
+        </>
+      ) : type === "checkbox" ? (
+        <div className="flex items-center gap-3">
+          <input
+            id={id}
+            type="checkbox"
+            checked={value as boolean}
+            onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+            onBlur={onBlur}
+            className="w-5 h-5 rounded border-earth-300 text-peach focus:ring-peach"
+            aria-invalid={isError}                  
+          />
+          <label htmlFor={id} className="text-sm text-earth-700 font-medium">
+            {label}
+          </label>
+        </div>
+      ) : (
+        <input
+          id={id}
+          type={type}
+          value={Array.isArray(value) ? value.join(", ") : String(value)}
+          onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          min={min}
+          max={max}
+          step={step}
+          maxLength={maxLength}
+          className={`w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm ${
+            isError
+              ? "border-red-400 ring-2 ring-red-200"
+              : isValid
+              ? "border-green-400 ring-2 ring-green-200"
+              : "border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent"
+          }`}
+          aria-invalid={isError}                    
+          aria-describedby={isError ? `${id}-error` : undefined}
+        />
+      )}
+
+      {isError && (
+        <div id={`${id}-error`} className="error-message mt-1 flex items-center gap-1 text-red-600 text-sm">
+          <AlertCircle size={14} />
+          {error}
+        </div>
+      )}
+      {isValid && type !== "checkbox" && (
+        <div className="success-message mt-1 flex items-center gap-1 text-green-600 text-sm">
+          <CheckCircle size={14} />
+          Valide
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function WorkshopForm({ initialData, isEditing, workshopId }: WorkshopFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [sections, setSections] = useState({
     basic: true,
     date: true,
@@ -91,7 +240,7 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
     image: true,
   });
 
-  const [form, setForm] = useState<WorkshopFormData>({
+  const initialFormData: WorkshopFormData = {
     title: initialData?.title || "",
     description: initialData?.description || "",
     price: initialData?.price?.toString() || "",
@@ -107,17 +256,61 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
     skillLevel: initialData?.skillLevel || "",
     availability: initialData?.availability || "",
     images: initialData?.images ? JSON.parse(initialData.images) : [],
-  });
+  };
+
+  const validationRules = {
+    title: { required: true, minLength: 3, maxLength: 100, message: "Titre requis (3-100 caractères)" },
+    description: { required: true, minLength: 10, maxLength: 2000, message: "Description requise (10-2000 caractères)" },
+    price: { required: true, min: 0.01, message: "Prix valide requis" },
+    startDate: { required: true, message: "Date de début requise" },
+    endDate: { required: true, message: "Date de fin requise" },
+    startTime: { required: true, message: "Heure de début requise" },
+    endTime: { required: true, message: "Heure de fin requise" },
+    availableSeats: { required: true, min: 0, message: "Places disponibles requises (≥ 0)" },
+    maxSpots: { min: 0, message: "Le nombre de places doit être ≥ 0" },
+  };
+
+  const {
+    values: form,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    validateAll,
+    setFieldValue,
+  } = useValidation(initialFormData, validationRules);
+
+  const validateForm = (): boolean => {
+    if (!validateAll()) return false;
+
+    if (form.startDate && form.endDate) {
+      const start = new Date(String(form.startDate));
+      const end = new Date(String(form.endDate));
+      if (end < start) {
+        toast.error("La date de fin doit être après la date de début");
+        return false;
+      }
+    }
+
+    if (form.startDate === form.endDate && form.startTime && form.endTime) {
+      if (form.endTime <= form.startTime) {
+        toast.error("L'heure de fin doit être après l'heure de début");
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   const toggleSection = (section: keyof typeof sections) => {
     setSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   const statusOptions = [
-    { value: "available", label: "✅ Disponible", icon: CheckCircle, color: "text-green-600" },
-    { value: "full", label: "🔴 Complet", icon: XCircle, color: "text-red-600" },
-    { value: "cancelled", label: "❌ Annulé", icon: XCircle, color: "text-gray-500" },
-    { value: "draft", label: "📝 Brouillon", icon: AlertCircle, color: "text-yellow-600" },
+    { value: "available", label: "✅ Disponible" },
+    { value: "full", label: "🔴 Complet" },
+    { value: "cancelled", label: "❌ Annulé" },
+    { value: "draft", label: "📝 Brouillon" },
   ];
 
   const skillLevels = [
@@ -126,33 +319,9 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
     { value: "avancé", label: "🌳 Avancé" },
   ];
 
-  function validateForm() {
-    const newErrors: Record<string, string> = {};
-
-    if (form.startDate && form.endDate) {
-      const start = new Date(form.startDate);
-      const end = new Date(form.endDate);
-      if (end < start) {
-        newErrors.endDate = "La date de fin doit être après la date de début";
-      }
-    }
-
-    if (form.startDate === form.endDate && form.startTime && form.endTime) {
-      if (form.endTime <= form.startTime) {
-        newErrors.endTime = "L'heure de fin doit être après l'heure de début";
-      }
-    }
-
-    if (form.availableSeats && parseInt(form.availableSeats) < 0) {
-      newErrors.availableSeats = "Les places doivent être ≥ 0";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     setLoading(true);
@@ -160,14 +329,14 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
     const payload = {
       title: form.title,
       description: form.description,
-      price: parseFloat(form.price) || 0,
-      startDate: form.startDate ? new Date(form.startDate).toISOString() : null,
-      endDate: form.endDate ? new Date(form.endDate).toISOString() : null,
+      price: parseFloat(String(form.price)) || 0,
+      startDate: form.startDate ? new Date(String(form.startDate)).toISOString() : null,
+      endDate: form.endDate ? new Date(String(form.endDate)).toISOString() : null,
       startTime: form.startTime,
       endTime: form.endTime,
       duration: form.startTime && form.endTime ? `${form.startTime} - ${form.endTime}` : "",
-      availableSeats: form.availableSeats ? parseInt(form.availableSeats) : null,
-      maxSpots: form.maxSpots ? parseInt(form.maxSpots) : null,
+      availableSeats: form.availableSeats ? parseInt(String(form.availableSeats)) : null,
+      maxSpots: form.maxSpots ? parseInt(String(form.maxSpots)) : null,
       status: form.status,
       location: form.location,
       materials: form.materials,
@@ -186,18 +355,18 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
     });
 
     if (res.ok) {
+      toast.success(isEditing ? "Atelier mis à jour ! ✅" : "Atelier créé avec succès ! 🎉");
       router.push("/admin/workshops");
       router.refresh();
     } else {
       const data = await res.json();
-      alert(data.error || "Erreur lors de l'enregistrement");
+      toast.error(data.error || "Erreur lors de l'enregistrement");
       setLoading(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 max-w-4xl mx-auto px-2 sm:px-0">
-      {/* 📝 Basic Info */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm">
         <SectionHeader
           title="Informations générales"
@@ -205,75 +374,69 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
           isOpen={sections.basic}
           onToggle={() => toggleSection("basic")}
         />
-
         {sections.basic && (
           <div className="mt-4 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-earth-700 mb-1">
-                Titre de l&apos;atelier *
-              </label>
-              <input
-                required
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent transition-all text-base sm:text-sm"
-                placeholder="ex: Atelier Macramé Débutant"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-earth-700 mb-1">
-                Description *
-              </label>
-              <textarea
-                required
-                rows={4}
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent transition-all resize-none text-base sm:text-sm"
-                placeholder="Décrivez votre atelier en détail..."
-              />
-            </div>
-
+            <FormField
+              id="title"
+              label="Titre de l'atelier"
+              type="text"
+              value={form.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              onBlur={() => handleBlur('title')}
+              error={errors.title}
+              touched={touched.title}
+              required
+              placeholder="ex: Atelier Macramé Débutant"
+              maxLength={100}
+              showCharCount
+            />
+            <FormField
+              id="description"
+              label="Description"
+              type="textarea"
+              rows={4}
+              value={form.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              onBlur={() => handleBlur('description')}
+              error={errors.description}
+              touched={touched.description}
+              required
+              placeholder="Décrivez votre atelier en détail..."
+              maxLength={2000}
+              showCharCount
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-earth-700 mb-1">
-                  Niveau requis
-                </label>
-                <select
-                  value={form.skillLevel}
-                  onChange={(e) => setForm({ ...form, skillLevel: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm"
-                  aria-label="Niveau requis"
-                >
-                  <option value="">Sélectionnez un niveau</option>
-                  {skillLevels.map((level) => (
-                    <option key={level.value} value={level.value}>
-                      {level.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-earth-700 mb-1">
-                  Lieu
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" size={18} />
-                  <input
-                    value={form.location}
-                    onChange={(e) => setForm({ ...form, location: e.target.value })}
-                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm"
-                    placeholder="Adresse du lieu"
-                  />
-                </div>
-              </div>
+              <FormField
+                id="skillLevel"
+                label="Niveau requis"
+                type="select"
+                value={form.skillLevel}
+                onChange={(e) => handleChange('skillLevel', e.target.value)}
+                onBlur={() => handleBlur('skillLevel')}
+                error={errors.skillLevel}
+                touched={touched.skillLevel}
+                options={[
+                  { label: "Sélectionnez un niveau", value: "" },
+                  ...skillLevels
+                ]}
+              />
+              <FormField
+                id="location"
+                label="Lieu"
+                type="text"
+                value={form.location}
+                onChange={(e) => handleChange('location', e.target.value)}
+                onBlur={() => handleBlur('location')}
+                error={errors.location}
+                touched={touched.location}
+                placeholder="Adresse du lieu"
+              />
             </div>
           </div>
         )}
       </section>
 
-      {/* 📅 Date & Time - Mobile Optimized */}
+      {/* Date & Heure Section */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm">
         <SectionHeader
           title="Date & Heure"
@@ -281,90 +444,63 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
           isOpen={sections.date}
           onToggle={() => toggleSection("date")}
         />
-
         {sections.date && (
           <div className="mt-4 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                    <label
-                    htmlFor="startDate"
-                    className="block text-sm font-medium text-earth-700 mb-1"
-                    >
-                    Date de début *
-                    </label>
-
-                    <input
-                    id="startDate"
-                    type="date"
-                  required
-                  min={new Date().toISOString().split("T")[0]}
-                  value={form.startDate}
-                  onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-earth-700 mb-1"
-                htmlFor="endDate">
-                  Date de fin *
-                </label>
-                <input
-                  id="endDate"
-                 type="date"
-                  required
-                  min={form.startDate || new Date().toISOString().split("T")[0]}
-                  value={form.endDate}
-                  onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.endDate ? "border-red-400" : "border-earth-200"
-                  } focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm`}
-                />
-                {errors.endDate && (
-                  <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>
-                )}
-              </div>
+              <FormField
+                id="startDate"
+                label="Date de début"
+                type="date"
+                value={form.startDate}
+                onChange={(e) => handleChange('startDate', e.target.value)}
+                onBlur={() => handleBlur('startDate')}
+                error={errors.startDate}
+                touched={touched.startDate}
+                required
+                min={new Date().toISOString().split("T")[0]}
+              />
+              <FormField
+                id="endDate"
+                label="Date de fin"
+                type="date"
+                value={form.endDate}
+                onChange={(e) => handleChange('endDate', e.target.value)}
+                onBlur={() => handleBlur('endDate')}
+                error={errors.endDate}
+                touched={touched.endDate}
+                required
+                min={form.startDate || new Date().toISOString().split("T")[0]}
+              />
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="startTime" className="block text-sm font-medium text-earth-700 mb-1">
-                  Heure de début *
-                </label>
-                <input
-                  id="startTime"
-                 type="time" 
-                  required
-                  value={form.startTime}
-                  onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="endTime" className="block text-sm font-medium text-earth-700 mb-1">
-                  Heure de fin *
-                </label>
-                <input
-                  id="endTime"
-                 type="time" 
-                  required
-                  value={form.endTime}
-                  onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.endTime ? "border-red-400" : "border-earth-200"
-                  } focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm`}
-                />
-                {errors.endTime && (
-                  <p className="text-red-500 text-sm mt-1">{errors.endTime}</p>
-                )}
-              </div>
+              <FormField
+                id="startTime"
+                label="Heure de début"
+                type="time"
+                value={form.startTime}
+                onChange={(e) => handleChange('startTime', e.target.value)}
+                onBlur={() => handleBlur('startTime')}
+                error={errors.startTime}
+                touched={touched.startTime}
+                required
+              />
+              <FormField
+                id="endTime"
+                label="Heure de fin"
+                type="time"
+                value={form.endTime}
+                onChange={(e) => handleChange('endTime', e.target.value)}
+                onBlur={() => handleBlur('endTime')}
+                error={errors.endTime}
+                touched={touched.endTime}
+                required
+              />
             </div>
           </div>
         )}
       </section>
 
-      {/* 💰 Pricing & Seats */}
+      {/* Prix & Places Section */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm">
         <SectionHeader
           title="Prix & Places"
@@ -372,98 +508,71 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
           isOpen={sections.pricing}
           onToggle={() => toggleSection("pricing")}
         />
-
         {sections.pricing && (
           <div className="mt-4 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-earth-700 mb-1">
-                  Prix par personne (DT) *
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-500 font-medium">
-                    DT
-                  </span>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    step="0.01"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm"
-                    placeholder="0.00"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-earth-700 mb-1">
-                  Places disponibles *
-                </label>
-                <div className="relative">
-                  <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" size={18} />
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    step="1"
-                    value={form.availableSeats}
-                    onChange={(e) => setForm({ ...form, availableSeats: e.target.value })}
-                    className={`w-full pl-12 pr-4 py-3 rounded-lg border ${
-                      errors.availableSeats ? "border-red-400" : "border-earth-200"
-                    } focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm`}
-                    placeholder="0"
-                  />
-                </div>
-                {errors.availableSeats && (
-                  <p className="text-red-500 text-sm mt-1">{errors.availableSeats}</p>
-                )}
-                <p className="text-xs text-earth-500 mt-2 flex items-start gap-1">
-                  <AlertCircle size={14} className="shrink-0 mt-0.5" />
-                  <span>Indique le nombre de places disponibles sur Warshati.</span>
-                </p>
-              </div>
+              <FormField
+                id="price"
+                label="Prix par personne (DT)"
+                type="number"
+                value={form.price}
+                onChange={(e) => handleChange('price', e.target.value)}
+                onBlur={() => handleBlur('price')}
+                error={errors.price}
+                touched={touched.price}
+                required
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+              <FormField
+                id="availableSeats"
+                label="Places disponibles"
+                type="number"
+                value={form.availableSeats}
+                onChange={(e) => handleChange('availableSeats', e.target.value)}
+                onBlur={() => handleBlur('availableSeats')}
+                error={errors.availableSeats}
+                touched={touched.availableSeats}
+                required
+                placeholder="0"
+                min="0"
+                step="1"
+              />
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-earth-700 mb-1">
-                Matériel fourni
-              </label>
-              <div className="relative">
-                <Package className="absolute left-4 top-1/2 -translate-y-1/2 text-earth-400" size={18} />
-                <input
-                  value={form.materials}
-                  onChange={(e) => setForm({ ...form, materials: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 rounded-lg border border-earth-200 focus:ring-2 focus:ring-peach focus:border-transparent text-base sm:text-sm"
-                  placeholder="ex: Tissus, fils, ciseaux, colle..."
-                />
-              </div>
-            </div>
+            <FormField
+              id="materials"
+              label="Matériel fourni"
+              type="text"
+              value={form.materials}
+              onChange={(e) => handleChange('materials', e.target.value)}
+              onBlur={() => handleBlur('materials')}
+              error={errors.materials}
+              touched={touched.materials}
+              placeholder="ex: Tissus, fils, ciseaux, colle..."
+            />
           </div>
         )}
       </section>
 
-      {/* 📊 Status - Mobile Friendly Grid */}
+      {/* Statut Section */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm">
         <SectionHeader
-          title="Statut de l&apos;atelier"
+          title="Statut de l'atelier"
           icon={<AlertCircle className="text-lavender" size={20} />}
           isOpen={sections.status}
           onToggle={() => toggleSection("status")}
         />
-
         {sections.status && (
           <div className="mt-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
               {statusOptions.map((option) => {
-                const Icon = option.icon;
                 const isSelected = form.status === option.value;
                 return (
                   <button
                     key={option.value}
                     type="button"
-                    onClick={() => setForm({ ...form, status: option.value })}
+                    onClick={() => setFieldValue('status', option.value)}
                     className={`p-2 sm:p-3 rounded-xl border-2 transition-all flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center ${
                       isSelected
                         ? "border-peach bg-peach-light/20 shadow-sm"
@@ -471,10 +580,7 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
                     }`}
                     aria-label={`Statut: ${option.label}`}
                   >
-                    <Icon size={16} className={`${option.color} sm:size-[18px]`} />
-                    <span className={`text-xs sm:text-sm ${isSelected ? "font-medium" : ""}`}>
-                      {option.label}
-                    </span>
+                    <span className="text-sm">{option.label}</span>
                   </button>
                 );
               })}
@@ -483,24 +589,25 @@ export default function WorkshopForm({ initialData, isEditing, workshopId }: Wor
         )}
       </section>
 
-      {/* 🖼️ Image */}
+      {/* Image Section */}
       <section className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm">
         <SectionHeader
-          title="Image de l&apos;atelier"
+          title="Image de l'atelier"
           icon={<ImageIcon className="text-lavender" size={20} />}
           isOpen={sections.image}
           onToggle={() => toggleSection("image")}
         />
-
         {sections.image && (
           <div className="mt-4 space-y-2">
-            <ImageUpload images={form.images} onChange={(images) => setForm({ ...form, images })} />
+            <ImageUpload
+              images={Array.isArray(form.images) ? form.images : []}
+              onChange={(images) => setFieldValue("images", images)}
+            />
             <p className="text-xs text-earth-400">Formats acceptés: JPG, PNG • Taille max: 5MB</p>
           </div>
         )}
       </section>
 
-      {/* Actions - Mobile Optimized */}
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
         <Button
           type="submit"

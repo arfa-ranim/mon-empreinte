@@ -1,18 +1,40 @@
+// app/admin/products/page.tsx
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Pencil } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { parseImages, formatPrice } from "@/lib/utils";
 import DeleteButton from "@/components/DeleteButton";
+import Pagination from "@/components/Pagination";
+import { ProductsGridSkeleton } from "@/components/Skeleton";
+import { Suspense } from "react";
 
 export const metadata = { title: "Gestion des produits" };
 
-export default async function AdminProductsPage() {
-  const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
+// We'll make this a server component and read searchParams
+export default async function AdminProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || "1");
+  const limit = 10;
+  const skip = (currentPage - 1) * limit;
+
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.product.count(),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="px-2 sm:px-4 md:px-0">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <h1 className="font-serif text-2xl sm:text-3xl font-bold text-earth-800">
           Produits
@@ -27,10 +49,18 @@ export default async function AdminProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <p className="text-earth-500 text-center py-10">Aucun produit. Créez votre premier produit.</p>
+        <div className="text-center py-16">
+          <p className="text-earth-500 mb-4">Aucun produit pour le moment.</p>
+          <Link
+            href="/admin/products/new"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-earth-700 text-white rounded-full text-sm font-medium hover:bg-earth-800 transition-colors"
+          >
+            <Plus size={18} />
+            Créer votre premier produit
+          </Link>
+        </div>
       ) : (
         <>
-          {/* Desktop Table - hidden on mobile */}
           <div className="hidden sm:block bg-white rounded-2xl border border-earth-100 overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-cream-100 text-earth-700">
@@ -88,7 +118,7 @@ export default async function AdminProductsPage() {
             </table>
           </div>
 
-          {/* Mobile Cards - visible only on mobile */}
+          {/* Mobile cards – also paginated */}
           <div className="sm:hidden space-y-4">
             {products.map((product) => {
               const images = parseImages(product.images);
@@ -131,6 +161,8 @@ export default async function AdminProductsPage() {
               );
             })}
           </div>
+
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
         </>
       )}
     </div>

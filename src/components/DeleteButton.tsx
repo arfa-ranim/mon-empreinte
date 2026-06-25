@@ -3,6 +3,7 @@
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner"; 
 
 export default function DeleteButton({ endpoint }: { endpoint: string }) {
   const router = useRouter();
@@ -14,9 +15,10 @@ export default function DeleteButton({ endpoint }: { endpoint: string }) {
     setLoading(true);
     const res = await fetch(endpoint, { method: "DELETE" });
     if (res.ok) {
+      toast.success("Élément supprimé avec succès ! 🗑️");
       router.refresh();
     } else {
-      alert("Erreur lors de la suppression");
+      toast.error("Erreur lors de la suppression");
     }
     setLoading(false);
   }

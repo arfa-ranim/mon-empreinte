@@ -187,3 +187,80 @@ h1, h2, h3, h4 {
     font-size: 16px !important;
   }
 }
+
+/* Spinner animation for loading states */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.border-3 {
+  border-width: 3px;
+}
+
+.border-t-transparent {
+  border-top-color: transparent;
+}
+
+/* ====== FORM VALIDATION ====== */
+
+/* Input states */
+.input-valid {
+  border-color: #22c55e !important;
+  --tw-ring-color: #22c55e !important;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2) !important;
+}
+
+.input-invalid {
+  border-color: #ef4444 !important;
+  --tw-ring-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Error message */
+.error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Success message */
+.success-message {
+  color: #22c55e;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Character counter */
+.char-counter {
+  font-size: 0.7rem;
+  color: var(--earth-400);
+  text-align: right;
+  margin-top: 0.25rem;
+}
+.char-counter.limit {
+  color: #ef4444;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
