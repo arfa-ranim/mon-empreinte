@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, Package, Palette, 
-  LogOut, Settings, Plus, Menu, X
+  LogOut, Settings, Plus, Menu, X, Mail
 } from "lucide-react";
 import Logo from "./Logo";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ const links = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/admin/products", label: "Produits", icon: Package },
   { href: "/admin/workshops", label: "Ateliers", icon: Palette },
+  { href: "/admin/messages", label: "Messages", icon: Mail },
   { href: "/admin/settings", label: "Paramètres", icon: Settings },
 ];
 
@@ -134,12 +135,12 @@ export default function AdminSidebar() {
 
   // Close mobile menu on route change – but we already have onItemClick closing it,
   // we can keep this effect but with a condition to avoid cascading renders.
-  // // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => {
-      if (isMobile) {
-        setIsMobileOpen(false);
-      }
-    }, [pathname, isMobile]);
+useEffect(() => {
+  if (isMobile) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMobileOpen(false);
+  }
+}, [pathname, isMobile]);
 
   return (
     <>

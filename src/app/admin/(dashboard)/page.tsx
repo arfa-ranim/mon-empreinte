@@ -5,14 +5,13 @@ import {
   Palette,
   Plus,
   TrendingUp,
-  Clock,
   Settings,
   AlertCircle,
   ChevronRight,
   RefreshCw,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { DashboardStatsSkeleton, DashboardRecentSkeleton } from "@/components/Skeleton";
+import { DashboardStatsSkeleton } from "@/components/Skeleton";
 import { Suspense } from "react";
 import StatsChart from "@/components/admin/StatsChart";
 import ActivityFeed from "@/components/admin/ActivityFeed";
@@ -37,7 +36,6 @@ async function DashboardStats() {
   for (let i = 5; i >= 0; i--) {
     const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const monthName = month.toLocaleDateString("fr-FR", { month: "short" });
-    // Count products and workshops created in that month
     const start = new Date(month.getFullYear(), month.getMonth(), 1);
     const end = new Date(month.getFullYear(), month.getMonth() + 1, 1);
     const productsCount = await prisma.product.count({
@@ -70,7 +68,11 @@ async function DashboardStats() {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 active:scale-95">
+        {/* Products */}
+        <Link
+          href="/admin/products"
+          className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 active:scale-95 block"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-earth-500 text-sm">Produits</p>
@@ -81,8 +83,13 @@ async function DashboardStats() {
               <Package size={24} className="sm:size-7" />
             </div>
           </div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 active:scale-95">
+        </Link>
+
+        {/* Workshops */}
+        <Link
+          href="/admin/workshops"
+          className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 active:scale-95 block"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-earth-500 text-sm">Ateliers</p>
@@ -93,8 +100,13 @@ async function DashboardStats() {
               <Palette size={24} className="sm:size-7" />
             </div>
           </div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 active:scale-95">
+        </Link>
+
+        {/* Messages - updated link to /admin/messages */}
+        <Link
+          href="/admin/messages"
+          className="bg-white rounded-2xl p-4 sm:p-6 border border-earth-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 active:scale-95 block"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-earth-500 text-sm">Messages</p>
@@ -105,7 +117,7 @@ async function DashboardStats() {
               <TrendingUp size={24} className="sm:size-7" />
             </div>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8">
@@ -185,7 +197,7 @@ export default async function AdminDashboardPage() {
             Tableau de bord
           </h1>
           <p className="text-sm sm:text-base text-earth-500 mt-1">
-            Bienvenue dans votre espace d'administration
+            Bienvenue dans votre espace d{"'"}administration
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
