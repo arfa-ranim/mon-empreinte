@@ -25,10 +25,18 @@ const workshopSchema = z.object({
 });
 
 export async function GET() {
-  const workshops = await prisma.workshop.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-  return NextResponse.json(workshops);
+  try {
+    const workshops = await prisma.workshop.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json({
+      data: workshops,
+      meta: { total: workshops.length },
+    });
+  } catch (error) {
+    console.error("Workshops API error:", error);
+    return NextResponse.json({ data: [], meta: { total: 0 } });
+  }
 }
 
 export async function POST(request: NextRequest) {

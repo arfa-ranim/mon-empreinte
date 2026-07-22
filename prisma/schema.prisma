@@ -34,27 +34,29 @@ model Product {
 }
 
 model Workshop {
-  id              String   @id @default(cuid())
-  title           String
-  description     String
-  price           Float
-  duration        String
-  images          String   @default("[]")
-  availability    String?
-  date            DateTime?
-  startTime       String?  
-  endTime         String? 
-  maxSpots        Int?  
-  // NEW FIELDS
-  startDate       DateTime?  // For multi-day workshops
-  endDate         DateTime?  // For multi-day workshops
-  availableSeats  Int?       // Dynamic seat availability
-  status          String?    // "available" | "full" | "cancelled" | "draft"
-  location        String?    // Workshop location
-  materials       String?    // Materials provided
-  skillLevel      String?    // "débutant" | "intermédiaire" | "avancé"
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  price        Float
+  duration     String
+  images       String   @default("[]")
+  availability String?
+  date         DateTime?
+  startTime    String?
+  endTime      String?
+  maxSpots     Int?
+  
+  // NEW FIELDS - ADD THESE
+  startDate    DateTime?
+  endDate      DateTime?
+  availableSeats Int?
+  status       String?  @default("available")
+  location     String?
+  materials    String?
+  skillLevel   String?
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model ContactMessage {

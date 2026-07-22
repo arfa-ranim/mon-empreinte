@@ -9,6 +9,22 @@ interface ImageUploadProps {
   onChange: (images: string[]) => void;
 }
 
+// Helper to convert blob URL to proxy URL
+function getProxyUrl(url: string): string {
+  // If it's a private blob URL, convert to proxy
+  if (url.includes('.private.blob.vercel-storage.com')) {
+    // Extract the pathname from the URL
+    try {
+      const blobUrl = new URL(url);
+      const pathname = blobUrl.pathname.substring(1); // Remove leading slash
+      return `/api/images/${pathname}`;
+    } catch {
+      return url;
+    }
+  }
+  return url;
+}
+
 export default function ImageUpload({ images, onChange }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
 
@@ -42,19 +58,22 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3">
-        {images.map((url, i) => (
-          <div key={url} className="relative w-24 h-24 rounded-lg overflow-hidden border border-earth-200">
-            <Image src={url} alt="" fill className="object-cover" />
+        {images.map((url, i) => {
+          const displayUrl = getProxyUrl(url);
+          return (
+            <div key={url} className="relative w-24 h-24 rounded-lg overflow-hidden border border-earth-200">
+              <Image src={displayUrl} alt="" fill className="object-cover" />
               <button
-              type="button"
-              onClick={() => removeImage(i)}
-              aria-label={`Supprimer l'image ${i + 1}`}  
-              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        ))}
+                type="button"
+                onClick={() => removeImage(i)}
+                aria-label={`Supprimer l'image ${i + 1}`}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       <label className="inline-flex items-center gap-2 px-4 py-2 bg-earth-100 text-earth-700 rounded-lg cursor-pointer hover:bg-earth-200 transition-colors">

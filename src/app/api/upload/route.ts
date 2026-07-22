@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { put } from "@vercel/blob";
+import { put } from "@vercel/blob"; 
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,12 +13,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Aucun fichier" }, { status: 400 });
     }
 
-    // Upload to Vercel Blob
-    const blob = await put(file.name, file, {
-      access: "public",
-    });
+    const token = process.env.PUBLIC_BLOB_READ_WRITE_TOKEN;
+    if (!token) {
+      console.error("BLOB_READ_WRITE_TOKEN is not set");
+      return NextResponse.json({ error: "Upload configuration missing" }, { status: 500 });
+    }
 
-    return NextResponse.json({ url: blob.url });
+
+const blob = await put(file.name, file, {
+  access: "public", // 👈 Change to public
+  token: token,
+  addRandomSuffix: true,
+});
+
+return NextResponse.json({ url: blob.url });
+
   } catch (error) {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });

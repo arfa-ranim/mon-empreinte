@@ -16,6 +16,11 @@ export async function GET() {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    console.error("Stats error:", error);
+    return NextResponse.json({ 
+      productCount: 0, 
+      workshopCount: 0, 
+      messageCount: 0 
+    }, { status: 200 });
   }
 }

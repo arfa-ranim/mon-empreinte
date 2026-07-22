@@ -7,13 +7,21 @@ const workshopSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   price: z.number().positive(),
-  duration: z.string().min(1),
+  duration: z.string().optional(),
   images: z.array(z.string()).default([]),
   availability: z.string().optional(),
   date: z.string().nullable().optional(),
   startTime: z.string().optional(),
-  endTime: z.string().optional(), 
+  endTime: z.string().optional(),
   maxSpots: z.number().nullable().optional(),
+  // NEW FIELDS
+  startDate: z.string().nullable().optional(),
+  endDate: z.string().nullable().optional(),
+  availableSeats: z.number().nullable().optional(),
+  status: z.string().optional(),
+  location: z.string().optional(),
+  materials: z.string().optional(),
+  skillLevel: z.string().optional(),
 });
 
 export async function GET(

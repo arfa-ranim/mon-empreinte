@@ -10,6 +10,11 @@ const productSchema = z.object({
   images: z.array(z.string()).default([]),
   category: z.string().optional(),
   inStock: z.boolean().default(true),
+  sku: z.string().optional(),
+  weight: z.number().nullable().optional(),
+  dimensions: z.string().optional(),
+  tags: z.string().optional(),
+  featured: z.boolean().default(false),
 });
 
 export async function GET(
