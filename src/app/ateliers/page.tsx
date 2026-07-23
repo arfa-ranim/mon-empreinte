@@ -2,8 +2,6 @@ import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
 import WorkshopCard from "@/components/WorkshopCard";
 import Pagination from "@/components/Pagination";
-import { WorkshopsListSkeleton } from "@/components/Skeleton";
-import { Suspense } from "react";
 import EmptyState from "@/components/EmptyState";
 import { WorkshopIcon } from "@/components/icons/EmptyIcons";
 
@@ -55,8 +53,14 @@ export default async function AteliersPage({
                 {workshops.map((workshop) => (
                   <WorkshopCard
                     key={workshop.id}
-                    {...workshop}
+                    id={workshop.id}
+                    title={workshop.title}
+                    description={workshop.description}
+                    price={workshop.price}
+                    duration={workshop.duration}
+                    images={workshop.images}
                     date={workshop.date?.toISOString() || null}
+                    availability={workshop.availability}
                   />
                 ))}
               </div>

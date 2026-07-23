@@ -3,6 +3,7 @@ import { MessageCircle } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "./SocialIcons";
 import Logo from "./Logo";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import Newsletter from "./Newsletter";
 
 interface FooterProps {
   settings?: {
@@ -90,6 +91,11 @@ export default function Footer({ settings }: FooterProps) {
               )}
             </div>
           </div>
+
+          <div className="md:col-span-3">
+            <Newsletter />
+          </div>
+
         </div>
 
         <div className="mt-10 pt-8 border-t border-earth-700 text-center text-sm text-cream-300">
