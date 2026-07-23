@@ -7,6 +7,7 @@ interface LogoProps {
   className?: string;
   brandName?: string;
   logoUrl?: string;
+  priority?: boolean; // Add this
 }
 
 export default function Logo({ 
@@ -14,7 +15,8 @@ export default function Logo({
   showText = true, 
   className = "",
   brandName = "Mon Empreinte",
-  logoUrl = "/logo.png"
+  logoUrl = "/logo.png",
+  priority = false, // Add this
 }: LogoProps) {
   return (
     <Link href="/" className={`flex items-center gap-3 group ${className}`}>
@@ -33,7 +35,7 @@ export default function Logo({
           width={size}
           height={size}
           className="object-cover"
-          priority
+          priority={priority} // Add this
         />
       </div>
       

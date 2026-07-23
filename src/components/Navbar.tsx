@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, Search, Heart } from "lucide-react";
 import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
@@ -14,7 +16,6 @@ const navLinks = [
   { href: "/galerie", label: "Galerie" },
   { href: "/a-propos", label: "À propos" },
   { href: "/contact", label: "Contact" },
-  { href: "/favoris", label: "❤️ Favoris" },
 ];
 
 interface NavbarProps {
@@ -25,149 +26,197 @@ interface NavbarProps {
 }
 
 export default function Navbar({ settings }: NavbarProps) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { wishlist } = useWishlist();
 
-  // Handle scroll - only update scrolled state, don't close menu
+  // Handle scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
-        open &&
+        isOpen &&
         menuRef.current &&
         !menuRef.current.contains(event.target as Node) &&
         buttonRef.current &&
         !buttonRef.current.contains(event.target as Node)
       ) {
-        setOpen(false);
+        setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [open]);
+  }, [isOpen]);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${
-      scrolled 
-        ? 'bg-cream-50/95 dark:bg-earth-900/95 backdrop-blur-md shadow-sm' 
-        : 'bg-cream-50/80 dark:bg-earth-900/80 backdrop-blur-sm'
-    } border-b-2 border-transparent bg-linear-to-r from-peach-light to-gold-light dark:from-earth-800 dark:to-earth-700 bg-clip-border`}>
-      <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+    <header
+      className={`
+        fixed top-0 left-0 right-0 z-50 transition-all duration-500
+        ${
+          scrolled
+            ? "bg-white/95 dark:bg-earth-900/95 backdrop-blur-lg shadow-elevation-1"
+            : "bg-white/80 dark:bg-earth-900/80 backdrop-blur-sm"
+        }
+        border-b border-earth-100/50 dark:border-earth-800/50
+      `}
+    >
+      <nav className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
           <Logo size={40} brandName={settings?.brandName} />
 
           {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-6 lg:gap-8">
+          <ul className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`text-sm font-medium transition-colors relative ${
-                      isActive
-                        ? "text-earth-800 dark:text-earth-200 font-semibold"
-                        : "text-earth-600 dark:text-earth-400 hover:text-earth-800 dark:hover:text-earth-200"
-                    }`}
+                    className={`
+                      relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                      ${
+                        isActive
+                          ? "text-earth-800 dark:text-earth-200 bg-peach-light/20 dark:bg-earth-700/30"
+                          : "text-earth-600 dark:text-earth-400 hover:text-earth-800 dark:hover:text-earth-200 hover:bg-cream-100 dark:hover:bg-earth-800"
+                      }
+                    `}
                   >
                     {link.label}
                     {isActive && (
-                      <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-mint rounded-full"></span>
+                      <motion.span
+                        layoutId="active-nav"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-gradient-warm rounded-full"
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
                     )}
                   </Link>
                 </li>
               );
             })}
-            <li>
-              <ThemeToggle />
-            </li>
           </ul>
 
-          {/* Mobile Controls */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Right Actions */}
+          <div className="flex items-center gap-2">
+            {/* Search Button - placeholder */}
+            <button
+              className="hidden md:flex p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors text-earth-600 dark:text-earth-400"
+              aria-label="Rechercher"
+            >
+              <Search size={20} />
+            </button>
+
+            {/* Wishlist with counter */}
+            <Link
+              href="/favoris"
+              className="relative p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors text-earth-600 dark:text-earth-400"
+              aria-label="Favoris"
+            >
+              <Heart size={20} />
+              {wishlist.length > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
+                >
+                  {wishlist.length > 9 ? "9+" : wishlist.length}
+                </motion.span>
+              )}
+            </Link>
+
             <ThemeToggle />
+
+            {/* Mobile Menu Button */}
             <button
               ref={buttonRef}
-              type="button"
-              className="relative z-50 p-2 text-earth-700 dark:text-earth-300 hover:bg-peach-light dark:hover:bg-earth-700 rounded-lg transition-colors touch-manipulation"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(!open);
-              }}
-              aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors text-earth-600 dark:text-earth-400"
+              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
             >
-              {open ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-{/* Mobile Navigation */}
-<div
-  ref={menuRef}
-  className={`
-    md:hidden fixed inset-x-0 top-0 z-40
-    bg-cream-50 dark:bg-earth-900
-    shadow-lg
-    transition-all duration-300 ease-in-out
-    ${open ? 'opacity-100 visible' : 'opacity-0 invisible'}
-  `}
-  style={{
-    top: open ? '0' : '-100%',
-    height: '100vh',
-    paddingTop: '4rem',
-  }}
->
-  <div className="h-full overflow-y-auto px-4 pb-20">
-    <ul className="space-y-2 pt-4">
-      {navLinks.map((link) => {
-        const isActive = pathname === link.href;
-        return (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className={`block py-3 px-4 rounded-xl text-base font-medium transition-colors ${
-                isActive
-                  ? "bg-lavender-light dark:bg-earth-700 text-earth-800 dark:text-earth-200"
-                  : "text-earth-700 dark:text-earth-300 hover:bg-peach-light dark:hover:bg-earth-700"
-              }`}
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              ref={menuRef}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="md:hidden overflow-hidden border-t border-earth-100 dark:border-earth-800"
             >
-              {link.label}
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-</div>
+              <ul className="py-4 space-y-1">
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`
+                          block px-4 py-3 rounded-xl text-base font-medium transition-colors
+                          ${
+                            isActive
+                              ? "bg-peach-light/30 dark:bg-earth-700/30 text-earth-800 dark:text-earth-200"
+                              : "text-earth-700 dark:text-earth-300 hover:bg-cream-100 dark:hover:bg-earth-800"
+                          }
+                        `}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+                {/* Mobile only - Favorites with counter */}
+                <li>
+                  <Link
+                    href="/favoris"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium text-earth-700 dark:text-earth-300 hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors"
+                  >
+                    <span>❤️ Favoris</span>
+                    {wishlist.length > 0 && (
+                      <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                        {wishlist.length}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );

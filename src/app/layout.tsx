@@ -6,7 +6,6 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import BackToTop from "@/components/BackToTop";
 
-
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
@@ -35,11 +34,10 @@ export default function RootLayout({
   return (
     <html 
       lang="fr" 
-      className={`${cormorant.variable} ${nunito.variable} h-full`}
-      data-scroll-behavior="smooth" 
+      className={`${cormorant.variable} ${nunito.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col antialiased">
+      <body className="antialiased">
         <ThemeProvider>
           {children}
           <Toaster 
