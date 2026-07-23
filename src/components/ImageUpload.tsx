@@ -11,16 +11,11 @@ interface ImageUploadProps {
 
 // Helper to convert blob URL to proxy URL
 function getProxyUrl(url: string): string {
-  // If it's a private blob URL, convert to proxy
   if (url.includes('.private.blob.vercel-storage.com')) {
-    // Extract the pathname from the URL
-    try {
-      const blobUrl = new URL(url);
-      const pathname = blobUrl.pathname.substring(1); // Remove leading slash
-      return `/api/images/${pathname}`;
-    } catch {
-      return url;
-    }
+    // Convert private blob URL to proxy URL
+    const blobUrl = new URL(url);
+    const pathname = blobUrl.pathname.substring(1);
+    return `/api/images/${pathname}`;
   }
   return url;
 }
