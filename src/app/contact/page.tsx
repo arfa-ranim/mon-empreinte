@@ -1,55 +1,17 @@
-"use client";
-
 import PublicLayout from "@/components/PublicLayout";
-import { useState, useEffect } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/SocialIcons";
 import Button from "@/components/Button";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { toast } from "sonner";
+import { getBrandSettings } from "@/lib/settings";
 
-interface Settings {
-  whatsappNumber: string;
-  instagram: string;
-  facebook: string;
-  email: string;
-}
-
-export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [loading, setLoading] = useState(false);
-  const [settings, setSettings] = useState<Settings | null>(null);
-
-  useEffect(() => {
-    fetch("/api/settings")
-      .then(res => res.json())
-      .then(data => setSettings(data))
-      .catch(console.error);
-  }, []);
+export default async function ContactPage() {
+  const settings = await getBrandSettings();
 
   const whatsappUrl = buildWhatsAppUrl(
     settings?.whatsappNumber || "21693494954",
     "Bonjour ! Je souhaite vous contacter."
   );
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    if (res.ok) {
-      toast.success("Message envoyé avec succès ! 📨");
-      setForm({ name: "", email: "", message: "" });
-    } else {
-      toast.error("Erreur lors de l'envoi. Réessayez.");
-    }
-    setLoading(false);
-  }
 
   return (
     <PublicLayout>
@@ -101,7 +63,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 sm:p-8 border border-earth-100 shadow-sm space-y-5">
+            <form action="/api/contact" method="POST" className="bg-white rounded-2xl p-6 sm:p-8 border border-earth-100 shadow-sm space-y-5">
               <h2 className="font-serif text-xl font-semibold text-earth-800">Envoyez-nous un message</h2>
 
               <div>
@@ -110,10 +72,9 @@ export default function ContactPage() {
                 </label>
                 <input
                   id="name"
+                  name="name"
                   type="text"
                   required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50"
                 />
               </div>
@@ -124,10 +85,9 @@ export default function ContactPage() {
                 </label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50"
                 />
               </div>
@@ -138,19 +98,17 @@ export default function ContactPage() {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50 resize-none"
                 />
               </div>
 
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button type="submit" className="w-full">
                 <Send size={18} />
-                {loading ? "Envoi..." : "Envoyer"}
+                Envoyer
               </Button>
-
             </form>
           </div>
         </div>

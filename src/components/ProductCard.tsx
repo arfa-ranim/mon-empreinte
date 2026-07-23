@@ -4,6 +4,7 @@ import { MessageCircle } from "lucide-react";
 import { parseImages, formatPrice } from "@/lib/utils";
 import { buildWhatsAppUrl, productOrderMessage } from "@/lib/whatsapp";
 import Button from "./Button";
+import { WHATSAPP_NUMBER } from "@/lib/constants"; // ← ADD THIS
 
 interface ProductCardProps {
   id: string;
@@ -16,7 +17,11 @@ interface ProductCardProps {
 export default function ProductCard({ id, title, price, images, category }: ProductCardProps) {
   const imageList = parseImages(images);
   const imageUrl = imageList[0] || "/placeholder.svg";
-  const whatsappUrl = buildWhatsAppUrl(productOrderMessage(title, price));
+  // ✅ Fix: Pass both number and message
+  const whatsappUrl = buildWhatsAppUrl(
+    WHATSAPP_NUMBER,
+    productOrderMessage(title, price)
+  );
 
   return (
     <article className="product-card group">
@@ -34,7 +39,6 @@ export default function ProductCard({ id, title, price, images, category }: Prod
               {category}
             </span>
           )}
-          {/* Decorative subtle icon */}
           <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
             <span className="text-xs bg-white/80 px-2 py-1 rounded-full text-earth-500">
               ✨ Détail
