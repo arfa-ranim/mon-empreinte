@@ -1,47 +1,109 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
+
+const STORAGE_KEY = "wishlist";
+
+const EMPTY_WISHLIST: string[] = [];
+
+let cachedWishlist = EMPTY_WISHLIST;
+
+
+function getWishlist() {
+  return cachedWishlist;
+}
+
+
+function updateWishlistCache() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) {
+      cachedWishlist = EMPTY_WISHLIST;
+      return;
+    }
+
+    const parsed = JSON.parse(saved);
+
+    cachedWishlist = Array.isArray(parsed)
+      ? parsed
+      : EMPTY_WISHLIST;
+
+  } catch {
+    cachedWishlist = EMPTY_WISHLIST;
+  }
+}
+
+
+function subscribe(callback: () => void) {
+  window.addEventListener("wishlist-change", callback);
+
+  return () => {
+    window.removeEventListener("wishlist-change", callback);
+  };
+}
+
+
+function getServerSnapshot() {
+  return EMPTY_WISHLIST;
+}
+
 
 export function useWishlist() {
-  // Initialize with a function to read from localStorage (lazy initialization)
-  const [wishlist, setWishlist] = useState<string[]>(() => {
-    // This runs only once during the initial render
-    if (typeof window === "undefined") return [];
-    
-    try {
-      const saved = localStorage.getItem("wishlist");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return Array.isArray(parsed) ? parsed : [];
-      }
-    } catch {
-      // Ignore parsing errors
-    }
-    return [];
-  });
 
-  // Save to localStorage whenever wishlist changes
-  useEffect(() => {
-    try {
-      localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    } catch {
-      // Ignore storage errors
-    }
-  }, [wishlist]);
+  const wishlist = useSyncExternalStore(
+    subscribe,
+    getWishlist,
+    getServerSnapshot
+  );
+
 
   const toggleWishlist = (productId: string) => {
-    setWishlist(prev =>
-      prev.includes(productId)
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
+
+    const current = cachedWishlist;
+
+
+    const updated = current.includes(productId)
+      ? current.filter((id) => id !== productId)
+      : [...current, productId];
+
+
+    cachedWishlist = updated;
+
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(updated)
+    );
+
+
+    window.dispatchEvent(
+      new Event("wishlist-change")
     );
   };
 
-  const isInWishlist = (productId: string) => wishlist.includes(productId);
 
   const clearWishlist = () => {
-    setWishlist([]);
+
+    cachedWishlist = EMPTY_WISHLIST;
+
+    localStorage.removeItem(STORAGE_KEY);
+
+    window.dispatchEvent(
+      new Event("wishlist-change")
+    );
   };
 
-  return { wishlist, toggleWishlist, isInWishlist, clearWishlist };
+
+  const isInWishlist = (productId: string) => {
+    return wishlist.includes(productId);
+  };
+
+
+  return {
+    wishlist,
+    toggleWishlist,
+    clearWishlist,
+    isInWishlist,
+  };
 }
