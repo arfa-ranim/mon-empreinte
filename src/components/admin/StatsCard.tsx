@@ -33,17 +33,20 @@ export default function StatsCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4 }}
-      whileHover={href ? { y: -4 } : undefined}
+      whileHover={href ? { y: -4, transition: { duration: 0.2 } } : undefined}
       className="relative overflow-hidden group"
     >
-      <div className="bg-white dark:bg-earth-900 rounded-2xl p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-2 transition-all duration-300">
+      <div className="bg-white dark:bg-earth-900 rounded-2xl p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-3 transition-all duration-300">
         {/* Decorative gradient background */}
         <div
           className={cn(
-            "absolute -right-8 -top-8 w-32 h-32 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500",
+            "absolute -right-8 -top-8 w-32 h-32 rounded-full blur-2xl opacity-30 group-hover:opacity-60 transition-opacity duration-500 group-hover:scale-110",
             bgColor
           )}
         />
+
+        {/* Shine effect on hover - fixed by using separate elements with separate transitions */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full" />
 
         <div className="relative">
           <div className="flex items-center justify-between">
@@ -77,7 +80,7 @@ export default function StatsCard({
             </div>
             <div
               className={cn(
-                "w-12 h-12 rounded-2xl flex items-center justify-center",
+                "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3",
                 bgColor,
                 color
               )}
