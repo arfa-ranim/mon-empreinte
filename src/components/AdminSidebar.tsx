@@ -51,7 +51,7 @@ const SidebarContent = ({
 
   return (
     <>
-      <div className="p-4 sm:p-6 border-b border-earth-700/50 bg-gradient-to-b from-earth-800 to-earth-900 dark:from-earth-900 dark:to-earth-950">
+      <div className="p-4 sm:p-6 border-b border-earth-700/50 bg-linear-to-b from-earth-800 to-earth-900 dark:from-earth-900 dark:to-earth-950">
         <Logo size={40} showText={false} />
         <p className="text-xs text-cream-300/80 dark:text-cream-300/60 mt-2 font-medium tracking-wider uppercase">
           Administration
