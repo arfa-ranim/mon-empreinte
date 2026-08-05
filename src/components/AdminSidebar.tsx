@@ -51,12 +51,12 @@ const SidebarContent = ({
 
   return (
     <>
-      <div className="p-4 sm:p-6 border-b border-earth-700/50 bg-linear-to-b from-earth-800 to-earth-900">
+      <div className="p-4 sm:p-6 border-b border-earth-700/50 bg-gradient-to-b from-earth-800 to-earth-900 dark:from-earth-900 dark:to-earth-950">
         <Logo size={40} showText={false} />
-        <p className="text-xs text-cream-300/60 mt-2 font-medium tracking-wider uppercase">
+        <p className="text-xs text-cream-300/80 dark:text-cream-300/60 mt-2 font-medium tracking-wider uppercase">
           Administration
         </p>
-        <div className="mt-3 flex items-center gap-2 text-xs text-cream-300/40">
+        <div className="mt-3 flex items-center gap-2 text-xs text-cream-300/50 dark:text-cream-300/40">
           <Sparkles size={12} />
           <span>Version 2.0</span>
         </div>
@@ -64,7 +64,7 @@ const SidebarContent = ({
 
       <nav className="flex-1 p-3 sm:p-4 space-y-4 sm:space-y-6 overflow-y-auto">
         <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-wider text-cream-400/40 font-semibold px-2">
+          <p className="text-[10px] uppercase tracking-wider text-cream-400/50 dark:text-cream-400/40 font-semibold px-2">
             Navigation
           </p>
           {links.map((link) => {
@@ -81,8 +81,8 @@ const SidebarContent = ({
                 className={cn(
                   "flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm transition-all duration-200 group relative",
                   isActive
-                    ? "bg-earth-700/80 text-white shadow-lg shadow-earth-900/20"
-                    : "text-cream-200/70 hover:bg-earth-700/40 hover:text-white hover:translate-x-1"
+                    ? "bg-earth-700/80 dark:bg-earth-700/60 text-white dark:text-white shadow-lg shadow-earth-900/20"
+                    : "text-cream-200/80 dark:text-cream-300/70 hover:bg-earth-700/40 dark:hover:bg-earth-700/30 hover:text-white dark:hover:text-white hover:translate-x-1"
                 )}
                 onClick={onItemClick}
               >
@@ -90,7 +90,9 @@ const SidebarContent = ({
                   size={18} 
                   className={cn(
                     "shrink-0 transition-colors",
-                    isActive ? link.color : "text-cream-300/50 group-hover:text-cream-200"
+                    isActive 
+                      ? link.color 
+                      : "text-cream-300/60 dark:text-cream-400/50 group-hover:text-cream-200 dark:group-hover:text-cream-200"
                   )} 
                 />
                 <span className="truncate">{link.label}</span>
@@ -107,7 +109,7 @@ const SidebarContent = ({
         </div>
 
         <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-wider text-cream-400/40 font-semibold px-2">
+          <p className="text-[10px] uppercase tracking-wider text-cream-400/50 dark:text-cream-400/40 font-semibold px-2">
             Actions rapides
           </p>
           {quickActions.map((action) => {
@@ -116,24 +118,24 @@ const SidebarContent = ({
               <Link
                 key={action.href}
                 href={action.href}
-                className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm text-cream-200/70 hover:bg-earth-700/40 hover:text-white hover:translate-x-1 transition-all duration-200 group"
+                className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm text-cream-200/80 dark:text-cream-300/70 hover:bg-earth-700/40 dark:hover:bg-earth-700/30 hover:text-white dark:hover:text-white hover:translate-x-1 transition-all duration-200 group"
                 onClick={onItemClick}
               >
-                <Icon size={18} className="shrink-0 text-cream-300/50 group-hover:text-cream-200" />
+                <Icon size={18} className="shrink-0 text-cream-300/60 dark:text-cream-400/50 group-hover:text-cream-200 dark:group-hover:text-cream-200" />
                 <span className="truncate">{action.label}</span>
-                <ChevronRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ChevronRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-cream-300/50 dark:text-cream-400/40" />
               </Link>
             );
           })}
         </div>
       </nav>
 
-      <div className="p-3 sm:p-4 border-t border-earth-700/50">
+      <div className="p-3 sm:p-4 border-t border-earth-700/50 dark:border-earth-700/30">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm text-cream-200/70 hover:bg-red-500/20 hover:text-red-400 w-full transition-all duration-200 group"
+          className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm text-cream-200/80 dark:text-cream-300/70 hover:bg-red-500/20 hover:text-red-400 dark:hover:text-red-400 w-full transition-all duration-200 group"
         >
-          <LogOut size={18} className="shrink-0 text-cream-300/50 group-hover:text-red-400" />
+          <LogOut size={18} className="shrink-0 text-cream-300/60 dark:text-cream-400/50 group-hover:text-red-400 dark:group-hover:text-red-400" />
           Déconnexion
         </button>
       </div>
@@ -206,7 +208,7 @@ export default function AdminSidebar() {
 
       <aside className={cn(
         "fixed md:sticky top-0 left-0 z-40",
-        "w-64 h-screen bg-earth-800/95 backdrop-blur-sm text-cream-100",
+        "w-64 h-screen bg-earth-800/95 dark:bg-earth-900/95 backdrop-blur-sm text-cream-100 dark:text-cream-100",
         "flex flex-col transition-transform duration-300 ease-in-out shadow-elevation-4",
         isMobile && !isMobileOpen && "-translate-x-full",
         isMobile && isMobileOpen && "translate-x-0",
