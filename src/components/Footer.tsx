@@ -64,13 +64,13 @@ export default function Footer({ settings }: FooterProps) {
   ];
 
   return (
-    <footer className="relative bg-earth-900 text-cream-100 mt-auto overflow-hidden">
+    <footer className="relative bg-earth-900 dark:bg-earth-900 text-cream-100 dark:text-cream-100 mt-auto overflow-hidden">
       {/* Decorative top border with gradient */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-peach via-mint to-lavender" />
 
       {/* Decorative background shapes */}
-      <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-peach/5 rounded-full blur-3xl" />
-      <div className="absolute -top-20 -left-20 w-64 h-64 bg-mint/5 rounded-full blur-3xl" />
+      <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-peach/5 dark:bg-peach/5 rounded-full blur-3xl" />
+      <div className="absolute -top-20 -left-20 w-64 h-64 bg-mint/5 dark:bg-mint/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -82,7 +82,9 @@ export default function Footer({ settings }: FooterProps) {
             className="md:col-span-1"
           >
             <Logo size={52} showText brandName={brandName} />
-            <p className="mt-4 text-cream-200 text-sm leading-relaxed">{description}</p>
+            <p className="mt-4 text-cream-200 dark:text-cream-300 text-sm leading-relaxed">
+              {description}
+            </p>
 
             {/* Social Icons */}
             <div className="mt-6 flex gap-3">
@@ -94,7 +96,7 @@ export default function Footer({ settings }: FooterProps) {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-10 h-10 rounded-full bg-earth-800 flex items-center justify-center text-cream-200 transition-all duration-300 hover:scale-110 ${social.color}`}
+                    className={`w-10 h-10 rounded-full bg-earth-800 dark:bg-earth-800 flex items-center justify-center text-cream-200 dark:text-cream-300 transition-all duration-300 hover:scale-110 ${social.color}`}
                     aria-label={social.label}
                   >
                     <Icon size={18} />
@@ -110,7 +112,7 @@ export default function Footer({ settings }: FooterProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h3 className="font-serif text-lg font-semibold text-cream-100 mb-4">
+            <h3 className="font-serif text-lg font-semibold text-cream-100 dark:text-cream-100 mb-4">
               Navigation
             </h3>
             <ul className="space-y-2.5 text-sm">
@@ -118,9 +120,9 @@ export default function Footer({ settings }: FooterProps) {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-cream-200 hover:text-white transition-colors flex items-center gap-2 group"
+                    className="text-cream-200 dark:text-cream-300 hover:text-white dark:hover:text-white transition-colors flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-cream-200/30 group-hover:bg-peach transition-colors" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-cream-200/30 dark:bg-cream-300/30 group-hover:bg-peach dark:group-hover:bg-peach transition-colors" />
                     {link.label}
                   </Link>
                 </li>
@@ -134,7 +136,7 @@ export default function Footer({ settings }: FooterProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h3 className="font-serif text-lg font-semibold text-cream-100 mb-4">
+            <h3 className="font-serif text-lg font-semibold text-cream-100 dark:text-cream-100 mb-4">
               Contact
             </h3>
             <ul className="space-y-3 text-sm">
@@ -143,11 +145,11 @@ export default function Footer({ settings }: FooterProps) {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-cream-200 hover:text-white transition-colors group"
+                  className="flex items-center gap-3 text-cream-200 dark:text-cream-300 hover:text-white dark:hover:text-white transition-colors group"
                 >
                   <MessageCircle
                     size={18}
-                    className="text-green-400 group-hover:scale-110 transition-transform"
+                    className="text-green-400 dark:text-green-400 group-hover:scale-110 transition-transform"
                   />
                   {settings?.whatsappNumber
                     ? `+216 ${settings.whatsappNumber.slice(3)}`
@@ -158,19 +160,19 @@ export default function Footer({ settings }: FooterProps) {
                 <li>
                   <a
                     href={`mailto:${settings.email}`}
-                    className="flex items-center gap-3 text-cream-200 hover:text-white transition-colors group"
+                    className="flex items-center gap-3 text-cream-200 dark:text-cream-300 hover:text-white dark:hover:text-white transition-colors group"
                   >
                     <Mail
                       size={18}
-                      className="text-cream-400 group-hover:scale-110 transition-transform"
+                      className="text-cream-400 dark:text-cream-400 group-hover:scale-110 transition-transform"
                     />
                     {settings.email}
                   </a>
                 </li>
               )}
               {settings?.address && (
-                <li className="flex items-start gap-3 text-cream-200">
-                  <MapPin size={18} className="text-cream-400 mt-0.5" />
+                <li className="flex items-start gap-3 text-cream-200 dark:text-cream-300">
+                  <MapPin size={18} className="text-cream-400 dark:text-cream-400 mt-0.5" />
                   <span>{settings.address}</span>
                 </li>
               )}
@@ -183,10 +185,10 @@ export default function Footer({ settings }: FooterProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h3 className="font-serif text-lg font-semibold text-cream-100 mb-4">
+            <h3 className="font-serif text-lg font-semibold text-cream-100 dark:text-cream-100 mb-4">
               Newsletter
             </h3>
-            <p className="text-cream-200 text-sm mb-4">
+            <p className="text-cream-200 dark:text-cream-300 text-sm mb-4">
               Recevez nos nouveautés et offres exclusives
             </p>
             <Newsletter />
@@ -198,14 +200,14 @@ export default function Footer({ settings }: FooterProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 pt-8 border-t border-earth-800 flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="mt-12 pt-8 border-t border-earth-800 dark:border-earth-800 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
-          <p className="text-sm text-cream-300 text-center sm:text-left">
+          <p className="text-sm text-cream-300 dark:text-cream-400 text-center sm:text-left">
             © {new Date().getFullYear()} {brandName}. Tous droits réservés.
           </p>
-          <div className="flex items-center gap-2 text-sm text-cream-300">
+          <div className="flex items-center gap-2 text-sm text-cream-300 dark:text-cream-400">
             <span>Fait avec</span>
-            <Heart size={14} className="text-red-400 animate-pulse" />
+            <Heart size={14} className="text-red-400 dark:text-red-400 animate-pulse" />
             <span>en Tunisie</span>
           </div>
         </motion.div>

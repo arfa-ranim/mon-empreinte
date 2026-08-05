@@ -148,42 +148,42 @@ export default function AdminSidebar() {
 
   // Check if mobile on mount and resize
   useEffect(() => {
-  const checkMobile = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-  requestAnimationFrame(checkMobile);
+    requestAnimationFrame(checkMobile);
 
-  window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", checkMobile);
 
-  return () => {
-    window.removeEventListener("resize", checkMobile);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
-  // Close mobile menu when route changes (only on mobile) 
-  // Using a separate effect with a flag to avoid the setState warning
+  // Close mobile menu when route changes (only on mobile)
   useEffect(() => {
-  if (window.innerWidth < 768) {
-    requestAnimationFrame(() => {
-      setIsMobileOpen(false);
-    });
-  }
-}, [pathname]);
+    if (window.innerWidth < 768) {
+      requestAnimationFrame(() => {
+        setIsMobileOpen(false);
+      });
+    }
+  }, [pathname]);
+
   // Handle closing menu when switching to desktop
   useEffect(() => {
-  const handleResize = () => {
-    if (window.innerWidth >= 768) {
-      setIsMobileOpen(false);
-    }
-  };
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileOpen(false);
+      }
+    };
 
-  window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
 
-  return () => {
-    window.removeEventListener("resize", handleResize);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>

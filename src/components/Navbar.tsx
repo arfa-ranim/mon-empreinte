@@ -90,10 +90,13 @@ export default function Navbar({ settings }: NavbarProps) {
     >
       <nav className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Logo size={40} brandName={settings?.brandName} />
+          {/* Logo - left aligned */}
+          <div className="flex items-center shrink-0">
+            <Logo size={40} brandName={settings?.brandName} />
+          </div>
 
-          {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-1">
+          {/* Desktop Navigation - centered */}
+          <ul className="hidden md:flex items-center justify-center gap-1 flex-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -124,7 +127,7 @@ export default function Navbar({ settings }: NavbarProps) {
           </ul>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Search Button - placeholder */}
             <button
               className="hidden md:flex p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors text-earth-600 dark:text-earth-400"
@@ -144,7 +147,7 @@ export default function Navbar({ settings }: NavbarProps) {
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
+                  className="absolute -top-0.5 -right-0.5 min-w-18px h-18px bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
                 >
                   {wishlist.length > 9 ? "9+" : wishlist.length}
                 </motion.span>
@@ -174,7 +177,7 @@ export default function Navbar({ settings }: NavbarProps) {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="md:hidden overflow-hidden border-t border-earth-100 dark:border-earth-800"
+              className="md:hidden overflow-hidden border-t border-earth-100 dark:border-earth-800 bg-white dark:bg-earth-900 rounded-b-2xl shadow-elevation-3"
             >
               <ul className="py-4 space-y-1">
                 {navLinks.map((link) => {

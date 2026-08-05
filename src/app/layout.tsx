@@ -37,7 +37,7 @@ export default function RootLayout({
       className={`${cormorant.variable} ${nunito.variable}`}
       suppressHydrationWarning
     >
-      <body className="antialiased">
+      <body className="antialiased bg-cream-50 dark:bg-earth-900 transition-colors duration-300">
         <ThemeProvider>
           {children}
           <Toaster 
