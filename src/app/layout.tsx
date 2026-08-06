@@ -19,13 +19,13 @@ const nunito = Nunito_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
+export const metadataBase = new URL("https://mon-empreinte.vercel.app");
 
 export const metadata: Metadata = {
   title: {
     default: `${BRAND.name} — Créations artisanales à Tunis`,
     template: `%s | ${BRAND.name}`,
   },
-
   description: BRAND.description,
 
     appleWebApp: {

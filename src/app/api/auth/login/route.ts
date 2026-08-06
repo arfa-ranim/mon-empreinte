@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createToken, setAuthCookie, verifyPassword } from "@/lib/auth";
 import { z } from "zod";
+// We import it, but we comment out its usage below
 import { ratelimit } from "@/lib/rate-limit";
 
 const loginSchema = z.object({
@@ -10,15 +11,16 @@ const loginSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    const ip = request.headers.get("x-forwarded-for") || "anonymous";
-    const { success } = await ratelimit.limit(ip);
-
-      if (!success) {
-    return NextResponse.json(
-      { error: "Trop de tentatives. Réessayez dans une minute." },
-      { status: 429 }
-    );
-  }
+  // Rate limiting is DISABLED to prevent server crash on launch.
+  // If you want to re-enable it later, you must add UPSTASH_REDIS env vars to Vercel.
+  // const ip = request.headers.get("x-forwarded-for") || "anonymous";
+  // const { success } = await ratelimit.limit(ip);
+  // if (!success) {
+  //   return NextResponse.json(
+  //     { error: "Trop de tentatives. Réessayez dans une minute." },
+  //     { status: 429 }
+  //   );
+  // }
   
   try {
     const body = await request.json();
@@ -37,6 +39,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Données invalides" }, { status: 400 });
     }
+    console.error("Login error:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
