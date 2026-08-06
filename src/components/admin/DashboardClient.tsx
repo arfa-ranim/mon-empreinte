@@ -13,8 +13,12 @@ import {
 } from "lucide-react";
 import { DashboardStatsSkeleton } from "@/components/Skeleton";
 import { useEffect, useState } from "react";
-import StatsChart from "@/components/admin/StatsChart";
 import StatsCard from "@/components/admin/StatsCard";
+import dynamic from "next/dynamic";
+const StatsChart = dynamic(() => import("@/components/admin/StatsChart"), {
+  loading: () => <div className="h-64 bg-cream-100 rounded-lg animate-pulse" />,
+  ssr: false,
+});
 
 // Types for dashboard data
 interface Product {
