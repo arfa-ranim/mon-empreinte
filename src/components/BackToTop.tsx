@@ -28,7 +28,7 @@ export default function BackToTop() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={scrollToTop}
-          className="fixed bottom-24 right-6 z-40 p-3 bg-peach text-earth-900 rounded-full shadow-lg hover:scale-110 transition-transform"
+          className="fixed bottom-20 right-6 z-40  p-3 bg-peach text-earth-900 rounded-full shadow-lg hover:scale-110 transition-transform"
           aria-label="Retour en haut"
         >
           <ArrowUp size={24} />
