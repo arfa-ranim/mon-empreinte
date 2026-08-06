@@ -9,6 +9,8 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useWishlist } from "@/hooks/useWishlist";
 import { toast } from "sonner";
+import { buildWhatsAppUrl, productOrderMessage } from "@/lib/whatsapp";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 // Define types
 interface Product {
@@ -25,13 +27,11 @@ interface Product {
 interface ProductDetailClientProps {
   product: Product;
   images: string[];
-  whatsappUrl: string;
 }
 
 export default function ProductDetailClient({ 
   product, 
   images, 
-  whatsappUrl 
 }: ProductDetailClientProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -40,22 +40,13 @@ export default function ProductDetailClient({
 
   const lightboxSlides = images.map((img: string) => ({ src: img }));
 
-/*
-const handleWhatsAppClick = () => {
-    // Track the click (for analytics)
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "conversion", {
-        send_to: "AW-XXXXXXXX/X-XXXXXX",
-        value: product.price,
-        currency: "TND",
-      });
-    }
-    // Open WhatsApp (existing logic)
-    window.open(whatsappUrl, "_blank");
-  };
+  // ✅ Fix: Build the correct WhatsApp URL inside the client
+  const productUrl = typeof window !== "undefined" ? window.location.href : "";
+  const whatsappUrl = buildWhatsAppUrl(
+    WHATSAPP_NUMBER,
+    productOrderMessage(product.title, product.price, productUrl)
+  );
 
-*/
- 
   const handleShare = async () => {
     const shareData = {
       title: product.title,
@@ -63,23 +54,19 @@ const handleWhatsAppClick = () => {
       url: typeof window !== "undefined" ? window.location.href : "",
     };
 
-    // Check if Web Share API is available (mobile)
     if (navigator.share) {
       try {
         await navigator.share(shareData);
       } catch (error) {
         if ((error as Error).name !== "AbortError") {
           console.error("Share failed:", error);
-          // Fallback to clipboard
           await handleCopyLink();
         }
       }
     } else {
-      // Desktop fallback - copy to clipboard
       await handleCopyLink();
     }
   };
-
 
   const handleCopyLink = async () => {
     try {
@@ -104,16 +91,16 @@ const handleWhatsAppClick = () => {
       {/* Image gallery */}
       <div className="space-y-4">
         <div className="relative aspect-square rounded-2xl overflow-hidden bg-cream-100 group">
-        <Image
-          src={images[0] || "/placeholder.svg"}
-          alt={product.title}
-          fill
-          priority
-          placeholder="blur"
-          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
-          className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 50vw"
-        />
+          <Image
+            src={images[0] || "/placeholder.svg"}
+            alt={product.title}
+            fill
+            priority
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
           <button
             onClick={() => setIsLightboxOpen(true)}
             className="absolute bottom-4 right-4 p-3 bg-white/90 rounded-full shadow-lg hover:scale-110 transition-transform"
@@ -125,24 +112,24 @@ const handleWhatsAppClick = () => {
         
         {images.length > 1 && (
           <div className="grid grid-cols-4 gap-3">
-          {images.slice(1).map((img: string, i: number) => (
-            <button
-              key={img}
-              onClick={() => setCurrentImageIndex(i + 1)}
-              className="relative aspect-square rounded-lg overflow-hidden bg-cream-100 hover:ring-2 hover:ring-peach transition-all"
-              aria-label={`Voir l'image ${i + 2}`}
-            >
-              <Image 
-                src={img} 
-                alt="" 
-                fill 
-                className="object-cover" 
-                sizes="100px"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
-              />
-            </button>
-          ))}
+            {images.slice(1).map((img: string, i: number) => (
+              <button
+                key={img}
+                onClick={() => setCurrentImageIndex(i + 1)}
+                className="relative aspect-square rounded-lg overflow-hidden bg-cream-100 hover:ring-2 hover:ring-peach transition-all"
+                aria-label={`Voir l'image ${i + 2}`}
+              >
+                <Image 
+                  src={img} 
+                  alt="" 
+                  fill 
+                  className="object-cover" 
+                  sizes="100px"
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
+                />
+              </button>
+            ))}
           </div>
         )}
       </div>

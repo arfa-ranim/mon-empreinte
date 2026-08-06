@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
 import { toast } from "sonner";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,8 +22,8 @@ export default function AdminLoginPage() {
 
     if (res.ok) {
       toast.success("Bienvenue ! 🎉");
-      router.push("/admin");
-      router.refresh();
+      // ✅ Full browser reload for Safari cookie handling
+      window.location.href = "/admin";
     } else {
       const data = await res.json();
       toast.error(data.error || "Erreur de connexion");

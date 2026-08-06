@@ -1,17 +1,62 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import PublicLayout from "@/components/PublicLayout";
 import { MessageCircle, Send } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/SocialIcons";
 import Button from "@/components/Button";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { getBrandSettings } from "@/lib/settings";
+import { toast } from "sonner";
 
-export default async function ContactPage() {
-  const settings = await getBrandSettings();
+// Define a minimal type for the settings we use
+interface BrandSettings {
+  whatsappNumber?: string;
+  instagram?: string;
+  facebook?: string;
+  email?: string;
+}
+
+export default function ContactPage() {
+  const [settings, setSettings] = useState<BrandSettings | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Load settings on the client
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => setSettings(data))
+      .catch(() => null);
+  }, []);
 
   const whatsappUrl = buildWhatsAppUrl(
     settings?.whatsappNumber || "21693494954",
     "Bonjour ! Je souhaite vous contacter."
   );
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formData.get("name"),
+        email: formData.get("email"),
+        message: formData.get("message"),
+      }),
+    });
+
+    if (res.ok) {
+      toast.success("Message envoyé avec succès ! ✅");
+      e.currentTarget.reset();
+    } else {
+      const data = await res.json();
+      toast.error(data.error || "Erreur lors de l'envoi");
+    }
+    setLoading(false);
+  }
 
   return (
     <PublicLayout>
@@ -63,7 +108,10 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <form action="/api/contact" method="POST" className="bg-white rounded-2xl p-6 sm:p-8 border border-earth-100 shadow-sm space-y-5">
+            <form 
+              onSubmit={handleSubmit} 
+              className="bg-white rounded-2xl p-6 sm:p-8 border border-earth-100 shadow-sm space-y-5"
+            >
               <h2 className="font-serif text-xl font-semibold text-earth-800">Envoyez-nous un message</h2>
 
               <div>
@@ -105,9 +153,9 @@ export default async function ContactPage() {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button type="submit" disabled={loading} className="w-full">
                 <Send size={18} />
-                Envoyer
+                {loading ? "Envoi..." : "Envoyer"}
               </Button>
             </form>
           </div>
