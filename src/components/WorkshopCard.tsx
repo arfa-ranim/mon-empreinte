@@ -30,6 +30,16 @@ const skillLevelLabels: Record<string, string> = {
   avancé: "🌳 Avancé",
 };
 
+function isSoon(dateStr: string | null): boolean {
+  if (!dateStr) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const workshopDate = new Date(dateStr);
+  const diffTime = workshopDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays >= 0 && diffDays <= 7;
+}
+
 export default function WorkshopCard({
   id,
   title,
@@ -86,7 +96,6 @@ export default function WorkshopCard({
 
       {/* Image Section */}
       <div className="relative md:w-2/5 aspect-4/3 md:aspect-auto min-h-60 overflow-hidden bg-cream-100 dark:bg-earth-800">
-        {/* Skeleton loader */}
         {!imageLoaded && (
           <div className="absolute inset-0 skeleton-shimmer" />
         )}
@@ -183,9 +192,14 @@ export default function WorkshopCard({
 
         {/* Formatted Date */}
         {formattedDate && (
-          <div className="mt-1 flex items-center gap-1.5 text-sm text-earth-500 dark:text-earth-400">
-            <Calendar size={16} />
+          <div className="mt-1 flex items-center gap-2 text-sm text-earth-500 dark:text-earth-400">
+            <Calendar size={16} className="text-mint" />
             <span>{formattedDate}</span>
+            {date && isSoon(date) && (
+              <span className="text-xs bg-peach-light/30 dark:bg-peach/10 text-earth-700 dark:text-earth-300 px-2 py-0.5 rounded-full">
+                Bientôt
+              </span>
+            )}
           </div>
         )}
 

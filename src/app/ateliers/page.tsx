@@ -19,13 +19,33 @@ export default async function AteliersPage({
   const limit = 10;
   const skip = (currentPage - 1) * limit;
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const [workshops, total] = await Promise.all([
     prisma.workshop.findMany({
-      orderBy: { date: "asc" },
+      where: {
+        startDate: {
+          gte: today,
+        },
+        status: {
+          not: "cancelled",
+        },
+      },
+      orderBy: { startDate: "asc" },
       skip,
       take: limit,
     }),
-    prisma.workshop.count(),
+    prisma.workshop.count({
+      where: {
+        startDate: {
+          gte: today,
+        },
+        status: {
+          not: "cancelled",
+        },
+      },
+    }),
   ]);
 
   const totalPages = Math.ceil(total / limit);
@@ -39,6 +59,11 @@ export default async function AteliersPage({
             <p className="mt-3 text-earth-600 max-w-xl mx-auto">
               Participez à nos ateliers créatifs et repartez avec votre propre création artisanale.
             </p>
+            {workshops.length > 0 && (
+              <p className="mt-2 text-sm text-earth-500">
+                {total} atelier{total > 1 ? "s" : ""} à venir
+              </p>
+            )}
           </div>
 
           {workshops.length === 0 ? (
@@ -50,19 +75,25 @@ export default async function AteliersPage({
           ) : (
             <>
               <div className="space-y-6">
-                {workshops.map((workshop) => (
-                  <WorkshopCard
-                    key={workshop.id}
-                    id={workshop.id}
-                    title={workshop.title}
-                    description={workshop.description}
-                    price={workshop.price}
-                    duration={workshop.duration}
-                    images={workshop.images}
-                    date={workshop.date?.toISOString() || null}
-                    availability={workshop.availability}
-                  />
-                ))}
+                {workshops.map((workshop) => {
+                  const displayDate = workshop.startDate || workshop.date;
+                  return (
+                    <WorkshopCard
+                      key={workshop.id}
+                      id={workshop.id}
+                      title={workshop.title}
+                      description={workshop.description}
+                      price={workshop.price}
+                      duration={workshop.duration}
+                      images={workshop.images}
+                      date={displayDate?.toISOString() || null}
+                      availability={workshop.availability}
+                      location={workshop.location}
+                      maxSpots={workshop.maxSpots}
+                      skillLevel={workshop.skillLevel}
+                    />
+                  );
+                })}
               </div>
               <Pagination currentPage={currentPage} totalPages={totalPages} />
             </>

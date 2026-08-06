@@ -7,19 +7,45 @@ import WorkshopCard from "@/components/WorkshopCard";
 import Link from "next/link";
 import { InstagramIcon } from "@/components/SocialIcons";
 import HeroSection from "@/components/sections/HeroSection";
+import UpcomingWorkshops from "@/components/sections/UpcomingWorkshops";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [products, workshops, settings] = await Promise.all([
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+
+  const [products, workshops, upcomingWorkshopsRaw, settings] = await Promise.all([
     prisma.product.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),
     prisma.workshop.findMany({ orderBy: { createdAt: "desc" }, take: 3 }),
+    prisma.workshop.findMany({
+      where: {
+        startDate: {
+          gte: today,
+          lte: nextWeek,
+        },
+        status: {
+          not: "cancelled",
+        },
+      },
+      orderBy: { startDate: "asc" },
+      take: 3,
+    }),
     getBrandSettings(),
   ]);
 
   return (
     <PublicLayout>
       <HeroSection settings={settings} />
+      <UpcomingWorkshops
+        workshops={upcomingWorkshopsRaw.map((w) => ({
+          ...w,
+          date: (w.startDate || w.date)?.toISOString() || null,
+        }))}
+      />
 
       {/* Featured Products */}
       <section className="py-16 sm:py-20">
@@ -45,7 +71,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Workshops */}
+      {/* Featured Workshops - Full list */}
       <section className="py-16 sm:py-20 bg-cream-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
