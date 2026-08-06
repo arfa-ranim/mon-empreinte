@@ -3,11 +3,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import PublicLayout from "@/components/PublicLayout";
 import { parseImages } from "@/lib/utils";
-import { buildWhatsAppUrl, productOrderMessage } from "@/lib/whatsapp";
-import { WHATSAPP_NUMBER } from "@/lib/constants";
 import ProductDetailClient from "./ProductDetailClient";
-import { generateOGTags } from "@/lib/og"; // ✅ Import
-import { BRAND } from "@/lib/constants"; // ✅ Import
+import { generateOGTags } from "@/lib/og";
+import { BRAND } from "@/lib/constants";
 
 // Define types
 interface Product {
@@ -32,7 +30,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const images = parseImages(product.images);
   const imageUrl = images[0] || "/logo.png";
   
-  // ✅ Generate proper OG tags
   const ogTags = generateOGTags(
     product.title,
     product.description,
@@ -61,10 +58,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const product = await getProduct(id);
   const images = parseImages(product.images);
-  const whatsappUrl = buildWhatsAppUrl(
-    WHATSAPP_NUMBER,
-    productOrderMessage(product.title, product.price)
-  );
 
   return (
     <PublicLayout>
@@ -77,10 +70,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             ← Retour aux produits
           </Link>
 
+          {/* ✅ Only pass product and images */}
           <ProductDetailClient 
             product={product} 
             images={images} 
-            whatsappUrl={whatsappUrl} 
           />
         </div>
       </section>

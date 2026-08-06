@@ -1,62 +1,16 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import PublicLayout from "@/components/PublicLayout";
-import { MessageCircle, Send } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/SocialIcons";
 import Button from "@/components/Button";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { toast } from "sonner";
-
-// Define a minimal type for the settings we use
-interface BrandSettings {
-  whatsappNumber?: string;
-  instagram?: string;
-  facebook?: string;
-  email?: string;
-}
+import { WHATSAPP_NUMBER, SOCIAL_LINKS } from "@/lib/constants";
+import ContactForm from "./ContactForm"; // ✅ Import the new separated form
 
 export default function ContactPage() {
-  const [settings, setSettings] = useState<BrandSettings | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  // Load settings on the client
-  useEffect(() => {
-    fetch("/api/settings")
-      .then((res) => res.json())
-      .then((data) => setSettings(data))
-      .catch(() => null);
-  }, []);
-
   const whatsappUrl = buildWhatsAppUrl(
-    settings?.whatsappNumber || "21693494954",
+    WHATSAPP_NUMBER,
     "Bonjour ! Je souhaite vous contacter."
   );
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(e.currentTarget);
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        message: formData.get("message"),
-      }),
-    });
-
-    if (res.ok) {
-      toast.success("Message envoyé avec succès ! ✅");
-      e.currentTarget.reset();
-    } else {
-      const data = await res.json();
-      toast.error(data.error || "Erreur lors de l'envoi");
-    }
-    setLoading(false);
-  }
 
   return (
     <PublicLayout>
@@ -75,12 +29,12 @@ export default function ContactPage() {
 
               <Button href={whatsappUrl} variant="primary" external className="w-full sm:w-auto">
                 <MessageCircle size={20} />
-                WhatsApp — {settings?.whatsappNumber ? `+216 ${settings.whatsappNumber.slice(3)}` : "+216 93 494 954"}
+                WhatsApp — +216 93 494 954
               </Button>
 
               <div className="space-y-3">
                 <a
-                  href={settings?.instagram || "#"}
+                  href={SOCIAL_LINKS.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
@@ -89,7 +43,7 @@ export default function ContactPage() {
                   Instagram — @mon.empreinte.tn
                 </a>
                 <a
-                  href={settings?.facebook || "#"}
+                  href={SOCIAL_LINKS.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
@@ -97,67 +51,17 @@ export default function ContactPage() {
                   <FacebookIcon size={22} />
                   Facebook — Mon Empreinte
                 </a>
-                {settings?.email && (
-                  <a
-                    href={`mailto:${settings.email}`}
-                    className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
-                  >
-                    ✉️ {settings.email}
-                  </a>
-                )}
+                <a
+                  href="mailto:contact@monempreinte.tn"
+                  className="flex items-center gap-3 text-earth-700 hover:text-earth-900 transition-colors"
+                >
+                  ✉️ contact@monempreinte.tn
+                </a>
               </div>
             </div>
 
-            <form 
-              onSubmit={handleSubmit} 
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-earth-100 shadow-sm space-y-5"
-            >
-              <h2 className="font-serif text-xl font-semibold text-earth-800">Envoyez-nous un message</h2>
-
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-earth-700 mb-1">
-                  Nom
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-earth-700 mb-1">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-earth-700 mb-1">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-lg border border-earth-200 focus:outline-none focus:ring-2 focus:ring-mint bg-cream-50 resize-none"
-                />
-              </div>
-
-              <Button type="submit" disabled={loading} className="w-full">
-                <Send size={18} />
-                {loading ? "Envoi..." : "Envoyer"}
-              </Button>
-            </form>
+            {/* Render the client form here */}
+            <ContactForm />
           </div>
         </div>
       </section>

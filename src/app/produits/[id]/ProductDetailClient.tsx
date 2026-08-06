@@ -12,7 +12,6 @@ import { toast } from "sonner";
 import { buildWhatsAppUrl, productOrderMessage } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
-// Define types
 interface Product {
   id: string;
   title: string;
@@ -154,7 +153,6 @@ export default function ProductDetailClient({
           </span>
         )}
 
-        {/* Action Buttons - Favorites & Share */}
         <div className="mt-6 flex items-center gap-4">
           <button
             onClick={handleWishlistToggle}
@@ -207,7 +205,6 @@ export default function ProductDetailClient({
         </div>
       </div>
 
-      {/* Lightbox */}
       <Lightbox
         open={isLightboxOpen}
         close={() => setIsLightboxOpen(false)}
