@@ -90,10 +90,14 @@ export default function ProductCard({
             src={imageUrl}
             alt={title}
             fill
+            // ✅ ADD these props
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
+            // ✅ UPDATE this line for better responsive sizing
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className={`object-cover transition-all duration-700 ${
               imageLoaded ? "opacity-100" : "opacity-0"
             } group-hover:scale-110`}
-            sizes="(max-width: 768px) 100vw, 33vw"
             onLoad={() => setImageLoaded(true)}
             priority={index < 3}
           />

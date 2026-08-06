@@ -6,6 +6,8 @@ import { parseImages } from "@/lib/utils";
 import { buildWhatsAppUrl, workshopBookingMessage } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import WorkshopDetailClient from "./WorkshopDetailClient";
+import { generateOGTags } from "@/lib/og"; // ✅ Import
+import { BRAND } from "@/lib/constants"; // ✅ Import
 
 // Define types
 interface Workshop {
@@ -31,7 +33,29 @@ interface Workshop {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const workshop = await prisma.workshop.findUnique({ where: { id } });
-  return { title: workshop?.title || "Atelier" };
+  
+  if (!workshop) {
+    return { title: "Atelier non trouvé" };
+  }
+
+  const images = parseImages(workshop.images);
+  const imageUrl = images[0] || "/logo.png";
+  
+  // ✅ Generate proper OG tags
+  const ogTags = generateOGTags(
+    workshop.title,
+    workshop.description,
+    imageUrl,
+    `/ateliers/${id}`,
+    BRAND.name
+  );
+
+  return {
+    title: ogTags.title,
+    description: ogTags.description,
+    openGraph: ogTags.openGraph,
+    twitter: ogTags.twitter,
+  };
 }
 
 // Server function to fetch workshop
@@ -41,7 +65,7 @@ async function getWorkshop(id: string): Promise<Workshop> {
   return workshop as Workshop;
 }
 
-// Main page component (Server Component)
+// Main page component
 export default async function WorkshopDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const workshop = await getWorkshop(id);

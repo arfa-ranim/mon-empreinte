@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { getBrandSettings } from "@/lib/settings";
 import PageTransition from "./PageTransition";
+import ErrorBoundary from "./ErrorBoundary";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getBrandSettings();
@@ -14,7 +15,10 @@ export default async function PublicLayout({ children }: { children: React.React
         <main className="flex-1 pt-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <Breadcrumbs />
-            {children}
+            {/* ✅ Wrap with ErrorBoundary */}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </div>
         </main>
       </PageTransition>

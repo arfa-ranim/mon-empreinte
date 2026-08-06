@@ -8,6 +8,8 @@ import Link from "next/link";
 import { InstagramIcon } from "@/components/SocialIcons";
 import HeroSection from "@/components/sections/HeroSection";
 import UpcomingWorkshops from "@/components/sections/UpcomingWorkshops";
+import { ProductsGridSkeleton, WorkshopsListSkeleton } from "@/components/Skeleton"; // ✅ Import
+import { Suspense } from "react"; // ✅ Import
 
 export const revalidate = 60;
 
@@ -40,12 +42,15 @@ export default async function HomePage() {
   return (
     <PublicLayout>
       <HeroSection settings={settings} />
-      <UpcomingWorkshops
-        workshops={upcomingWorkshopsRaw.map((w) => ({
-          ...w,
-          date: (w.startDate || w.date)?.toISOString() || null,
-        }))}
-      />
+      
+      <Suspense fallback={<div className="h-64 skeleton-shimmer rounded-2xl mx-4" />}>
+        <UpcomingWorkshops
+          workshops={upcomingWorkshopsRaw.map((w) => ({
+            ...w,
+            date: (w.startDate || w.date)?.toISOString() || null,
+          }))}
+        />
+      </Suspense>
 
       {/* Featured Products */}
       <section className="py-16 sm:py-20">
@@ -56,11 +61,14 @@ export default async function HomePage() {
             </h2>
             <p className="mt-3 text-earth-600">Découvrez nos dernières pièces artisanales</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
-          </div>
+          {/* ✅ Wrap with Suspense */}
+          <Suspense fallback={<ProductsGridSkeleton />}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
+          </Suspense>
           {products.length > 0 && (
             <div className="text-center mt-10">
               <Button href="/produits" variant="secondary">
@@ -71,7 +79,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Workshops - Full list */}
+      {/* Featured Workshops */}
       <section className="py-16 sm:py-20 bg-cream-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -80,15 +88,18 @@ export default async function HomePage() {
             </h2>
             <p className="mt-3 text-earth-600">Venez créer avec nous lors de nos ateliers créatifs</p>
           </div>
-          <div className="space-y-6">
-            {workshops.map((workshop) => (
-              <WorkshopCard
-                key={workshop.id}
-                {...workshop}
-                date={workshop.date?.toISOString() || null}
-              />
-            ))}
-          </div>
+          {/* ✅ Wrap with Suspense */}
+          <Suspense fallback={<WorkshopsListSkeleton />}>
+            <div className="space-y-6">
+              {workshops.map((workshop) => (
+                <WorkshopCard
+                  key={workshop.id}
+                  {...workshop}
+                  date={workshop.date?.toISOString() || null}
+                />
+              ))}
+            </div>
+          </Suspense>
           {workshops.length > 0 && (
             <div className="text-center mt-10">
               <Button href="/ateliers" variant="secondary">

@@ -64,6 +64,7 @@ export default function ProductDetailClient({
     }
   };
 
+
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -87,14 +88,16 @@ export default function ProductDetailClient({
       {/* Image gallery */}
       <div className="space-y-4">
         <div className="relative aspect-square rounded-2xl overflow-hidden bg-cream-100 group">
-          <Image
-            src={images[0] || "/placeholder.svg"}
-            alt={product.title}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
+        <Image
+          src={images[0] || "/placeholder.svg"}
+          alt={product.title}
+          fill
+          priority
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
           <button
             onClick={() => setIsLightboxOpen(true)}
             className="absolute bottom-4 right-4 p-3 bg-white/90 rounded-full shadow-lg hover:scale-110 transition-transform"
@@ -106,16 +109,24 @@ export default function ProductDetailClient({
         
         {images.length > 1 && (
           <div className="grid grid-cols-4 gap-3">
-            {images.slice(1).map((img: string, i: number) => (
-              <button
-                key={img}
-                onClick={() => setCurrentImageIndex(i + 1)}
-                className="relative aspect-square rounded-lg overflow-hidden bg-cream-100 hover:ring-2 hover:ring-peach transition-all"
-                aria-label={`Voir l'image ${i + 2}`}
-              >
-                <Image src={img} alt="" fill className="object-cover" sizes="100px" />
-              </button>
-            ))}
+          {images.slice(1).map((img: string, i: number) => (
+            <button
+              key={img}
+              onClick={() => setCurrentImageIndex(i + 1)}
+              className="relative aspect-square rounded-lg overflow-hidden bg-cream-100 hover:ring-2 hover:ring-peach transition-all"
+              aria-label={`Voir l'image ${i + 2}`}
+            >
+              <Image 
+                src={img} 
+                alt="" 
+                fill 
+                className="object-cover" 
+                sizes="100px"
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
+              />
+            </button>
+          ))}
           </div>
         )}
       </div>

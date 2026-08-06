@@ -6,17 +6,13 @@ import EmptyState from "@/components/EmptyState";
 import { ProductIcon } from "@/components/icons/EmptyIcons";
 import ProductFilters from "@/components/ProductFilters";
 import StaggeredGrid from "@/components/StaggeredGrid";
+import { ProductsGridSkeleton } from "@/components/Skeleton"; 
+import { Suspense } from "react"; 
 
 export const revalidate = 60;
 export const metadata = { title: "Produits" };
 
-// Define search params type
-interface SearchParams {
-  page?: string;
-  category?: string;
-  search?: string;
-  maxPrice?: string;
-}
+
 
 // Define where clause type
 interface WhereClause {
@@ -28,7 +24,7 @@ interface WhereClause {
 export default async function ProduitsPage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>;
+  searchParams: Promise<{ page?: string; category?: string; search?: string; maxPrice?: string }>;
 }) {
   const params = await searchParams;
   const currentPage = parseInt(params.page || "1");
@@ -77,32 +73,34 @@ export default async function ProduitsPage({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Filters sidebar */}
             <div className="lg:col-span-1">
               <ProductFilters />
             </div>
 
             {/* Products grid */}
             <div className="lg:col-span-3">
-              {products.length === 0 ? (
-                <EmptyState
-                  title="Aucun produit trouvé"
-                  description="Essayez de modifier vos filtres ou revenez plus tard."
-                  icon={<ProductIcon size={80} />}
-                />
-              ) : (
-                <>
-                  <div className="text-sm text-earth-500 mb-4">
-                    {total} produit{total > 1 ? "s" : ""} trouvé{total > 1 ? "s" : ""}
-                  </div>
-                  <StaggeredGrid columns={3}>
-                    {products.map((product, index) => (
-                      <ProductCard key={product.id} {...product} index={index} />
-                    ))}
-                  </StaggeredGrid>
-                  <Pagination currentPage={currentPage} totalPages={totalPages} />
-                </>
-              )}
+              {/* ✅ Wrap products with Suspense */}
+              <Suspense fallback={<ProductsGridSkeleton />}>
+                {products.length === 0 ? (
+                  <EmptyState
+                    title="Aucun produit trouvé"
+                    description="Essayez de modifier vos filtres ou revenez plus tard."
+                    icon={<ProductIcon size={80} />}
+                  />
+                ) : (
+                  <>
+                    <div className="text-sm text-earth-500 mb-4">
+                      {total} produit{total > 1 ? "s" : ""} trouvé{total > 1 ? "s" : ""}
+                    </div>
+                    <StaggeredGrid columns={3}>
+                      {products.map((product, index) => (
+                        <ProductCard key={product.id} {...product} index={index} />
+                      ))}
+                    </StaggeredGrid>
+                    <Pagination currentPage={currentPage} totalPages={totalPages} />
+                  </>
+                )}
+              </Suspense>
             </div>
           </div>
         </div>

@@ -104,10 +104,12 @@ export default function WorkshopCard({
           src={imageUrl}
           alt={title}
           fill
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
           className={`object-cover transition-all duration-700 ${
             imageLoaded ? "opacity-100" : "opacity-0"
           } group-hover:scale-105`}
-          sizes="(max-width: 768px) 100vw, 40vw"
           onLoad={() => setImageLoaded(true)}
         />
 

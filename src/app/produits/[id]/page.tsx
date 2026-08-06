@@ -2,10 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import PublicLayout from "@/components/PublicLayout";
-import { parseImages, formatPrice } from "@/lib/utils";
+import { parseImages } from "@/lib/utils";
 import { buildWhatsAppUrl, productOrderMessage } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import ProductDetailClient from "./ProductDetailClient";
+import { generateOGTags } from "@/lib/og"; // ✅ Import
+import { BRAND } from "@/lib/constants"; // ✅ Import
 
 // Define types
 interface Product {
@@ -22,7 +24,29 @@ interface Product {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const product = await prisma.product.findUnique({ where: { id } });
-  return { title: product?.title || "Produit" };
+  
+  if (!product) {
+    return { title: "Produit non trouvé" };
+  }
+
+  const images = parseImages(product.images);
+  const imageUrl = images[0] || "/logo.png";
+  
+  // ✅ Generate proper OG tags
+  const ogTags = generateOGTags(
+    product.title,
+    product.description,
+    imageUrl,
+    `/produits/${id}`,
+    BRAND.name
+  );
+
+  return {
+    title: ogTags.title,
+    description: ogTags.description,
+    openGraph: ogTags.openGraph,
+    twitter: ogTags.twitter,
+  };
 }
 
 // Server function to fetch product
@@ -32,7 +56,7 @@ async function getProduct(id: string): Promise<Product> {
   return product as Product;
 }
 
-// Main page component (Server Component)
+// Main page component
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const product = await getProduct(id);

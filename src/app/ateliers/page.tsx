@@ -4,6 +4,8 @@ import WorkshopCard from "@/components/WorkshopCard";
 import Pagination from "@/components/Pagination";
 import EmptyState from "@/components/EmptyState";
 import { WorkshopIcon } from "@/components/icons/EmptyIcons";
+import { WorkshopsListSkeleton } from "@/components/Skeleton"; // ✅ Import
+import { Suspense } from "react"; // ✅ Import
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -59,45 +61,41 @@ export default async function AteliersPage({
             <p className="mt-3 text-earth-600 max-w-xl mx-auto">
               Participez à nos ateliers créatifs et repartez avec votre propre création artisanale.
             </p>
-            {workshops.length > 0 && (
-              <p className="mt-2 text-sm text-earth-500">
-                {total} atelier{total > 1 ? "s" : ""} à venir
-              </p>
+             <Suspense fallback={<WorkshopsListSkeleton />}>
+            {workshops.length === 0 ? (
+              <EmptyState
+                title="Aucun atelier programmé"
+                description="Nous proposons régulièrement de nouveaux ateliers. Revenez bientôt !"
+                icon={<WorkshopIcon size={80} />}
+              />
+            ) : (
+              <>
+                <div className="space-y-6">
+                  {workshops.map((workshop) => {
+                    const displayDate = workshop.startDate || workshop.date;
+                    return (
+                      <WorkshopCard
+                        key={workshop.id}
+                        id={workshop.id}
+                        title={workshop.title}
+                        description={workshop.description}
+                        price={workshop.price}
+                        duration={workshop.duration}
+                        images={workshop.images}
+                        date={displayDate?.toISOString() || null}
+                        availability={workshop.availability}
+                        location={workshop.location}
+                        maxSpots={workshop.maxSpots}
+                        skillLevel={workshop.skillLevel}
+                      />
+                    );
+                  })}
+                </div>
+                <Pagination currentPage={currentPage} totalPages={totalPages} />
+              </>
             )}
-          </div>
-
-          {workshops.length === 0 ? (
-            <EmptyState
-              title="Aucun atelier programmé"
-              description="Nous proposons régulièrement de nouveaux ateliers. Revenez bientôt !"
-              icon={<WorkshopIcon size={80} />}
-            />
-          ) : (
-            <>
-              <div className="space-y-6">
-                {workshops.map((workshop) => {
-                  const displayDate = workshop.startDate || workshop.date;
-                  return (
-                    <WorkshopCard
-                      key={workshop.id}
-                      id={workshop.id}
-                      title={workshop.title}
-                      description={workshop.description}
-                      price={workshop.price}
-                      duration={workshop.duration}
-                      images={workshop.images}
-                      date={displayDate?.toISOString() || null}
-                      availability={workshop.availability}
-                      location={workshop.location}
-                      maxSpots={workshop.maxSpots}
-                      skillLevel={workshop.skillLevel}
-                    />
-                  );
-                })}
-              </div>
-              <Pagination currentPage={currentPage} totalPages={totalPages} />
-            </>
-          )}
+          </Suspense>
+        </div>
         </div>
       </section>
     </PublicLayout>
