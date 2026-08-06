@@ -33,6 +33,8 @@ model Product {
   updatedAt   DateTime @updatedAt
 }
 
+
+
 model Workshop {
   id           String   @id @default(cuid())
   title        String
@@ -72,4 +74,10 @@ model Setting {
   key       String   @unique
   value     String   // JSON string
   updatedAt DateTime @updatedAt
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

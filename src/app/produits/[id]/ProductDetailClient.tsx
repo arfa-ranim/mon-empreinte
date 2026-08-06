@@ -40,6 +40,22 @@ export default function ProductDetailClient({
 
   const lightboxSlides = images.map((img: string) => ({ src: img }));
 
+/*
+const handleWhatsAppClick = () => {
+    // Track the click (for analytics)
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-XXXXXXXX/X-XXXXXX",
+        value: product.price,
+        currency: "TND",
+      });
+    }
+    // Open WhatsApp (existing logic)
+    window.open(whatsappUrl, "_blank");
+  };
+
+*/
+ 
   const handleShare = async () => {
     const shareData = {
       title: product.title,

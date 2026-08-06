@@ -5,6 +5,8 @@ import { BRAND } from "@/lib/constants";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import BackToTop from "@/components/BackToTop";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -23,14 +25,20 @@ export const metadata: Metadata = {
     default: `${BRAND.name} — Créations artisanales à Tunis`,
     template: `%s | ${BRAND.name}`,
   },
+
   description: BRAND.description,
+
+    appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Mon Empreinte",
+  },
+  formatDetection: {
+    telephone: true,
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html 
       lang="fr" 
@@ -52,6 +60,8 @@ export default function RootLayout({
           />
         </ThemeProvider>
         <BackToTop />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

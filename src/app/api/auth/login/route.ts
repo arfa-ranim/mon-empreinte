@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createToken, setAuthCookie, verifyPassword } from "@/lib/auth";
 import { z } from "zod";
+import { ratelimit } from "@/lib/rate-limit";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -9,6 +10,16 @@ const loginSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const { success } = await ratelimit.limit(ip);
+
+      if (!success) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessayez dans une minute." },
+      { status: 429 }
+    );
+  }
+  
   try {
     const body = await request.json();
     const { email, password } = loginSchema.parse(body);
