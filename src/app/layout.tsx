@@ -36,6 +36,14 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: true,
   },
+    openGraph: {
+    title: `${BRAND.name} — Créations artisanales à Tunis`,
+    description: BRAND.description,
+    url: "https://mon-empreinte.vercel.app",
+    siteName: BRAND.name,
+    // Add this line below 👇
+    images: [{ url: "/logo.png", width: 1200, height: 630, alt: BRAND.name }],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
