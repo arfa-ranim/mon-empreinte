@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getCSRFToken } from "./actions"; // 👈 import the action
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
 import { toast } from "sonner";
@@ -9,6 +10,12 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [csrfToken, setCsrfToken] = useState("");
+
+  // Fetch CSRF token on mount
+  useEffect(() => {
+    getCSRFToken().then(setCsrfToken);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -16,13 +23,15 @@ export default function AdminLoginPage() {
 
     const res = await fetch("/api/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-csrf-token": csrfToken, // 👈 send the token
+      },
       body: JSON.stringify({ email, password }),
     });
 
     if (res.ok) {
       toast.success("Bienvenue ! 🎉");
-      // ✅ Full browser reload for Safari cookie handling
       window.location.href = "/admin";
     } else {
       const data = await res.json();
@@ -30,7 +39,6 @@ export default function AdminLoginPage() {
     }
     setLoading(false);
   }
-
   return (
     <div className="min-h-screen bg-cream-100 flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md border border-earth-100">

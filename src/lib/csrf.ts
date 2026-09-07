@@ -1,3 +1,4 @@
+// src/lib/csrf.ts
 import { cookies } from "next/headers";
 
 export function generateCSRFToken(): string {

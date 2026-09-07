@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createToken, setAuthCookie, verifyPassword } from "@/lib/auth";
 import { z } from "zod";
-// We import it, but we comment out its usage below
 import { ratelimit } from "@/lib/rate-limit";
+import { validateCSRFToken } from "@/lib/csrf"; 
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -11,17 +11,26 @@ const loginSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  // Rate limiting is DISABLED to prevent server crash on launch.
-  // If you want to re-enable it later, you must add UPSTASH_REDIS env vars to Vercel.
-  // const ip = request.headers.get("x-forwarded-for") || "anonymous";
-  // const { success } = await ratelimit.limit(ip);
-  // if (!success) {
-  //   return NextResponse.json(
-  //     { error: "Trop de tentatives. Réessayez dans une minute." },
-  //     { status: 429 }
-  //   );
-  // }
-  
+  // 1️⃣ Rate limiting
+  const ip = request.headers.get("x-forwarded-for") || "anonymous";
+  const { success } = await ratelimit.limit(ip);
+  if (!success) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessayez dans une minute." },
+      { status: 429 }
+    );
+  }
+
+  // 2️⃣ CSRF validation (NEW)
+  const csrfToken = request.headers.get("x-csrf-token");
+  if (!csrfToken || !(await validateCSRFToken(csrfToken))) {
+    return NextResponse.json(
+      { error: "CSRF token invalide" },
+      { status: 403 }
+    );
+  }
+
+  // 3️⃣ Original login logic
   try {
     const body = await request.json();
     const { email, password } = loginSchema.parse(body);

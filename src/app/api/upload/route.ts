@@ -14,9 +14,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Aucun fichier" }, { status: 400 });
     }
 
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: "Type de fichier non supporté" }, { status: 400 });
+    }
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: "Fichier trop volumineux (max 5MB)" }, { status: 400 });
+    }
+
     const token = process.env.PUBLIC_BLOB_READ_WRITE_TOKEN;
     
-    // ✅ Log to help you debug
     console.log("✅ Token status:", token ? "Present" : "MISSING");
     console.log("📁 File name:", file.name);
     console.log("📏 File size:", file.size);
