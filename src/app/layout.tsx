@@ -19,16 +19,16 @@ const nunito = Nunito_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-export const metadataBase = new URL("https://mon-empreinte.vercel.app");
 
 export const metadata: Metadata = {
+  // ✅ metadataBase MUST be inside the metadata object
+  metadataBase: new URL("https://mon-empreinte.vercel.app"),
   title: {
     default: `${BRAND.name} — Créations artisanales à Tunis`,
     template: `%s | ${BRAND.name}`,
   },
   description: BRAND.description,
-
-    appleWebApp: {
+  appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Mon Empreinte",
@@ -36,33 +36,39 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: true,
   },
-    openGraph: {
+  openGraph: {
     title: `${BRAND.name} — Créations artisanales à Tunis`,
     description: BRAND.description,
     url: "https://mon-empreinte.vercel.app",
     siteName: BRAND.name,
-    // Add this line below 👇
-    images: [{ url: "/logo.png", width: 1200, height: 630, alt: BRAND.name }],
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: BRAND.name,
+      },
+    ],
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html 
-      lang="fr" 
+    <html
+      lang="fr"
       className={`${cormorant.variable} ${nunito.variable}`}
       suppressHydrationWarning
     >
       <body className="antialiased bg-cream-50 dark:bg-earth-900 transition-colors duration-300">
         <ThemeProvider>
           {children}
-          <Toaster 
+          <Toaster
             position="top-center"
             richColors
             closeButton
             toastOptions={{
               style: {
-                fontFamily: 'var(--font-nunito)',
+                fontFamily: "var(--font-nunito)",
               },
             }}
           />

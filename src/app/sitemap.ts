@@ -25,21 +25,34 @@ export default async function sitemap() {
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
+      // ✅ Static pages: no lastModified — signals "this changes rarely"
+      changeFrequency: "weekly" as const,
       priority: 1.0,
     },
     {
       url: `${baseUrl}/produits`,
-      lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/ateliers`,
-      lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/galerie`,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/a-propos`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
     },
     ...productUrls,
     ...workshopUrls,
