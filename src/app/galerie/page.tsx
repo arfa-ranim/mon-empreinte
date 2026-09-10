@@ -1,9 +1,7 @@
 import PublicLayout from "@/components/PublicLayout";
 import { prisma } from "@/lib/prisma";
-import Image from "next/image";
 import { parseImages } from "@/lib/utils";
-import EmptyState from "@/components/EmptyState"; // ← ADD THIS
-import { GalleryIcon } from "@/components/icons/EmptyIcons"; // ← ADD THIS
+import GalleryClient from "./GalleryClient";
 
 export const metadata = { title: "Galerie" };
 
@@ -13,54 +11,41 @@ export default async function GaleriePage() {
     prisma.workshop.findMany({ orderBy: { createdAt: "desc" } }),
   ]);
 
-  const galleryItems = [
-    ...products.flatMap((p) =>
-      parseImages(p.images).map((img) => ({ src: img, alt: p.title, type: "product" as const }))
-    ),
-    ...workshops.flatMap((w) =>
-      parseImages(w.images).map((img) => ({ src: img, alt: w.title, type: "workshop" as const }))
-    ),
-  ];
+  const productItems = products.flatMap((p) =>
+    parseImages(p.images).map((img) => ({
+      src: img,
+      alt: p.title,
+      href: `/produits/${p.id}`,
+      category: p.category || "Création",
+    }))
+  );
+
+  const workshopItems = workshops.flatMap((w) =>
+    parseImages(w.images).map((img) => ({
+      src: img,
+      alt: w.title,
+      href: `/ateliers/${w.id}`,
+      category: "Atelier",
+    }))
+  );
 
   return (
     <PublicLayout>
       <section className="py-12 sm:py-16">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h1 className="font-serif text-4xl font-bold text-earth-800">Galerie</h1>
-            <p className="mt-3 text-earth-600">
+            <h1 className="font-serif text-4xl font-bold text-earth-800 dark:text-earth-200">
+              Galerie
+            </h1>
+            <p className="mt-3 text-earth-600 dark:text-earth-400">
               Un aperçu de nos créations et de l&apos;ambiance de nos ateliers
             </p>
           </div>
 
-          {/* ← REPLACE THIS CONDITIONAL */}
-          {galleryItems.length === 0 ? (
-            <EmptyState
-              title="Galerie vide"
-              description="Ajoutez des images à vos produits et ateliers pour remplir la galerie."
-              icon={<GalleryIcon size={80} />}
-            />
-          ) : (
-            <div className="masonry-grid">
-              {galleryItems.map((item, i) => (
-                <div
-                  key={`${item.src}-${i}`}
-                  className="masonry-item relative rounded-xl overflow-hidden bg-cream-100 group"
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    width={400}
-                    height={item.type === "workshop" ? 300 : 400}
-                    className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-earth-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                    <span className="text-white text-sm font-medium">{item.alt}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <GalleryClient
+            productItems={productItems}
+            workshopItems={workshopItems}
+          />
         </div>
       </section>
     </PublicLayout>

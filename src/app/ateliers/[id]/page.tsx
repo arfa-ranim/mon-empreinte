@@ -1,15 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import PublicLayout from "@/components/PublicLayout";
 import { parseImages } from "@/lib/utils";
 import { buildWhatsAppUrl, workshopBookingMessage } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import WorkshopDetailClient from "./WorkshopDetailClient";
-import { generateOGTags } from "@/lib/og"; // ✅ Import
-import { BRAND } from "@/lib/constants"; // ✅ Import
+import { generateOGTags } from "@/lib/og";
+import { BRAND } from "@/lib/constants";
 
-// Define types
 interface Workshop {
   id: string;
   title: string;
@@ -33,15 +33,14 @@ interface Workshop {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const workshop = await prisma.workshop.findUnique({ where: { id } });
-  
+
   if (!workshop) {
     return { title: "Atelier non trouvé" };
   }
 
   const images = parseImages(workshop.images);
   const imageUrl = images[0] || "/logo.png";
-  
-  // ✅ Generate proper OG tags
+
   const ogTags = generateOGTags(
     workshop.title,
     workshop.description,
@@ -58,14 +57,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
-// Server function to fetch workshop
 async function getWorkshop(id: string): Promise<Workshop> {
   const workshop = await prisma.workshop.findUnique({ where: { id } });
   if (!workshop) notFound();
   return workshop as Workshop;
 }
 
-// Main page component
 export default async function WorkshopDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const workshop = await getWorkshop(id);
@@ -79,17 +76,18 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
     <PublicLayout>
       <section className="py-12 sm:py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <Link 
-            href="/ateliers" 
-            className="text-earth-600 hover:text-earth-800 text-sm mb-6 inline-block"
+          <Link
+            href="/ateliers"
+            className="inline-flex items-center gap-1.5 text-earth-600 dark:text-earth-400 hover:text-earth-800 dark:hover:text-earth-200 text-sm mb-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peach-dark focus-visible:ring-offset-2 rounded-md px-1 py-0.5"
           >
-            ← Retour aux ateliers
+            <ChevronLeft size={16} />
+            Retour aux ateliers
           </Link>
 
-          <WorkshopDetailClient 
-            workshop={workshop} 
-            images={images} 
-            whatsappUrl={whatsappUrl} 
+          <WorkshopDetailClient
+            workshop={workshop}
+            images={images}
+            whatsappUrl={whatsappUrl}
           />
         </div>
       </section>
