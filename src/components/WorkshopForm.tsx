@@ -137,6 +137,23 @@ const FormField = ({
   const isError = touched && !!error;
   const isValid = touched && !error && (Array.isArray(value) ? value.length > 0 : Boolean(value));
 
+  // ✅ Explicit colors — no ambiguity between light and dark mode
+  const inputBase = cn(
+    "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm",
+    "bg-cream-50 text-earth-900 placeholder:text-earth-400",
+    "dark:bg-earth-900 dark:text-earth-100 dark:placeholder:text-earth-500",
+    "focus:outline-none focus:ring-2 focus:ring-peach-dark focus:border-transparent",
+    "dark:focus:ring-peach"
+  );
+
+  const inputState = cn(
+    isError
+      ? "border-red-400 ring-2 ring-red-200 dark:ring-red-900/50"
+      : isValid
+      ? "border-green-400 ring-2 ring-green-200 dark:ring-green-900/50"
+      : "border-earth-200 dark:border-earth-700"
+  );
+
   return (
     <div className={className}>
       <label htmlFor={id} className="block text-sm font-medium text-earth-700 dark:text-earth-300 mb-1.5">
@@ -149,17 +166,9 @@ const FormField = ({
           value={Array.isArray(value) ? value[0] || "" : String(value)}
           onChange={onChange as React.ChangeEventHandler<HTMLSelectElement>}
           onBlur={onBlur}
-          className={cn(
-            "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm appearance-none bg-white dark:bg-earth-900",
-            "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-            isError
-              ? "border-red-400 ring-2 ring-red-200"
-              : isValid
-              ? "border-green-400 ring-2 ring-green-200"
-              : "border-earth-200 dark:border-earth-700"
-          )}
+          className={cn(inputBase, inputState, "appearance-none")}
           aria-label={label}
-          aria-invalid={isError}                   
+          aria-invalid={isError}
           aria-describedby={isError ? `${id}-error` : undefined}
         >
           {options?.map((opt) => (
@@ -178,16 +187,8 @@ const FormField = ({
             onBlur={onBlur}
             placeholder={placeholder}
             maxLength={maxLength}
-            className={cn(
-              "w-full px-4 py-3 rounded-lg border transition-all resize-none text-base sm:text-sm",
-              "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-              isError
-                ? "border-red-400 ring-2 ring-red-200"
-                : isValid
-                ? "border-green-400 ring-2 ring-green-200"
-                : "border-earth-200 dark:border-earth-700 bg-white dark:bg-earth-900"
-            )}
-            aria-invalid={isError}                  
+            className={cn(inputBase, inputState, "resize-none")}
+            aria-invalid={isError}
             aria-describedby={isError ? `${id}-error` : undefined}
           />
           {showCharCount && maxLength && (
@@ -208,7 +209,7 @@ const FormField = ({
             onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
             onBlur={onBlur}
             className="w-5 h-5 rounded border-earth-300 dark:border-earth-600 text-peach focus:ring-peach focus:ring-2 focus:ring-offset-2 transition-colors"
-            aria-invalid={isError}                  
+            aria-invalid={isError}
           />
           <label htmlFor={id} className="text-sm text-earth-700 dark:text-earth-300 font-medium">
             {label}
@@ -221,15 +222,7 @@ const FormField = ({
           value={String(value)}
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
           onBlur={onBlur}
-          className={cn(
-            "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm",
-            "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-            isError
-              ? "border-red-400 ring-2 ring-red-200"
-              : isValid
-              ? "border-green-400 ring-2 ring-green-200"
-              : "border-earth-200 dark:border-earth-700 bg-white dark:bg-earth-900"
-          )}
+          className={cn(inputBase, inputState)}
           aria-label={label}
           aria-invalid={isError}
           aria-describedby={isError ? `${id}-error` : undefined}
@@ -246,28 +239,20 @@ const FormField = ({
           max={max}
           step={step}
           maxLength={maxLength}
-          className={cn(
-            "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm",
-            "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-            isError
-              ? "border-red-400 ring-2 ring-red-200"
-              : isValid
-              ? "border-green-400 ring-2 ring-green-200"
-              : "border-earth-200 dark:border-earth-700 bg-white dark:bg-earth-900"
-          )}
-          aria-invalid={isError}                    
+          className={cn(inputBase, inputState)}
+          aria-invalid={isError}
           aria-describedby={isError ? `${id}-error` : undefined}
         />
       )}
 
       {isError && (
-        <div id={`${id}-error`} className="error-message mt-1.5 flex items-center gap-1.5 text-red-600 text-sm">
+        <div id={`${id}-error`} className="error-message mt-1.5 flex items-center gap-1.5 text-red-600 dark:text-red-400 text-sm">
           <AlertCircle size={14} />
           {error}
         </div>
       )}
       {isValid && type !== "checkbox" && (
-        <div className="success-message mt-1.5 flex items-center gap-1.5 text-green-600 text-sm">
+        <div className="success-message mt-1.5 flex items-center gap-1.5 text-green-600 dark:text-green-400 text-sm">
           <CheckCircle size={14} />
           Valide
         </div>

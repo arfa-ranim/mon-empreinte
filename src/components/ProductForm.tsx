@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import Button from "@/components/Button";
-import { 
+import {
   Package, ChevronDown, ChevronUp, Sparkles,
   AlertCircle, CheckCircle, Save, X,
   Loader2, Eye, EyeOff
@@ -49,11 +49,11 @@ interface ProductFormProps {
   productId?: string;
 }
 
-const SectionHeader = ({ 
-  title, icon, isOpen, onToggle 
-}: { 
-  title: string; 
-  icon: React.ReactNode; 
+const SectionHeader = ({
+  title, icon, isOpen, onToggle
+}: {
+  title: string;
+  icon: React.ReactNode;
   isOpen: boolean;
   onToggle: () => void;
 }) => (
@@ -121,10 +121,27 @@ const FormField = ({
   showCharCount?: boolean;
 }) => {
   const isError = touched && !!error;
-  const isValid = touched && !error && 
+  const isValid = touched && !error &&
     (Array.isArray(value) ? value.length > 0 : Boolean(value));
 
   const stringValue = Array.isArray(value) ? value.join(", ") : String(value);
+
+  // ✅ Explicit colors — no ambiguity between light and dark mode
+  const inputBase = cn(
+    "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm",
+    "bg-cream-50 text-earth-900 placeholder:text-earth-400",
+    "dark:bg-earth-900 dark:text-earth-100 dark:placeholder:text-earth-500",
+    "focus:outline-none focus:ring-2 focus:ring-peach-dark focus:border-transparent",
+    "dark:focus:ring-peach"
+  );
+
+  const inputState = cn(
+    isError
+      ? "border-red-400 ring-2 ring-red-200 dark:ring-red-900/50"
+      : isValid
+      ? "border-green-400 ring-2 ring-green-200 dark:ring-green-900/50"
+      : "border-earth-200 dark:border-earth-700"
+  );
 
   return (
     <div className={className}>
@@ -140,15 +157,7 @@ const FormField = ({
           value={Array.isArray(value) ? (value[0] || "") : String(value)}
           onChange={onChange as React.ChangeEventHandler<HTMLSelectElement>}
           onBlur={onBlur}
-          className={cn(
-            "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm appearance-none bg-white dark:bg-earth-900",
-            "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-            isError
-              ? "border-red-400 ring-2 ring-red-200"
-              : isValid
-              ? "border-green-400 ring-2 ring-green-200"
-              : "border-earth-200 dark:border-earth-700"
-          )}
+          className={cn(inputBase, inputState, "appearance-none")}
           aria-label={label}
           aria-invalid={isError ? "true" : "false"}
           aria-describedby={isError ? `${id}-error` : undefined}
@@ -169,15 +178,7 @@ const FormField = ({
             onBlur={onBlur}
             placeholder={placeholder}
             maxLength={maxLength}
-            className={cn(
-              "w-full px-4 py-3 rounded-lg border transition-all resize-none text-base sm:text-sm",
-              "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-              isError
-                ? "border-red-400 ring-2 ring-red-200"
-                : isValid
-                ? "border-green-400 ring-2 ring-green-200"
-                : "border-earth-200 dark:border-earth-700 bg-white dark:bg-earth-900"
-            )}
+            className={cn(inputBase, inputState, "resize-none")}
             aria-invalid={isError ? "true" : "false"}
             aria-describedby={isError ? `${id}-error` : undefined}
           />
@@ -217,28 +218,20 @@ const FormField = ({
           max={max}
           step={step}
           maxLength={maxLength}
-          className={cn(
-            "w-full px-4 py-3 rounded-lg border transition-all text-base sm:text-sm",
-            "focus:outline-none focus:ring-2 focus:ring-peach focus:border-transparent",
-            isError
-              ? "border-red-400 ring-2 ring-red-200"
-              : isValid
-              ? "border-green-400 ring-2 ring-green-200"
-              : "border-earth-200 dark:border-earth-700 bg-white dark:bg-earth-900"
-          )}
+          className={cn(inputBase, inputState)}
           aria-invalid={isError ? "true" : "false"}
           aria-describedby={isError ? `${id}-error` : undefined}
         />
       )}
 
       {isError && (
-        <div id={`${id}-error`} className="error-message mt-1.5 flex items-center gap-1.5 text-red-600 text-sm">
+        <div id={`${id}-error`} className="error-message mt-1.5 flex items-center gap-1.5 text-red-600 dark:text-red-400 text-sm">
           <AlertCircle size={14} />
           {error}
         </div>
       )}
       {isValid && type !== "checkbox" && (
-        <div className="success-message mt-1.5 flex items-center gap-1.5 text-green-600 text-sm">
+        <div className="success-message mt-1.5 flex items-center gap-1.5 text-green-600 dark:text-green-400 text-sm">
           <CheckCircle size={14} />
           Valide
         </div>
@@ -247,7 +240,6 @@ const FormField = ({
   );
 };
 
-// Progress indicator component
 function FormProgress({ current, total, label }: { current: number; total: number; label: string }) {
   const percentage = (current / total) * 100;
   return (
@@ -267,7 +259,6 @@ function FormProgress({ current, total, label }: { current: number; total: numbe
   );
 }
 
-// Auto-save indicator
 function AutoSaveIndicator({ saving, saved }: { saving: boolean; saved: boolean }) {
   return (
     <AnimatePresence mode="wait">
@@ -312,7 +303,7 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
     images: true,
   });
 
- const initialFormData = useMemo<ProductFormData>(() => ({
+  const initialFormData = useMemo<ProductFormData>(() => ({
     title: initialData?.title || "",
     description: initialData?.description || "",
     price: initialData?.price?.toString() || "",
@@ -350,33 +341,29 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
   };
 
   const categoryOptions = [
-    "Accessoires", "Bijoux", "Décoration", "Textile", 
+    "Accessoires", "Bijoux", "Décoration", "Textile",
     "Bougies", "Sac", "Art mural", "Vêtements", "Autre"
   ];
 
-  // Define handleAutoSave BEFORE it's used in useEffect
   const handleAutoSave = useCallback(async () => {
     setSaving(true);
-    // Simulate auto-save - in production, this would save to a draft
     await new Promise(resolve => setTimeout(resolve, 500));
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   }, []);
 
-  // Auto-save effect
   useEffect(() => {
     if (!isEditing) return;
-    
+
     const interval = setInterval(() => {
-      // Check if any field has changed from initial
       const hasChanges = Object.keys(initialFormData).some(key => {
         if (key === 'images') {
           return JSON.stringify(form[key]) !== JSON.stringify(initialFormData[key]);
         }
         return form[key] !== initialFormData[key];
       });
-      
+
       if (hasChanges) {
         handleAutoSave();
       }
@@ -450,9 +437,9 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
           </div>
           <AutoSaveIndicator saving={saving} saved={saved} />
         </div>
-        <FormProgress 
-          current={completedSections} 
-          total={sectionCount} 
+        <FormProgress
+          current={completedSections}
+          total={sectionCount}
           label={`${completedSections}/${sectionCount}`}
         />
       </div>
@@ -476,8 +463,8 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
         transition={{ duration: 0.3 }}
         className="bg-white dark:bg-earth-900 rounded-2xl p-4 sm:p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-2 transition-shadow"
       >
-        <SectionHeader 
-          title="Informations générales" 
+        <SectionHeader
+          title="Informations générales"
           icon={<Package className="text-peach" size={20} />}
           isOpen={sections.basic}
           onToggle={() => toggleSection('basic')}
@@ -562,8 +549,8 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
         transition={{ duration: 0.3 }}
         className="bg-white dark:bg-earth-900 rounded-2xl p-4 sm:p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-2 transition-shadow"
       >
-        <SectionHeader 
-          title="Inventaire & Détails" 
+        <SectionHeader
+          title="Inventaire & Détails"
           icon={<Package className="text-mint" size={20} />}
           isOpen={sections.inventory}
           onToggle={() => toggleSection('inventory')}
@@ -641,8 +628,8 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
         transition={{ duration: 0.3 }}
         className="bg-white dark:bg-earth-900 rounded-2xl p-4 sm:p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-2 transition-shadow"
       >
-        <SectionHeader 
-          title="Statut & Visibilité" 
+        <SectionHeader
+          title="Statut & Visibilité"
           icon={<Package className="text-gold" size={20} />}
           isOpen={sections.status}
           onToggle={() => toggleSection('status')}
@@ -690,8 +677,8 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
         transition={{ duration: 0.3 }}
         className="bg-white dark:bg-earth-900 rounded-2xl p-4 sm:p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-2 transition-shadow"
       >
-        <SectionHeader 
-          title="Images du produit" 
+        <SectionHeader
+          title="Images du produit"
           icon={<Package className="text-lavender" size={20} />}
           isOpen={sections.images}
           onToggle={() => toggleSection('images')}
@@ -705,9 +692,9 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="mt-4 space-y-2 overflow-hidden"
             >
-              <ImageUpload 
-                images={form.images as string[]} 
-                onChange={(images) => setFieldValue('images', images)} 
+              <ImageUpload
+                images={form.images as string[]}
+                onChange={(images) => setFieldValue('images', images)}
               />
               <p className="text-xs text-earth-400 dark:text-earth-500">
                 Formats acceptés: JPG, PNG • Taille max: 5MB
@@ -717,11 +704,11 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
         </AnimatePresence>
       </motion.section>
 
-      {/* Action Buttons with sticky footer */}
+      {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sticky bottom-0 bg-cream-50/95 dark:bg-earth-900/95 backdrop-blur-sm p-4 -mx-4 px-4 sm:mx-0 sm:px-0 rounded-t-2xl border-t border-earth-100 dark:border-earth-800 z-10">
-        <Button 
-          type="submit" 
-          disabled={loading} 
+        <Button
+          type="submit"
+          disabled={loading}
           className="w-full sm:w-auto px-6 sm:px-8 py-3 text-base flex items-center gap-2"
         >
           {loading ? (
@@ -736,18 +723,18 @@ export default function ProductForm({ initialData, isEditing, productId }: Produ
             </>
           )}
         </Button>
-        <Button 
-          href="/admin/products" 
-          variant="secondary" 
+        <Button
+          href="/admin/products"
+          variant="secondary"
           className="w-full sm:w-auto flex items-center gap-2"
         >
           <X size={18} />
           Annuler
         </Button>
         {isEditing && productId && (
-          <Button 
-            href={`/produits/${productId}`} 
-            variant="outline" 
+          <Button
+            href={`/produits/${productId}`}
+            variant="outline"
             className="w-full sm:w-auto flex items-center gap-2"
             external
           >

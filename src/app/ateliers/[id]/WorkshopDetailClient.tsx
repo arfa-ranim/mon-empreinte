@@ -35,10 +35,10 @@ interface WorkshopDetailClientProps {
 }
 
 const statusColors: Record<string, string> = {
-  available: "bg-green-100 text-green-700",
-  full: "bg-red-100 text-red-700",
-  cancelled: "bg-gray-100 text-gray-700",
-  draft: "bg-yellow-100 text-yellow-700",
+  available: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
+  full: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300",
+  cancelled: "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300",
+  draft: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300",
 };
 
 const statusLabels: Record<string, string> = {
@@ -54,10 +54,10 @@ const skillLevelLabels: Record<string, string> = {
   avancé: "🌳 Avancé",
 };
 
-export default function WorkshopDetailClient({ 
-  workshop, 
-  images, 
-  whatsappUrl 
+export default function WorkshopDetailClient({
+  workshop,
+  images,
+  whatsappUrl
 }: WorkshopDetailClientProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -68,7 +68,7 @@ export default function WorkshopDetailClient({
   const skillLevel = workshop.skillLevel || "";
   const startDate = workshop.startDate ? formatDate(workshop.startDate) : null;
   const endDate = workshop.endDate ? formatDate(workshop.endDate) : null;
-  const dateRange = startDate && endDate && startDate !== endDate 
+  const dateRange = startDate && endDate && startDate !== endDate
     ? `${startDate} - ${endDate}`
     : startDate || "Date à définir";
 
@@ -76,34 +76,39 @@ export default function WorkshopDetailClient({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
       {/* Image gallery */}
       <div className="space-y-4">
-        <div className="relative aspect-square rounded-2xl overflow-hidden bg-cream-100 group">
-        <Image
-          src={images[0] || "/placeholder.svg"}
-          alt={workshop.title}
+        <div className="relative aspect-square rounded-2xl overflow-hidden bg-cream-100 dark:bg-earth-800 group">
+          <Image
+            src={images[currentImageIndex] || "/placeholder.svg"}
+            alt={workshop.title}
             fill
             priority
             placeholder="blur"
             blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmMGU4Ii8+PC9zdmc+"
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
-          /> 
+          />
           <button
             onClick={() => setIsLightboxOpen(true)}
-            className="absolute bottom-4 right-4 p-3 bg-white/90 rounded-full shadow-lg hover:scale-110 transition-transform"
+            className="absolute bottom-4 right-4 p-3 bg-white/90 dark:bg-earth-800/90 rounded-full shadow-lg hover:scale-110 transition-transform"
             aria-label="Agrandir l'image"
           >
-            <span className="text-earth-800">🔍</span>
+            <span className="text-earth-800 dark:text-earth-200">🔍</span>
           </button>
         </div>
-        
+
         {images.length > 1 && (
           <div className="grid grid-cols-4 gap-3">
-            {images.slice(1).map((img: string, i: number) => (
+            {images.map((img: string, i: number) => (
               <button
                 key={img}
-                onClick={() => setCurrentImageIndex(i + 1)}
-                className="relative aspect-square rounded-lg overflow-hidden bg-cream-100 hover:ring-2 hover:ring-mint transition-all"
-                aria-label={`Voir l'image ${i + 2}`}
+                onClick={() => setCurrentImageIndex(i)}
+                className={`relative aspect-square rounded-lg overflow-hidden bg-cream-100 dark:bg-earth-800 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peach-dark ${
+                  i === currentImageIndex
+                    ? "ring-2 ring-peach-dark"
+                    : "hover:ring-2 hover:ring-mint"
+                }`}
+                aria-label={`Voir l'image ${i + 1}`}
+                aria-current={i === currentImageIndex}
               >
                 <Image src={img} alt="" fill className="object-cover" sizes="100px" />
               </button>
@@ -114,54 +119,48 @@ export default function WorkshopDetailClient({
 
       {/* Workshop info */}
       <div>
-        <div className="flex items-start justify-between">
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-earth-800">
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-earth-800 dark:text-earth-200">
             {workshop.title}
           </h1>
-          <span className={`text-sm px-3 py-1 rounded-full font-medium ${statusColors[status]}`}>
+          <span className={`text-sm px-3 py-1 rounded-full font-medium shrink-0 ${statusColors[status]}`}>
             {statusLabels[status]}
           </span>
         </div>
 
-        <p className="mt-4 text-2xl font-semibold text-earth-700">
+        <p className="mt-4 text-2xl font-semibold text-earth-700 dark:text-earth-300">
           {formatPrice(workshop.price)}
         </p>
 
-        {/* Workshop details */}
         <div className="mt-6 space-y-3">
-          {/* Date */}
-          <div className="flex items-center gap-3 text-earth-600">
-            <Calendar size={20} className="text-mint" />
+          <div className="flex items-center gap-3 text-earth-600 dark:text-earth-400">
+            <Calendar size={20} className="text-mint-dark dark:text-mint" />
             <span>{dateRange}</span>
           </div>
 
-          {/* Time */}
           {workshop.startTime && workshop.endTime && (
-            <div className="flex items-center gap-3 text-earth-600">
-              <Clock size={20} className="text-mint" />
+            <div className="flex items-center gap-3 text-earth-600 dark:text-earth-400">
+              <Clock size={20} className="text-mint-dark dark:text-mint" />
               <span>{workshop.startTime} - {workshop.endTime}</span>
             </div>
           )}
 
-          {/* Duration */}
           {workshop.duration && (
-            <div className="flex items-center gap-3 text-earth-600">
-              <Clock size={20} className="text-mint" />
+            <div className="flex items-center gap-3 text-earth-600 dark:text-earth-400">
+              <Clock size={20} className="text-mint-dark dark:text-mint" />
               <span>Durée: {workshop.duration}</span>
             </div>
           )}
 
-          {/* Location */}
           {workshop.location && (
-            <div className="flex items-center gap-3 text-earth-600">
-              <MapPin size={20} className="text-mint" />
+            <div className="flex items-center gap-3 text-earth-600 dark:text-earth-400">
+              <MapPin size={20} className="text-mint-dark dark:text-mint" />
               <span>{workshop.location}</span>
             </div>
           )}
 
-          {/* Available seats */}
-          <div className="flex items-center gap-3 text-earth-600">
-            <Users size={20} className="text-mint" />
+          <div className="flex items-center gap-3 text-earth-600 dark:text-earth-400">
+            <Users size={20} className="text-mint-dark dark:text-mint" />
             <span>
               {workshop.availableSeats !== null && workshop.maxSpots !== null
                 ? `${workshop.availableSeats} / ${workshop.maxSpots} places disponibles`
@@ -171,44 +170,39 @@ export default function WorkshopDetailClient({
             </span>
           </div>
 
-          {/* Skill level */}
           {skillLevel && (
-            <div className="flex items-center gap-3 text-earth-600">
-              <Award size={20} className="text-mint" />
+            <div className="flex items-center gap-3 text-earth-600 dark:text-earth-400">
+              <Award size={20} className="text-mint-dark dark:text-mint" />
               <span>Niveau: {skillLevelLabels[skillLevel] || skillLevel}</span>
             </div>
           )}
 
-          {/* Materials */}
           {workshop.materials && (
-            <div className="flex items-start gap-3 text-earth-600">
-              <Tag size={20} className="text-mint mt-1" />
+            <div className="flex items-start gap-3 text-earth-600 dark:text-earth-400">
+              <Tag size={20} className="text-mint-dark dark:text-mint mt-1" />
               <span>Matériel fourni: {workshop.materials}</span>
             </div>
           )}
         </div>
 
-        {/* Description */}
         <div className="mt-8">
-          <h3 className="font-semibold text-earth-800 mb-3">Description</h3>
-          <p className="text-earth-600 leading-relaxed whitespace-pre-line">
+          <h3 className="font-semibold text-earth-800 dark:text-earth-200 mb-3">Description</h3>
+          <p className="text-earth-600 dark:text-earth-400 leading-relaxed whitespace-pre-line">
             {workshop.description}
           </p>
         </div>
 
-        {/* Availability note */}
         {workshop.availability && (
-          <div className="mt-4 text-sm text-earth-500 bg-cream-100 p-3 rounded-lg">
+          <div className="mt-4 text-sm text-earth-500 dark:text-earth-400 bg-cream-100 dark:bg-earth-800 p-3 rounded-lg">
             📅 {workshop.availability}
           </div>
         )}
 
-        {/* WhatsApp button */}
         <div className="mt-8">
-          <Button 
-            href={whatsappUrl} 
-            variant="whatsapp" 
-            external 
+          <Button
+            href={whatsappUrl}
+            variant="whatsapp"
+            external
             className="w-full text-base py-4"
           >
             <MessageCircle size={20} />
@@ -217,7 +211,6 @@ export default function WorkshopDetailClient({
         </div>
       </div>
 
-      {/* Lightbox */}
       <Lightbox
         open={isLightboxOpen}
         close={() => setIsLightboxOpen(false)}
