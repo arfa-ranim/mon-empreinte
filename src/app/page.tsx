@@ -8,6 +8,7 @@ import Link from "next/link";
 import { InstagramIcon } from "@/components/SocialIcons";
 import HeroSection from "@/components/sections/HeroSection";
 import UpcomingWorkshops from "@/components/sections/UpcomingWorkshops";
+import TwoPathSection from "@/components/sections/TwoPathSection";
 import { ProductsGridSkeleton, WorkshopsListSkeleton } from "@/components/Skeleton";
 import { Suspense } from "react";
 
@@ -38,6 +39,9 @@ export default async function HomePage() {
     <PublicLayout>
       {/* ✅ Hero — FULL WIDTH, no container */}
       <HeroSection settings={settings} />
+
+      {/* ✅ Two-path section — the brand's dual identity */}
+      <TwoPathSection />
 
       {/* ✅ Everything below — inside container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,7 +80,7 @@ export default async function HomePage() {
           )}
         </section>
 
-        {/* Featured Workshops — no bg-cream-100 band anymore */}
+        {/* Featured Workshops */}
         <section className="py-16 sm:py-20">
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-earth-800 dark:text-earth-200">
