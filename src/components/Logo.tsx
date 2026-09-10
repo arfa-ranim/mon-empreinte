@@ -7,26 +7,26 @@ interface LogoProps {
   className?: string;
   brandName?: string;
   logoUrl?: string;
-  priority?: boolean; // Add this
+  priority?: boolean;
 }
 
-export default function Logo({ 
-  size = 48, 
-  showText = true, 
+export default function Logo({
+  size = 48,
+  showText = true,
   className = "",
   brandName = "Mon Empreinte",
   logoUrl = "/logo.png",
-  priority = false, // Add this
+  priority = false,
 }: LogoProps) {
   return (
     <Link href="/" className={`flex items-center gap-3 group ${className}`}>
       <div
-        className={`relative rounded-full overflow-hidden border-2 border-earth-300 shadow-sm 
-                   group-hover:shadow-glow bg-cream-100 shrink-0 group-hover:scale-105 
+        className={`relative rounded-full overflow-hidden border-2 border-earth-300 dark:border-earth-600 shadow-sm 
+                   group-hover:shadow-glow bg-cream-100 dark:bg-earth-800 shrink-0 group-hover:scale-105 
                    transition-all duration-300`}
-        style={{ 
-          width: `${size}px`, 
-          height: `${size}px` 
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
         }}
       >
         <Image
@@ -35,12 +35,12 @@ export default function Logo({
           width={size}
           height={size}
           className="object-cover"
-          priority={priority} // Add this
+          priority={priority}
         />
       </div>
-      
+
       {showText && (
-        <span className="font-serif text-xl font-semibold text-earth-800 tracking-wide">
+        <span className="font-serif text-xl font-semibold text-earth-800 dark:text-cream-100 tracking-wide transition-colors">
           {brandName}
         </span>
       )}
