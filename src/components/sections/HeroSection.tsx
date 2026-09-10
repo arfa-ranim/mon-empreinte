@@ -19,17 +19,15 @@ interface HeroSectionProps {
 export default function HeroSection({ settings }: HeroSectionProps) {
   return (
     <section className="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden bg-gradient-hero dark:bg-earth-900">
-      {/* Animated Background Shapes */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-10 -left-20 w-72 h-72 bg-peach rounded-full blur-3xl opacity-20 dark:opacity-10 animate-float" />
         <div className="absolute bottom-10 -right-20 w-96 h-96 bg-mint rounded-full blur-3xl opacity-20 dark:opacity-10 animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-600px h-600px bg-lavender rounded-full blur-3xl opacity-10 dark:opacity-5" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-lavender rounded-full blur-3xl opacity-10 dark:opacity-5" />
         <div className="absolute top-1/4 right-1/4 w-48 h-48 bg-gold rounded-full blur-2xl opacity-15 dark:opacity-8 animate-pulse-glow" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10 py-12">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Animated Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -41,7 +39,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             <Sparkles size={14} className="text-gold ml-1" />
           </motion.div>
 
-          {/* Main Title */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,7 +51,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             </span>
           </motion.h1>
 
-          {/* Tagline */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,7 +60,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             {settings.tagline}
           </motion.p>
 
-          {/* Description */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -74,7 +69,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             {settings.description}
           </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -102,7 +96,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             </Button>
           </motion.div>
 
-          {/* Trust Indicators */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

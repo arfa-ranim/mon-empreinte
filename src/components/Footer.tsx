@@ -43,38 +43,23 @@ export default function Footer({ settings }: FooterProps) {
   ];
 
   const socialLinks = [
-    {
-      href: instagram,
-      icon: InstagramIcon,
-      label: "Instagram",
-      color: "hover:text-pink-500",
-    },
-    {
-      href: facebook,
-      icon: FacebookIcon,
-      label: "Facebook",
-      color: "hover:text-blue-500",
-    },
-    {
-      href: whatsappUrl,
-      icon: MessageCircle,
-      label: "WhatsApp",
-      color: "hover:text-green-400",
-    },
+    { href: instagram, icon: InstagramIcon, label: "Instagram", color: "hover:text-pink-500" },
+    { href: facebook, icon: FacebookIcon, label: "Facebook", color: "hover:text-blue-500" },
+    { href: whatsappUrl, icon: MessageCircle, label: "WhatsApp", color: "hover:text-green-400" },
   ];
 
   return (
-    <footer className="relative bg-earth-900 dark:bg-earth-900 text-cream-100 dark:text-cream-100 mt-auto overflow-hidden">
-      {/* Decorative top border with gradient */}
+    <footer
+      data-scope="site-footer"
+      className="relative bg-earth-900 dark:bg-earth-900 text-cream-100 dark:text-cream-100 mt-auto overflow-hidden"
+    >
       <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-peach via-mint to-lavender" />
 
-      {/* Decorative background shapes */}
       <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-peach/5 dark:bg-peach/5 rounded-full blur-3xl" />
       <div className="absolute -top-20 -left-20 w-64 h-64 bg-mint/5 dark:bg-mint/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          {/* Brand Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -86,7 +71,6 @@ export default function Footer({ settings }: FooterProps) {
               {description}
             </p>
 
-            {/* Social Icons */}
             <div className="mt-6 flex gap-3">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -106,7 +90,6 @@ export default function Footer({ settings }: FooterProps) {
             </div>
           </motion.div>
 
-          {/* Quick Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -130,7 +113,6 @@ export default function Footer({ settings }: FooterProps) {
             </ul>
           </motion.div>
 
-          {/* Contact Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -179,7 +161,6 @@ export default function Footer({ settings }: FooterProps) {
             </ul>
           </motion.div>
 
-          {/* Newsletter Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -195,7 +176,6 @@ export default function Footer({ settings }: FooterProps) {
           </motion.div>
         </div>
 
-        {/* Bottom Bar */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

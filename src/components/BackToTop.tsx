@@ -9,9 +9,7 @@ export default function BackToTop() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShow(window.scrollY > 500);
-    };
+    const handleScroll = () => setShow(window.scrollY > 500);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -27,8 +25,11 @@ export default function BackToTop() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
           onClick={scrollToTop}
-          className="fixed bottom-20 right-6 z-40  p-3 bg-peach text-earth-900 rounded-full shadow-lg hover:scale-110 transition-transform"
+          className="fixed bottom-20 right-6 z-40 p-3 bg-peach text-earth-900 rounded-full shadow-lg"
           aria-label="Retour en haut"
         >
           <ArrowUp size={24} />

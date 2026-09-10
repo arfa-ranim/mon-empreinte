@@ -33,16 +33,12 @@ export default function Navbar({ settings }: NavbarProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { wishlist } = useWishlist();
 
-  // Handle scroll
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
@@ -55,7 +51,6 @@ export default function Navbar({ settings }: NavbarProps) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
     return () => {
@@ -64,7 +59,6 @@ export default function Navbar({ settings }: NavbarProps) {
     };
   }, [isOpen]);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -78,6 +72,7 @@ export default function Navbar({ settings }: NavbarProps) {
 
   return (
     <header
+      data-scope="site-header"
       className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-500
         ${
@@ -90,12 +85,10 @@ export default function Navbar({ settings }: NavbarProps) {
     >
       <nav className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo - left aligned */}
           <div className="flex items-center shrink-0">
             <Logo size={40} brandName={settings?.brandName} />
           </div>
 
-          {/* Desktop Navigation - centered */}
           <ul className="hidden md:flex items-center justify-center gap-1 flex-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -126,9 +119,7 @@ export default function Navbar({ settings }: NavbarProps) {
             })}
           </ul>
 
-          {/* Right Actions */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Search Button - placeholder */}
             <button
               className="hidden md:flex p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors text-earth-600 dark:text-earth-400"
               aria-label="Rechercher"
@@ -136,7 +127,6 @@ export default function Navbar({ settings }: NavbarProps) {
               <Search size={20} />
             </button>
 
-            {/* Wishlist with counter */}
             <Link
               href="/favoris"
               className="relative p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-800 transition-colors text-earth-600 dark:text-earth-400"
@@ -147,7 +137,7 @@ export default function Navbar({ settings }: NavbarProps) {
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-0.5 -right-0.5 min-w-18px h-18px bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
+                  className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
                 >
                   {wishlist.length > 9 ? "9+" : wishlist.length}
                 </motion.span>
@@ -156,7 +146,6 @@ export default function Navbar({ settings }: NavbarProps) {
 
             <ThemeToggle />
 
-            {/* Mobile Menu Button */}
             <button
               ref={buttonRef}
               onClick={() => setIsOpen(!isOpen)}
@@ -168,7 +157,6 @@ export default function Navbar({ settings }: NavbarProps) {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -201,7 +189,6 @@ export default function Navbar({ settings }: NavbarProps) {
                     </li>
                   );
                 })}
-                {/* Mobile only - Favorites with counter */}
                 <li>
                   <Link
                     href="/favoris"

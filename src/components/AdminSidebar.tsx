@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, Package, Palette, 
+import {
+  LayoutDashboard, Package, Palette,
   LogOut, Settings, Plus, Menu, X, Mail,
   ChevronRight, Sparkles
 } from "lucide-react";
@@ -25,23 +25,19 @@ const quickActions = [
   { href: "/admin/workshops/new", label: "Nouvel atelier", icon: Plus },
 ];
 
-// Mobile Toggle
 const MobileToggle = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => (
   <button
     onClick={onToggle}
     className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-white dark:bg-earth-900 rounded-xl shadow-elevation-2 border border-earth-100 dark:border-earth-800 hover:bg-cream-50 dark:hover:bg-earth-800 transition-colors"
     aria-label="Toggle menu"
   >
-    {isOpen ? <X size={22} className="text-earth-700 dark:text-earth-200" /> : <Menu size={22} className="text-earth-700 dark:text-earth-200" />}
+    {isOpen
+      ? <X size={22} className="text-earth-700 dark:text-earth-200" />
+      : <Menu size={22} className="text-earth-700 dark:text-earth-200" />}
   </button>
 );
 
-// Sidebar Content
-const SidebarContent = ({ 
-  onItemClick 
-}: { 
-  onItemClick?: () => void 
-}) => {
+const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
   const pathname = usePathname();
 
   async function handleLogout() {
@@ -86,14 +82,14 @@ const SidebarContent = ({
                 )}
                 onClick={onItemClick}
               >
-                <Icon 
-                  size={18} 
+                <Icon
+                  size={18}
                   className={cn(
                     "shrink-0 transition-colors",
-                    isActive 
-                      ? link.color 
+                    isActive
+                      ? link.color
                       : "text-cream-300/60 dark:text-cream-400/50 group-hover:text-cream-200 dark:group-hover:text-cream-200"
-                  )} 
+                  )}
                 />
                 <span className="truncate">{link.label}</span>
                 {isActive && (
@@ -148,55 +144,37 @@ export default function AdminSidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check if mobile on mount and resize
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     requestAnimationFrame(checkMobile);
-
     window.addEventListener("resize", checkMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Close mobile menu when route changes (only on mobile)
   useEffect(() => {
     if (window.innerWidth < 768) {
-      requestAnimationFrame(() => {
-        setIsMobileOpen(false);
-      });
+      requestAnimationFrame(() => setIsMobileOpen(false));
     }
   }, [pathname]);
 
-  // Handle closing menu when switching to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsMobileOpen(false);
-      }
+      if (window.innerWidth >= 768) setIsMobileOpen(false);
     };
-
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <>
-      <MobileToggle 
-        isOpen={isMobileOpen} 
-        onToggle={() => setIsMobileOpen(!isMobileOpen)} 
+      <MobileToggle
+        isOpen={isMobileOpen}
+        onToggle={() => setIsMobileOpen(!isMobileOpen)}
       />
-      
+
       <AnimatePresence>
         {isMobile && isMobileOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -206,14 +184,17 @@ export default function AdminSidebar() {
         )}
       </AnimatePresence>
 
-      <aside className={cn(
-        "fixed md:sticky top-0 left-0 z-40",
-        "w-64 h-screen bg-earth-800/95 dark:bg-earth-900/95 backdrop-blur-sm text-cream-100 dark:text-cream-100",
-        "flex flex-col transition-transform duration-300 ease-in-out shadow-elevation-4",
-        isMobile && !isMobileOpen && "-translate-x-full",
-        isMobile && isMobileOpen && "translate-x-0",
-        "md:translate-x-0"
-      )}>
+      <aside
+        data-scope="admin"
+        className={cn(
+          "fixed md:sticky top-0 left-0 z-40",
+          "w-64 h-screen bg-earth-800/95 dark:bg-earth-900/95 backdrop-blur-sm text-cream-100 dark:text-cream-100",
+          "flex flex-col transition-transform duration-300 ease-in-out shadow-elevation-4",
+          isMobile && !isMobileOpen && "-translate-x-full",
+          isMobile && isMobileOpen && "translate-x-0",
+          "md:translate-x-0"
+        )}
+      >
         <SidebarContent onItemClick={() => isMobile && setIsMobileOpen(false)} />
       </aside>
     </>

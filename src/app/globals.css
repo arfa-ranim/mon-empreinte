@@ -1,20 +1,61 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   1) TAILWIND THEME TOKENS
+   These register your custom palette with Tailwind v4 so utilities like
+   `bg-cream-50`, `text-earth-800`, `border-earth-100`, `bg-peach`, etc.
+   are actually generated. Static values — dark mode is handled by the
+   unlayered `.dark .*` overrides at the bottom of this file.
+   ========================================================================== */
+@theme {
+  --color-cream-50: #FDFBF7;
+  --color-cream-100: #F5F0E8;
+  --color-cream-200: #E8DFD0;
+  --color-earth-100: #EDE6DB;
+  --color-earth-200: #D4C4A8;
+  --color-earth-300: #C4A77D;
+  --color-earth-400: #A8917A;
+  --color-earth-500: #8B7355;
+  --color-earth-600: #6B5A45;
+  --color-earth-700: #5C4D3C;
+  --color-earth-800: #3D3328;
+  --color-earth-900: #2C2416;
+
+  --color-peach: #FFB5A0;
+  --color-peach-dark: #E8967E;
+  --color-peach-light: #FFE0D6;
+  --color-mint: #A8D8C8;
+  --color-mint-dark: #82BFAE;
+  --color-mint-light: #D6F0E8;
+  --color-lavender: #D4C5F9;
+  --color-lavender-dark: #B8A5E8;
+  --color-lavender-light: #EEE8FC;
+  --color-gold: #F0DBA8;
+  --color-gold-light: #F9F0D8;
+  --color-warm-white: #FFFCF8;
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+}
+
+/* ==========================================================================
+   2) RAW CSS VARIABLES
+   Consumed by custom classes (gradients, shadows, glass morphism, etc.).
+   ========================================================================== */
 :root {
-  /* Light mode colors */
   --cream-50: #FDFBF7;
   --cream-100: #F5F0E8;
   --cream-200: #E8DFD0;
   --earth-100: #EDE6DB;
   --earth-200: #D4C4A8;
   --earth-300: #C4A77D;
+  --earth-400: #A8917A;
   --earth-500: #8B7355;
   --earth-600: #6B5A45;
   --earth-700: #5C4D3C;
   --earth-800: #3D3328;
   --earth-900: #2C2416;
 
-  /* Accent colors */
   --peach: #FFB5A0;
   --peach-dark: #E8967E;
   --peach-light: #FFE0D6;
@@ -28,32 +69,29 @@
   --gold-light: #F9F0D8;
   --warm-white: #FFFCF8;
 
-  /* Gradients */
   --gradient-warm: linear-gradient(135deg, #FFB5A0 0%, #F0DBA8 100%);
   --gradient-cool: linear-gradient(135deg, #A8D8C8 0%, #D4C5F9 100%);
   --gradient-hero: linear-gradient(135deg, #FFFCF8 0%, #F5F0E8 50%, #FFE0D6 100%);
   --gradient-mint: linear-gradient(135deg, #A8D8C8 0%, #D4C5F9 100%);
 
-  /* Elevation Shadows */
   --shadow-elevation-1: 0 2px 8px rgba(61, 51, 40, 0.06);
   --shadow-elevation-2: 0 8px 24px rgba(61, 51, 40, 0.08);
   --shadow-elevation-3: 0 16px 48px rgba(61, 51, 40, 0.12);
   --shadow-elevation-4: 0 24px 64px rgba(61, 51, 40, 0.16);
 
-  /* Glass Morphism */
   --glass-bg: rgba(255, 252, 248, 0.72);
   --glass-border: rgba(255, 252, 248, 0.25);
   --glass-shadow: 0 8px 32px rgba(61, 51, 40, 0.06);
 
-  /* Existing shadows */
   --shadow-soft: 0 8px 30px rgba(255, 181, 160, 0.15);
   --shadow-mint: 0 8px 30px rgba(168, 216, 200, 0.2);
   --shadow-glow: 0 0 30px rgba(255, 181, 160, 0.1);
 }
 
-/* Dark Mode - Enhanced contrast */
+/* Dark mode: only the variables consumed by custom classes flip here.
+   Color utilities (bg-*, text-*, border-*) are handled by the unlayered
+   `.dark .*` overrides at the bottom of this file. */
 .dark {
-  /* Dark mode colors - better contrast */
   --cream-50: #0d0a08;
   --cream-100: #1a1410;
   --cream-200: #2a221c;
@@ -66,22 +104,26 @@
   --earth-800: #f5efe8;
   --earth-900: #fcf9f6;
   --warm-white: #1a1410;
-  
-  /* Glass morphism - darker */
+
   --glass-bg: rgba(13, 10, 8, 0.92);
   --glass-border: rgba(255, 252, 248, 0.06);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  
-  /* Shadows - darker for dark mode */
+
   --shadow-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.4);
   --shadow-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.5);
   --shadow-elevation-3: 0 16px 48px rgba(0, 0, 0, 0.6);
   --shadow-elevation-4: 0 24px 64px rgba(0, 0, 0, 0.7);
-  
+
   --gradient-hero: linear-gradient(135deg, #1a1410 0%, #0d0a08 50%, #2a221c 100%);
 }
 
-/* ===== BASE STYLES ===== */
+/* ==========================================================================
+   3) BASE
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--cream-50);
   color: var(--earth-900);
@@ -91,146 +133,119 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 h1, h2, h3, h4 {
   font-family: var(--font-cormorant), Georgia, serif;
 }
 
-/* ===== SCROLLBAR STYLING ===== */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: var(--cream-100);
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--earth-300);
   border-radius: 9999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: var(--earth-500);
 }
-
 .dark ::-webkit-scrollbar-track {
   background: var(--cream-100);
 }
-
 .dark ::-webkit-scrollbar-thumb {
   background: var(--earth-500);
 }
 
-/* ===== ANIMATIONS ===== */
+/* ==========================================================================
+   4) ANIMATIONS
+   ========================================================================== */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fade-in-scale {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
 }
-
 @keyframes float-delayed {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
 }
-
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.05); }
 }
-
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Utility Animation Classes */
 .animate-fade-in {
   animation: fade-in 0.6s ease-out forwards;
 }
-
 .animate-fade-in-up {
   animation: fade-in-up 0.8s ease-out forwards;
 }
-
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
-
 .animate-float-delayed {
   animation: float-delayed 7s ease-in-out infinite;
 }
-
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
+/* ==========================================================================
+   5) CUSTOM UTILITIES & COMPONENT CLASSES
+   ========================================================================== */
 
+/* Border helpers */
 .border-3 {
   border-width: 3px;
 }
-
 .border-t-transparent {
   border-top-color: transparent;
 }
 
-/* ===== GRADIENTS ===== */
+/* Gradients */
 .bg-gradient-warm {
   background: var(--gradient-warm);
 }
-
 .bg-gradient-cool {
   background: var(--gradient-cool);
 }
-
 .bg-gradient-hero {
   background: var(--gradient-hero);
 }
-
 .bg-gradient-mint {
   background: var(--gradient-mint);
 }
-
 .text-gradient-warm {
   background: var(--gradient-warm);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-
 .dark .text-gradient-warm {
   background: linear-gradient(135deg, #FFB5A0 0%, #F0DBA8 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ===== GLASS MORPHISM ===== */
+/* Glass */
 .glass {
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(12px);
@@ -239,24 +254,13 @@ h1, h2, h3, h4 {
   box-shadow: var(--glass-shadow);
 }
 
-/* ===== ELEVATION SHADOWS ===== */
-.shadow-elevation-1 {
-  box-shadow: var(--shadow-elevation-1);
-}
+/* Elevation shadows */
+.shadow-elevation-1 { box-shadow: var(--shadow-elevation-1); }
+.shadow-elevation-2 { box-shadow: var(--shadow-elevation-2); }
+.shadow-elevation-3 { box-shadow: var(--shadow-elevation-3); }
+.shadow-elevation-4 { box-shadow: var(--shadow-elevation-4); }
 
-.shadow-elevation-2 {
-  box-shadow: var(--shadow-elevation-2);
-}
-
-.shadow-elevation-3 {
-  box-shadow: var(--shadow-elevation-3);
-}
-
-.shadow-elevation-4 {
-  box-shadow: var(--shadow-elevation-4);
-}
-
-/* ===== BUTTON STYLES ===== */
+/* Buttons */
 .btn-primary {
   background: var(--gradient-warm);
   color: var(--earth-900);
@@ -264,116 +268,68 @@ h1, h2, h3, h4 {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: none;
 }
-
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-elevation-3);
 }
-
 .btn-primary:active {
   transform: translateY(0px) scale(0.98);
 }
-
 .btn-secondary {
   background: var(--gradient-cool);
   color: var(--earth-800);
   box-shadow: var(--shadow-mint);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-
 .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-elevation-3);
 }
-
 .btn-outline {
   background: transparent;
   color: var(--earth-700);
   border: 2px solid var(--earth-200);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-
 .btn-outline:hover {
   background: var(--cream-100);
   border-color: var(--earth-300);
   transform: translateY(-2px);
 }
 
-.btn-whatsapp {
-  background: #25D366;
-  color: white;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.btn-whatsapp:hover {
-  background: #1da851;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(37, 211, 102, 0.3);
-}
-
-/* Dark mode button overrides */
-.dark .btn-primary {
-  color: var(--earth-900);
-}
-
-.dark .btn-secondary {
-  color: var(--earth-800);
-}
-
+/* Dark button adjustments */
+.dark .btn-primary { color: var(--earth-900); }
+.dark .btn-secondary { color: var(--earth-800); }
 .dark .btn-outline {
   color: var(--earth-300);
   border-color: var(--earth-600);
 }
-
 .dark .btn-outline:hover {
   background: var(--earth-800);
   border-color: var(--earth-500);
 }
 
-/* ===== CARD STYLES ===== */
-.product-card, .workshop-card {
+/* Card primitives (used by Skeleton loaders) */
+.product-card,
+.workshop-card {
   background: var(--warm-white);
   border-radius: 24px;
   box-shadow: var(--shadow-elevation-1);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: 1px solid var(--earth-100);
 }
-
-.product-card:hover, .workshop-card:hover {
+.product-card:hover,
+.workshop-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-elevation-3);
 }
-
-/* Dark mode cards */
 .dark .product-card,
 .dark .workshop-card {
   background: var(--warm-white);
   border-color: var(--earth-100);
 }
 
-.dark .product-card .text-earth-800,
-.dark .workshop-card .text-earth-800 {
-  color: var(--earth-800);
-}
-
-.dark .product-card .text-earth-600,
-.dark .workshop-card .text-earth-600 {
-  color: var(--earth-600);
-}
-
-/* ===== FORM VALIDATION ===== */
-.input-valid {
-  border-color: #22c55e !important;
-  --tw-ring-color: #22c55e !important;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
-}
-
-.input-invalid {
-  border-color: #ef4444 !important;
-  --tw-ring-color: #ef4444 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
-}
-
+/* Form validation helpers */
 .error-message {
   color: #ef4444;
   font-size: 0.75rem;
@@ -383,11 +339,7 @@ h1, h2, h3, h4 {
   gap: 0.25rem;
   animation: fade-in 0.2s ease-out;
 }
-
-.dark .error-message {
-  color: #f87171;
-}
-
+.dark .error-message { color: #f87171; }
 .success-message {
   color: #22c55e;
   font-size: 0.75rem;
@@ -397,7 +349,7 @@ h1, h2, h3, h4 {
   gap: 0.25rem;
 }
 
-/* ===== SHIMMER SKELETON ===== */
+/* Skeleton shimmer */
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
@@ -408,7 +360,6 @@ h1, h2, h3, h4 {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
-
 .dark .skeleton-shimmer {
   background: linear-gradient(
     90deg,
@@ -419,329 +370,161 @@ h1, h2, h3, h4 {
   background-size: 200% 100%;
 }
 
-/* ===== RESPONSIVE UTILITIES ===== */
+/* Touch / scroll helpers */
 .touch-manipulation {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
-.smooth-scroll {
-  scroll-behavior: smooth;
+/* Masonry */
+.masonry-grid { columns: 3; column-gap: 1rem; }
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
-.safe-padding {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
-
-/* Prevent zoom on inputs (iOS) */
+/* ==========================================================================
+   6) RESPONSIVE / A11Y
+   ========================================================================== */
 @media (max-width: 640px) {
-  input, select, textarea {
-    font-size: 16px !important;
-  }
+  input, select, textarea { font-size: 16px !important; }
+}
+@media (max-width: 768px) {
+  .masonry-grid { columns: 2; }
+}
+@media (max-width: 480px) {
+  .masonry-grid { columns: 1; }
 }
 
-/* ===== REDUCED MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-/* ===== DARK MODE OVERRIDES ===== */
-.dark .bg-white {
-  background-color: #1a1410;
-}
+/* ==========================================================================
+   7) DARK MODE OVERRIDES (UNLAYERED — INTENTIONALLY)
+   These sit outside any @layer so they beat Tailwind utilities.
+   Broad overrides below are what keeps dark mode consistent across the app.
+   Header/Footer/Admin are scoped via [data-scope] attributes so they can't
+   leak into unrelated components.
+   ========================================================================== */
 
-.dark .bg-cream-50 {
-  background-color: #0d0a08;
-}
+/* --- Generic surface overrides --- */
+.dark .bg-white          { background-color: #1a1410; }
+.dark .bg-cream-50       { background-color: #0d0a08; }
+.dark .bg-cream-100      { background-color: #1a1410; }
+.dark .bg-cream-200      { background-color: #2a221c; }
+.dark .bg-earth-50       { background-color: #2a221c; }
+.dark .bg-earth-100      { background-color: #3d322a; }
 
-.dark .bg-cream-100 {
-  background-color: #1a1410;
-}
+.dark .border-earth-100  { border-color: #3d322a; }
+.dark .border-earth-200  { border-color: #5a4a3e; }
 
-.dark .bg-cream-200 {
-  background-color: #2a221c;
-}
+.dark .text-earth-800    { color: #f5efe8; }
+.dark .text-earth-700    { color: #e8ddd2; }
+.dark .text-earth-600    { color: #cfc0b0; }
+.dark .text-earth-500    { color: #b5a392; }
+.dark .text-earth-400    { color: #8a7a6a; }
+.dark .text-earth-300    { color: #7a6556; }
 
-.dark .border-earth-100 {
-  border-color: #3d322a;
-}
-
-.dark .border-earth-200 {
-  border-color: #5a4a3e;
-}
-
-.dark .text-earth-800 {
-  color: #f5efe8;
-}
-
-.dark .text-earth-700 {
-  color: #e8ddd2;
-}
-
-.dark .text-earth-600 {
-  color: #cfc0b0;
-}
-
-.dark .text-earth-500 {
-  color: #b5a392;
-}
-
-.dark .text-earth-400 {
-  color: #8a7a6a;
-}
-
-.dark .text-earth-300 {
-  color: #7a6556;
-}
-
-.dark .text-cream-100 {
-  color: #1a1410;
-}
-
-.dark .hover\:bg-cream-50:hover {
-  background-color: #1a1410;
-}
-
-.dark .hover\:bg-cream-100:hover {
-  background-color: #2a221c;
-}
-
-.dark .bg-earth-100 {
-  background-color: #3d322a;
-}
-
-.dark .bg-earth-50 {
-  background-color: #2a221c;
-}
+.dark .hover\:bg-cream-50:hover  { background-color: #1a1410; }
+.dark .hover\:bg-cream-100:hover { background-color: #2a221c; }
 
 .dark .shadow-sm {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
 }
-
 .dark .shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5),
+              0 2px 4px -1px rgba(0, 0, 0, 0.4);
 }
-
 .dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6),
+              0 4px 6px -2px rgba(0, 0, 0, 0.5);
 }
 
-/* Navbar dark mode - much darker */
-.dark .navbar-glass {
-  background: rgba(13, 10, 8, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Dropdown dark mode */
-.dark .dropdown-content {
-  background: #1a1410;
-  border-color: #3d322a;
-}
-
-/* ===== NAVBAR FIXES ===== */
-.dark header {
+/* --- Site header (Navbar) — scoped --- */
+.dark [data-scope="site-header"] {
   background: rgba(13, 10, 8, 0.95) !important;
   border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }
-
-.dark header .text-earth-600 {
-  color: #cfc0b0 !important;
-}
-
-.dark header .text-earth-800 {
-  color: #f5efe8 !important;
-}
-
-.dark header .hover\:bg-cream-100:hover {
+.dark [data-scope="site-header"] .text-earth-600 { color: #cfc0b0 !important; }
+.dark [data-scope="site-header"] .text-earth-800 { color: #f5efe8 !important; }
+.dark [data-scope="site-header"] .hover\:bg-cream-100:hover {
   background-color: #2a221c !important;
 }
-
-.dark header .bg-white\/80 {
+.dark [data-scope="site-header"] .bg-white\/80 {
   background: rgba(13, 10, 8, 0.95) !important;
 }
-
-.dark header .bg-white\/95 {
+.dark [data-scope="site-header"] .bg-white\/95 {
   background: rgba(13, 10, 8, 0.98) !important;
 }
-
-/* Fix for mobile menu in dark mode */
-.dark .md\:hidden .bg-white {
+.dark [data-scope="site-header"] .md\:hidden .bg-white {
   background-color: #1a1410 !important;
 }
-
-.dark .md\:hidden .border-earth-100 {
+.dark [data-scope="site-header"] .md\:hidden .border-earth-100 {
   border-color: #3d322a !important;
 }
 
-/* ===== FOOTER DARK MODE ===== */
-.dark footer {
+/* --- Site footer — scoped --- */
+.dark [data-scope="site-footer"] {
   background: #0d0a08 !important;
 }
-
-.dark footer .text-cream-100 {
-  color: #f5efe8 !important;
-}
-
-.dark footer .text-cream-200 {
-  color: #cfc0b0 !important;
-}
-
-.dark footer .text-cream-300 {
-  color: #b5a392 !important;
-}
-
-.dark footer .text-cream-400 {
-  color: #8a7a6a !important;
-}
-
-.dark footer .text-earth-800 {
-  color: #f5efe8 !important;
-}
-
-.dark footer .text-earth-600 {
-  color: #cfc0b0 !important;
-}
-
-.dark footer .text-earth-400 {
-  color: #8a7a6a !important;
-}
-
-.dark footer .border-earth-800 {
-  border-color: #2a221c !important;
-}
-
-.dark footer .bg-earth-800 {
-  background-color: #2a221c !important;
-}
-
-.dark footer .bg-earth-900 {
-  background-color: #0d0a08 !important;
-}
-
-.dark footer .hover\:text-white:hover {
-  color: #ffffff !important;
-}
-
-.dark footer .text-green-400 {
-  color: #4ade80 !important;
-}
-
-.dark footer .text-red-400 {
-  color: #f87171 !important;
-}
-
-/* Newsletter in dark mode */
-.dark footer .bg-peach-light\/30 {
+.dark [data-scope="site-footer"] .text-cream-100 { color: #f5efe8 !important; }
+.dark [data-scope="site-footer"] .text-cream-200 { color: #cfc0b0 !important; }
+.dark [data-scope="site-footer"] .text-cream-300 { color: #b5a392 !important; }
+.dark [data-scope="site-footer"] .text-cream-400 { color: #8a7a6a !important; }
+.dark [data-scope="site-footer"] .text-earth-800  { color: #f5efe8 !important; }
+.dark [data-scope="site-footer"] .text-earth-600  { color: #cfc0b0 !important; }
+.dark [data-scope="site-footer"] .text-earth-400  { color: #8a7a6a !important; }
+.dark [data-scope="site-footer"] .border-earth-800 { border-color: #2a221c !important; }
+.dark [data-scope="site-footer"] .bg-earth-800    { background-color: #2a221c !important; }
+.dark [data-scope="site-footer"] .bg-earth-900    { background-color: #0d0a08 !important; }
+.dark [data-scope="site-footer"] .hover\:text-white:hover { color: #ffffff !important; }
+.dark [data-scope="site-footer"] .text-green-400  { color: #4ade80 !important; }
+.dark [data-scope="site-footer"] .text-red-400    { color: #f87171 !important; }
+.dark [data-scope="site-footer"] .bg-peach-light\/30 {
   background-color: rgba(255, 181, 160, 0.08) !important;
 }
-
-.dark footer .bg-earth-800 {
+.dark [data-scope="site-footer"] .border-earth-200 { border-color: #3d322a !important; }
+.dark [data-scope="site-footer"] .hover\:bg-earth-700:hover {
   background-color: #2a221c !important;
 }
 
-.dark footer .border-earth-200 {
-  border-color: #3d322a !important;
-}
-
-.dark footer .border-earth-700 {
-  border-color: #3d322a !important;
-}
-
-.dark footer .hover\:bg-earth-700:hover {
-  background-color: #2a221c !important;
-}
-
-/* ===== ADMIN SIDEBAR DARK MODE FIXES ===== */
-.dark .bg-earth-800 {
+/* --- Admin (sidebar + admin surfaces) — scoped --- */
+.dark [data-scope="admin"] .bg-earth-800 {
   background-color: #1a1410 !important;
 }
-
-.dark .bg-earth-800\/95 {
+.dark [data-scope="admin"] .bg-earth-800\/95 {
   background-color: rgba(26, 20, 16, 0.95) !important;
 }
-
-.dark .bg-gradient-to-b {
-  background: linear-gradient(to bottom, #1a1410, #0d0a08) !important;
-}
-
-.dark .text-cream-100 {
-  color: #f5efe8 !important;
-}
-
-.dark .text-cream-200 {
-  color: #cfc0b0 !important;
-}
-
-.dark .text-cream-300 {
-  color: #b5a392 !important;
-}
-
-.dark .text-cream-400 {
-  color: #8a7a6a !important;
-}
-
-.dark .border-earth-700 {
-  border-color: #2a221c !important;
-}
-
-.dark .border-earth-700\/50 {
+.dark [data-scope="admin"] .text-cream-100 { color: #f5efe8 !important; }
+.dark [data-scope="admin"] .text-cream-200 { color: #cfc0b0 !important; }
+.dark [data-scope="admin"] .text-cream-300 { color: #b5a392 !important; }
+.dark [data-scope="admin"] .text-cream-400 { color: #8a7a6a !important; }
+.dark [data-scope="admin"] .border-earth-700 { border-color: #2a221c !important; }
+.dark [data-scope="admin"] .border-earth-700\/50 {
   border-color: rgba(42, 34, 28, 0.5) !important;
 }
-
-.dark .bg-earth-700\/80 {
+.dark [data-scope="admin"] .bg-earth-700\/80 {
   background-color: rgba(42, 34, 28, 0.8) !important;
 }
-
-.dark .bg-earth-700\/40 {
+.dark [data-scope="admin"] .bg-earth-700\/40 {
   background-color: rgba(42, 34, 28, 0.4) !important;
 }
-
-.dark .hover\:bg-earth-700\/40:hover {
+.dark [data-scope="admin"] .hover\:bg-earth-700\/40:hover {
   background-color: rgba(42, 34, 28, 0.4) !important;
 }
-
-.dark .hover\:bg-earth-700\/50:hover {
+.dark [data-scope="admin"] .hover\:bg-earth-700\/50:hover {
   background-color: rgba(42, 34, 28, 0.5) !important;
 }
-
-.dark .bg-earth-700 {
+.dark [data-scope="admin"] .bg-earth-700 {
   background-color: #2a221c !important;
 }
-
-/* Admin sidebar active state */
-.dark .bg-earth-700\/80 {
-  background-color: rgba(42, 34, 28, 0.8) !important;
-}
-
-.dark .shadow-earth-900\/20 {
+.dark [data-scope="admin"] .shadow-earth-900\/20 {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Masonry Grid */
-.masonry-grid {
-  columns: 3;
-  column-gap: 1rem;
-}
-@media (max-width: 768px) {
-  .masonry-grid {
-    columns: 2;
-  }
-}
-@media (max-width: 480px) {
-  .masonry-grid {
-    columns: 1;
-  }
-}
-.masonry-item {
-  break-inside: avoid;
-  margin-bottom: 1rem;
-  border-radius: 0.75rem;
-  overflow: hidden;
 }

@@ -83,22 +83,16 @@ export default function WorkshopCard({
       transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="group relative bg-white dark:bg-earth-900 rounded-2xl overflow-hidden shadow-elevation-1 hover:shadow-elevation-3 transition-all duration-500 border border-earth-100 dark:border-earth-800 flex flex-col md:flex-row"
     >
-      {/* Status Ribbon */}
       <div
         className={`absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg ${
-          isAvailable
-            ? "bg-green-500 text-white"
-            : "bg-red-500 text-white"
+          isAvailable ? "bg-green-500 text-white" : "bg-red-500 text-white"
         }`}
       >
         {isAvailable ? "✅ Disponible" : "🔴 Complet"}
       </div>
 
-      {/* Image Section */}
       <div className="relative md:w-2/5 aspect-4/3 md:aspect-auto min-h-60 overflow-hidden bg-cream-100 dark:bg-earth-800">
-        {!imageLoaded && (
-          <div className="absolute inset-0 skeleton-shimmer" />
-        )}
+        {!imageLoaded && <div className="absolute inset-0 skeleton-shimmer" />}
 
         <Image
           src={imageUrl}
@@ -113,10 +107,8 @@ export default function WorkshopCard({
           onLoad={() => setImageLoaded(true)}
         />
 
-        {/* Dark overlay on hover */}
         <div className="absolute inset-0 bg-earth-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        {/* Date Badge - overlays the image */}
         {day && month && (
           <div className="absolute bottom-4 left-4 bg-white/95 dark:bg-earth-800/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-earth-100 dark:border-earth-700">
             <div className="text-center">
@@ -130,7 +122,6 @@ export default function WorkshopCard({
           </div>
         )}
 
-        {/* Location on image - mobile */}
         {location && (
           <div className="absolute bottom-4 right-4 md:hidden flex items-center gap-1.5 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
             <MapPin size={14} />
@@ -139,7 +130,6 @@ export default function WorkshopCard({
         )}
       </div>
 
-      {/* Content Section */}
       <div className="flex-1 p-6 flex flex-col">
         <div className="flex items-start justify-between gap-4">
           <Link href={`/ateliers/${id}`} className="flex-1">
@@ -156,7 +146,6 @@ export default function WorkshopCard({
           {description}
         </p>
 
-        {/* Workshop Details Chips */}
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {duration && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-mint-light/50 dark:bg-mint/10 rounded-full text-xs text-earth-700 dark:text-earth-300">
@@ -184,7 +173,6 @@ export default function WorkshopCard({
           )}
         </div>
 
-        {/* Location - desktop only */}
         {location && (
           <div className="mt-3 flex items-center gap-1.5 text-sm text-earth-500 dark:text-earth-400">
             <MapPin size={16} />
@@ -192,7 +180,6 @@ export default function WorkshopCard({
           </div>
         )}
 
-        {/* Formatted Date */}
         {formattedDate && (
           <div className="mt-1 flex items-center gap-2 text-sm text-earth-500 dark:text-earth-400">
             <Calendar size={16} className="text-mint" />
@@ -205,7 +192,6 @@ export default function WorkshopCard({
           </div>
         )}
 
-        {/* Actions */}
         <div className="mt-5 flex flex-wrap gap-3">
           <Button
             href={whatsappUrl}
@@ -221,10 +207,7 @@ export default function WorkshopCard({
             className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full border-2 border-earth-200 dark:border-earth-700 text-earth-700 dark:text-earth-300 text-sm font-medium hover:bg-earth-50 dark:hover:bg-earth-800 hover:border-earth-300 dark:hover:border-earth-600 transition-all group/link"
           >
             En savoir plus
-            <ChevronRight
-              size={16}
-              className="group-hover/link:translate-x-1 transition-transform"
-            />
+            <ChevronRight size={16} className="group-hover/link:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

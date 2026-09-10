@@ -348,7 +348,7 @@ export default function DashboardClient() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-linear-to-br` from-peach-light/30 via-white to-mint-light/30 dark:from-earth-800/50 dark:via-earth-900 dark:to-earth-800/50 rounded-2xl p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1"
+        className="bg-linear-to-br from-peach-light/30 via-white to-mint-light/30 dark:from-earth-800/50 dark:via-earth-900 dark:to-earth-800/50 rounded-2xl p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1"
       >
         <div className="flex items-center justify-between mb-4">
           <div>
