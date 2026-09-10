@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StatsCardProps {
@@ -12,8 +11,6 @@ interface StatsCardProps {
   href?: string;
   color?: string;
   bgColor?: string;
-  trend?: string;
-  trendUp?: boolean;
   delay?: number;
 }
 
@@ -24,69 +21,41 @@ export default function StatsCard({
   href,
   color = "text-peach",
   bgColor = "bg-peach/10",
-  trend,
-  trendUp = true,
   delay = 0,
 }: StatsCardProps) {
   const content = (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.4 }}
-      whileHover={href ? { y: -4, transition: { duration: 0.2 } } : undefined}
+      transition={{ delay, duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+      whileHover={href ? { y: -2 } : undefined}
       className="relative overflow-hidden group"
     >
       <div className="bg-white dark:bg-earth-900 rounded-2xl p-6 border border-earth-100 dark:border-earth-800 shadow-elevation-1 hover:shadow-elevation-3 transition-all duration-300">
-        {/* Decorative gradient background */}
         <div
           className={cn(
-            "absolute -right-8 -top-8 w-32 h-32 rounded-full blur-2xl opacity-30 group-hover:opacity-60 transition-opacity duration-500 group-hover:scale-110",
+            "absolute -right-8 -top-8 w-32 h-32 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500",
             bgColor
           )}
         />
 
-        {/* Shine effect on hover - fixed by using separate elements with separate transitions */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full" />
-
-        <div className="relative">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-earth-500 dark:text-earth-400 text-sm font-medium">
-                {title}
-              </p>
-              <p className="text-3xl font-bold text-earth-800 dark:text-earth-200">
-                {value}
-              </p>
-              {trend && (
-                <div className="flex items-center gap-1.5">
-                  {trendUp ? (
-                    <ArrowUpRight size={16} className="text-green-500" />
-                  ) : (
-                    <ArrowDownRight size={16} className="text-red-500" />
-                  )}
-                  <span
-                    className={cn(
-                      "text-xs font-medium",
-                      trendUp ? "text-green-500" : "text-red-500"
-                    )}
-                  >
-                    {trend}
-                  </span>
-                  <span className="text-xs text-earth-400 dark:text-earth-500">
-                    vs mois dernier
-                  </span>
-                </div>
-              )}
-            </div>
-            <div
-              className={cn(
-                "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3",
-                bgColor,
-                color
-              )}
-            >
-              <Icon size={24} />
-            </div>
+        <div className="relative flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-earth-500 dark:text-earth-400 text-sm font-medium">
+              {title}
+            </p>
+            <p className="text-3xl font-bold text-earth-800 dark:text-earth-200">
+              {value}
+            </p>
+          </div>
+          <div
+            className={cn(
+              "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105",
+              bgColor,
+              color
+            )}
+          >
+            <Icon size={24} />
           </div>
         </div>
       </div>

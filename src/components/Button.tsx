@@ -16,8 +16,13 @@ const variants = {
   primary: "btn-primary text-earth-900",
   secondary: "btn-secondary text-earth-800",
   outline: "btn-outline",
-  whatsapp: "bg-[#25D366] text-white hover:bg-[#1da851]",
+  whatsapp: "bg-[#25D366] text-white hover:bg-[#1da851] shadow-soft",
 };
+
+const base =
+  "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peach-dark focus-visible:ring-offset-2 " +
+  "dark:focus-visible:ring-peach dark:focus-visible:ring-offset-earth-900";
 
 export default function Button({
   children,
@@ -30,16 +35,21 @@ export default function Button({
   external,
 }: ButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200",
+    base,
     variants[variant],
-    disabled && "opacity-50 cursor-not-allowed",
+    disabled && "opacity-50 cursor-not-allowed pointer-events-none",
     className
   );
 
   if (href) {
     if (external) {
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={classes}
+        >
           {children}
         </a>
       );

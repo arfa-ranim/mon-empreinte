@@ -2,25 +2,25 @@
 
 /* ==========================================================================
    1) TAILWIND THEME TOKENS
-   These register your custom palette with Tailwind v4 so utilities like
-   `bg-cream-50`, `text-earth-800`, `border-earth-100`, `bg-peach`, etc.
-   are actually generated. Static values — dark mode is handled by the
-   unlayered `.dark .*` overrides at the bottom of this file.
    ========================================================================== */
 @theme {
-  --color-cream-50: #FDFBF7;
-  --color-cream-100: #F5F0E8;
-  --color-cream-200: #E8DFD0;
+  /* Creams — soft, warm, never stark white */
+  --color-cream-50: #FDFAF5;      /* page background — soft peach cream */
+  --color-cream-100: #F9F3EA;     /* subtle surface */
+  --color-cream-200: #F0E6D6;     /* deeper surface */
+
+  /* Earth — used for text and borders only */
   --color-earth-100: #EDE6DB;
   --color-earth-200: #D4C4A8;
   --color-earth-300: #C4A77D;
-  --color-earth-400: #A8917A;
-  --color-earth-500: #8B7355;
-  --color-earth-600: #6B5A45;
-  --color-earth-700: #5C4D3C;
-  --color-earth-800: #3D3328;
-  --color-earth-900: #2C2416;
+  --color-earth-400: #7A6549;
+  --color-earth-500: #6B5740;
+  --color-earth-600: #5A4A35;
+  --color-earth-700: #47392A;
+  --color-earth-800: #352B1E;
+  --color-earth-900: #241D13;
 
+  /* Accents */
   --color-peach: #FFB5A0;
   --color-peach-dark: #E8967E;
   --color-peach-light: #FFE0D6;
@@ -32,7 +32,9 @@
   --color-lavender-light: #EEE8FC;
   --color-gold: #F0DBA8;
   --color-gold-light: #F9F0D8;
-  --color-warm-white: #FFFCF8;
+
+  /* Cards / elevated surfaces — warm off-white, NOT pure white */
+  --color-warm-white: #FFFCF7;
 
   --font-serif: var(--font-cormorant), Georgia, serif;
   --font-sans: var(--font-nunito), system-ui, sans-serif;
@@ -40,22 +42,25 @@
 
 /* ==========================================================================
    2) RAW CSS VARIABLES
-   Consumed by custom classes (gradients, shadows, glass morphism, etc.).
    ========================================================================== */
 :root {
-  --cream-50: #FDFBF7;
-  --cream-100: #F5F0E8;
-  --cream-200: #E8DFD0;
+  /* Creams */
+  --cream-50: #FDFAF5;
+  --cream-100: #F9F3EA;
+  --cream-200: #F0E6D6;
+
+  /* Earth */
   --earth-100: #EDE6DB;
   --earth-200: #D4C4A8;
   --earth-300: #C4A77D;
-  --earth-400: #A8917A;
-  --earth-500: #8B7355;
-  --earth-600: #6B5A45;
-  --earth-700: #5C4D3C;
-  --earth-800: #3D3328;
-  --earth-900: #2C2416;
+  --earth-400: #7A6549;
+  --earth-500: #6B5740;
+  --earth-600: #5A4A35;
+  --earth-700: #47392A;
+  --earth-800: #352B1E;
+  --earth-900: #241D13;
 
+  /* Accents */
   --peach: #FFB5A0;
   --peach-dark: #E8967E;
   --peach-light: #FFE0D6;
@@ -67,30 +72,39 @@
   --lavender-light: #EEE8FC;
   --gold: #F0DBA8;
   --gold-light: #F9F0D8;
-  --warm-white: #FFFCF8;
 
+  --warm-white: #FFFCF7;
+
+  /* Gradients */
   --gradient-warm: linear-gradient(135deg, #FFB5A0 0%, #F0DBA8 100%);
   --gradient-cool: linear-gradient(135deg, #A8D8C8 0%, #D4C5F9 100%);
-  --gradient-hero: linear-gradient(135deg, #FFFCF8 0%, #F5F0E8 50%, #FFE0D6 100%);
+
+  /* ✅ Hero — soft peach cream, no brown, no stark white */
+  --gradient-hero: linear-gradient(
+    165deg,
+    #FFFCF6 0%,
+    #FDF4E9 45%,
+    #FBEADB 100%
+  );
   --gradient-mint: linear-gradient(135deg, #A8D8C8 0%, #D4C5F9 100%);
 
-  --shadow-elevation-1: 0 2px 8px rgba(61, 51, 40, 0.06);
-  --shadow-elevation-2: 0 8px 24px rgba(61, 51, 40, 0.08);
-  --shadow-elevation-3: 0 16px 48px rgba(61, 51, 40, 0.12);
-  --shadow-elevation-4: 0 24px 64px rgba(61, 51, 40, 0.16);
+  /* Shadows */
+  --shadow-elevation-1: 0 2px 8px rgba(61, 51, 40, 0.05);
+  --shadow-elevation-2: 0 8px 24px rgba(61, 51, 40, 0.07);
+  --shadow-elevation-3: 0 16px 48px rgba(61, 51, 40, 0.10);
+  --shadow-elevation-4: 0 24px 64px rgba(61, 51, 40, 0.14);
 
-  --glass-bg: rgba(255, 252, 248, 0.72);
-  --glass-border: rgba(255, 252, 248, 0.25);
+  --glass-bg: rgba(255, 252, 247, 0.72);
+  --glass-border: rgba(255, 252, 247, 0.25);
   --glass-shadow: 0 8px 32px rgba(61, 51, 40, 0.06);
 
   --shadow-soft: 0 8px 30px rgba(255, 181, 160, 0.15);
   --shadow-mint: 0 8px 30px rgba(168, 216, 200, 0.2);
   --shadow-glow: 0 0 30px rgba(255, 181, 160, 0.1);
+
+  --focus-ring: 0 0 0 2px var(--cream-50), 0 0 0 4px var(--peach-dark);
 }
 
-/* Dark mode: only the variables consumed by custom classes flip here.
-   Color utilities (bg-*, text-*, border-*) are handled by the unlayered
-   `.dark .*` overrides at the bottom of this file. */
 .dark {
   --cream-50: #0d0a08;
   --cream-100: #1a1410;
@@ -114,7 +128,9 @@
   --shadow-elevation-3: 0 16px 48px rgba(0, 0, 0, 0.6);
   --shadow-elevation-4: 0 24px 64px rgba(0, 0, 0, 0.7);
 
-  --gradient-hero: linear-gradient(135deg, #1a1410 0%, #0d0a08 50%, #2a221c 100%);
+  --gradient-hero: linear-gradient(165deg, #1a1410 0%, #0d0a08 50%, #2a221c 100%);
+
+  --focus-ring: 0 0 0 2px #1a1410, 0 0 0 4px var(--peach);
 }
 
 /* ==========================================================================
@@ -137,30 +153,37 @@ h1, h2, h3, h4 {
   font-family: var(--font-cormorant), Georgia, serif;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ==========================================================================
+   4) FOCUS-VISIBLE
+   ========================================================================== */
+*:focus {
+  outline: none;
 }
-::-webkit-scrollbar-track {
-  background: var(--cream-100);
+*:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 6px;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--earth-300);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--earth-500);
-}
-.dark ::-webkit-scrollbar-track {
-  background: var(--cream-100);
-}
-.dark ::-webkit-scrollbar-thumb {
-  background: var(--earth-500);
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  box-shadow: var(--focus-ring);
 }
 
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--cream-100); }
+::-webkit-scrollbar-thumb { background: var(--earth-300); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--earth-500); }
+.dark ::-webkit-scrollbar-track { background: var(--cream-100); }
+.dark ::-webkit-scrollbar-thumb { background: var(--earth-500); }
+
 /* ==========================================================================
-   4) ANIMATIONS
+   5) ANIMATIONS
    ========================================================================== */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(12px); }
@@ -169,10 +192,6 @@ h1, h2, h3, h4 {
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fade-in-scale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -191,61 +210,38 @@ h1, h2, h3, h4 {
   100% { background-position: 200% 0; }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.6s ease-out forwards;
-}
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
-}
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-.animate-float-delayed {
-  animation: float-delayed 7s ease-in-out infinite;
-}
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
+.animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+.animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-delayed { animation: float-delayed 7s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
 
 /* ==========================================================================
-   5) CUSTOM UTILITIES & COMPONENT CLASSES
+   6) CUSTOM UTILITIES
    ========================================================================== */
+.border-3 { border-width: 3px; }
+.border-t-transparent { border-top-color: transparent; }
 
-/* Border helpers */
-.border-3 {
-  border-width: 3px;
-}
-.border-t-transparent {
-  border-top-color: transparent;
-}
+.bg-gradient-warm { background: var(--gradient-warm); }
+.bg-gradient-cool { background: var(--gradient-cool); }
+.bg-gradient-hero { background: var(--gradient-hero); }
+.bg-gradient-mint { background: var(--gradient-mint); }
 
-/* Gradients */
-.bg-gradient-warm {
-  background: var(--gradient-warm);
-}
-.bg-gradient-cool {
-  background: var(--gradient-cool);
-}
-.bg-gradient-hero {
-  background: var(--gradient-hero);
-}
-.bg-gradient-mint {
-  background: var(--gradient-mint);
-}
 .text-gradient-warm {
-  background: var(--gradient-warm);
+  background: linear-gradient(135deg, #5A4A35 0%, #A8543A 50%, #7A3920 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 2px rgba(255, 252, 248, 0.8));
 }
 .dark .text-gradient-warm {
   background: linear-gradient(135deg, #FFB5A0 0%, #F0DBA8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: none;
 }
 
-/* Glass */
 .glass {
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(12px);
@@ -254,7 +250,6 @@ h1, h2, h3, h4 {
   box-shadow: var(--glass-shadow);
 }
 
-/* Elevation shadows */
 .shadow-elevation-1 { box-shadow: var(--shadow-elevation-1); }
 .shadow-elevation-2 { box-shadow: var(--shadow-elevation-2); }
 .shadow-elevation-3 { box-shadow: var(--shadow-elevation-3); }
@@ -268,23 +263,17 @@ h1, h2, h3, h4 {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: none;
 }
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-elevation-3);
-}
-.btn-primary:active {
-  transform: translateY(0px) scale(0.98);
-}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevation-3); }
+.btn-primary:active { transform: translateY(0px) scale(0.98); }
+
 .btn-secondary {
   background: var(--gradient-cool);
   color: var(--earth-800);
   box-shadow: var(--shadow-mint);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.btn-secondary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-elevation-3);
-}
+.btn-secondary:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevation-3); }
+
 .btn-outline {
   background: transparent;
   color: var(--earth-700);
@@ -297,19 +286,12 @@ h1, h2, h3, h4 {
   transform: translateY(-2px);
 }
 
-/* Dark button adjustments */
 .dark .btn-primary { color: var(--earth-900); }
 .dark .btn-secondary { color: var(--earth-800); }
-.dark .btn-outline {
-  color: var(--earth-300);
-  border-color: var(--earth-600);
-}
-.dark .btn-outline:hover {
-  background: var(--earth-800);
-  border-color: var(--earth-500);
-}
+.dark .btn-outline { color: var(--earth-300); border-color: var(--earth-600); }
+.dark .btn-outline:hover { background: var(--earth-800); border-color: var(--earth-500); }
 
-/* Card primitives (used by Skeleton loaders) */
+/* Card primitives */
 .product-card,
 .workshop-card {
   background: var(--warm-white);
@@ -320,7 +302,7 @@ h1, h2, h3, h4 {
 }
 .product-card:hover,
 .workshop-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-elevation-3);
 }
 .dark .product-card,
@@ -329,48 +311,37 @@ h1, h2, h3, h4 {
   border-color: var(--earth-100);
 }
 
-/* Form validation helpers */
+/* Form validation */
 .error-message {
-  color: #ef4444;
+  color: #b91c1c;
   font-size: 0.75rem;
   margin-top: 0.25rem;
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  animation: fade-in 0.2s ease-out;
 }
-.dark .error-message { color: #f87171; }
+.dark .error-message { color: #fca5a5; }
 .success-message {
-  color: #22c55e;
+  color: #15803d;
   font-size: 0.75rem;
   margin-top: 0.25rem;
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
+.dark .success-message { color: #86efac; }
 
-/* Skeleton shimmer */
+/* Skeleton */
 .skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--cream-100) 25%,
-    var(--cream-200) 50%,
-    var(--cream-100) 75%
-  );
+  background: linear-gradient(90deg, var(--cream-100) 25%, var(--cream-200) 50%, var(--cream-100) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 .dark .skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--earth-100) 25%,
-    var(--earth-200) 50%,
-    var(--earth-100) 75%
-  );
+  background: linear-gradient(90deg, var(--earth-100) 25%, var(--earth-200) 50%, var(--earth-100) 75%);
   background-size: 200% 100%;
 }
 
-/* Touch / scroll helpers */
 .touch-manipulation {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -385,18 +356,32 @@ h1, h2, h3, h4 {
   overflow: hidden;
 }
 
+/* Status chips */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.status-chip--available { background: #dcfce7; color: #14532d; }
+.status-chip--unavailable { background: #fee2e2; color: #7f1d1d; }
+.status-chip--neutral { background: #ede9fe; color: #3b0764; }
+.dark .status-chip--available { background: rgba(34, 197, 94, 0.18); color: #bbf7d0; }
+.dark .status-chip--unavailable { background: rgba(239, 68, 68, 0.18); color: #fecaca; }
+.dark .status-chip--neutral { background: rgba(168, 85, 247, 0.18); color: #e9d5ff; }
+
 /* ==========================================================================
-   6) RESPONSIVE / A11Y
+   7) RESPONSIVE / A11Y
    ========================================================================== */
 @media (max-width: 640px) {
   input, select, textarea { font-size: 16px !important; }
 }
-@media (max-width: 768px) {
-  .masonry-grid { columns: 2; }
-}
-@media (max-width: 480px) {
-  .masonry-grid { columns: 1; }
-}
+@media (max-width: 768px) { .masonry-grid { columns: 2; } }
+@media (max-width: 480px) { .masonry-grid { columns: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -407,19 +392,12 @@ h1, h2, h3, h4 {
 }
 
 /* ==========================================================================
-   7) DARK MODE OVERRIDES (UNLAYERED — INTENTIONALLY)
-   These sit outside any @layer so they beat Tailwind utilities.
-   Broad overrides below are what keeps dark mode consistent across the app.
-   Header/Footer/Admin are scoped via [data-scope] attributes so they can't
-   leak into unrelated components.
+   8) DARK MODE OVERRIDES
    ========================================================================== */
-
-/* --- Generic surface overrides --- */
 .dark .bg-white          { background-color: #1a1410; }
 .dark .bg-cream-50       { background-color: #0d0a08; }
 .dark .bg-cream-100      { background-color: #1a1410; }
 .dark .bg-cream-200      { background-color: #2a221c; }
-.dark .bg-earth-50       { background-color: #2a221c; }
 .dark .bg-earth-100      { background-color: #3d322a; }
 
 .dark .border-earth-100  { border-color: #3d322a; }
@@ -435,45 +413,21 @@ h1, h2, h3, h4 {
 .dark .hover\:bg-cream-50:hover  { background-color: #1a1410; }
 .dark .hover\:bg-cream-100:hover { background-color: #2a221c; }
 
-.dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-}
-.dark .shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5),
-              0 2px 4px -1px rgba(0, 0, 0, 0.4);
-}
-.dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6),
-              0 4px 6px -2px rgba(0, 0, 0, 0.5);
-}
-
-/* --- Site header (Navbar) — scoped --- */
+/* --- Site header --- */
 .dark [data-scope="site-header"] {
   background: rgba(13, 10, 8, 0.95) !important;
   border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }
 .dark [data-scope="site-header"] .text-earth-600 { color: #cfc0b0 !important; }
 .dark [data-scope="site-header"] .text-earth-800 { color: #f5efe8 !important; }
-.dark [data-scope="site-header"] .hover\:bg-cream-100:hover {
-  background-color: #2a221c !important;
-}
-.dark [data-scope="site-header"] .bg-white\/80 {
-  background: rgba(13, 10, 8, 0.95) !important;
-}
-.dark [data-scope="site-header"] .bg-white\/95 {
-  background: rgba(13, 10, 8, 0.98) !important;
-}
-.dark [data-scope="site-header"] .md\:hidden .bg-white {
-  background-color: #1a1410 !important;
-}
-.dark [data-scope="site-header"] .md\:hidden .border-earth-100 {
-  border-color: #3d322a !important;
-}
+.dark [data-scope="site-header"] .hover\:bg-cream-100:hover { background-color: #2a221c !important; }
+.dark [data-scope="site-header"] .bg-white\/80 { background: rgba(13, 10, 8, 0.95) !important; }
+.dark [data-scope="site-header"] .bg-white\/95 { background: rgba(13, 10, 8, 0.98) !important; }
+.dark [data-scope="site-header"] .md\:hidden .bg-white { background-color: #1a1410 !important; }
+.dark [data-scope="site-header"] .md\:hidden .border-earth-100 { border-color: #3d322a !important; }
 
-/* --- Site footer — scoped --- */
-.dark [data-scope="site-footer"] {
-  background: #0d0a08 !important;
-}
+/* --- Site footer --- */
+.dark [data-scope="site-footer"] { background: #0d0a08 !important; }
 .dark [data-scope="site-footer"] .text-cream-100 { color: #f5efe8 !important; }
 .dark [data-scope="site-footer"] .text-cream-200 { color: #cfc0b0 !important; }
 .dark [data-scope="site-footer"] .text-cream-300 { color: #b5a392 !important; }
@@ -487,44 +441,42 @@ h1, h2, h3, h4 {
 .dark [data-scope="site-footer"] .hover\:text-white:hover { color: #ffffff !important; }
 .dark [data-scope="site-footer"] .text-green-400  { color: #4ade80 !important; }
 .dark [data-scope="site-footer"] .text-red-400    { color: #f87171 !important; }
-.dark [data-scope="site-footer"] .bg-peach-light\/30 {
-  background-color: rgba(255, 181, 160, 0.08) !important;
-}
+.dark [data-scope="site-footer"] .bg-peach-light\/30 { background-color: rgba(255, 181, 160, 0.08) !important; }
 .dark [data-scope="site-footer"] .border-earth-200 { border-color: #3d322a !important; }
-.dark [data-scope="site-footer"] .hover\:bg-earth-700:hover {
-  background-color: #2a221c !important;
-}
+.dark [data-scope="site-footer"] .hover\:bg-earth-700:hover { background-color: #2a221c !important; }
 
-/* --- Admin (sidebar + admin surfaces) — scoped --- */
-.dark [data-scope="admin"] .bg-earth-800 {
-  background-color: #1a1410 !important;
-}
-.dark [data-scope="admin"] .bg-earth-800\/95 {
-  background-color: rgba(26, 20, 16, 0.95) !important;
-}
+/* --- Admin --- */
+.dark [data-scope="admin"] .bg-earth-800 { background-color: #1a1410 !important; }
+.dark [data-scope="admin"] .bg-earth-800\/95 { background-color: rgba(26, 20, 16, 0.95) !important; }
 .dark [data-scope="admin"] .text-cream-100 { color: #f5efe8 !important; }
 .dark [data-scope="admin"] .text-cream-200 { color: #cfc0b0 !important; }
 .dark [data-scope="admin"] .text-cream-300 { color: #b5a392 !important; }
 .dark [data-scope="admin"] .text-cream-400 { color: #8a7a6a !important; }
 .dark [data-scope="admin"] .border-earth-700 { border-color: #2a221c !important; }
-.dark [data-scope="admin"] .border-earth-700\/50 {
-  border-color: rgba(42, 34, 28, 0.5) !important;
+.dark [data-scope="admin"] .border-earth-700\/50 { border-color: rgba(42, 34, 28, 0.5) !important; }
+.dark [data-scope="admin"] .bg-earth-700\/80 { background-color: rgba(42, 34, 28, 0.8) !important; }
+.dark [data-scope="admin"] .bg-earth-700\/40 { background-color: rgba(42, 34, 28, 0.4) !important; }
+.dark [data-scope="admin"] .hover\:bg-earth-700\/40:hover { background-color: rgba(42, 34, 28, 0.4) !important; }
+.dark [data-scope="admin"] .hover\:bg-earth-700\/50:hover { background-color: rgba(42, 34, 28, 0.5) !important; }
+.dark [data-scope="admin"] .bg-earth-700 { background-color: #2a221c !important; }
+.dark [data-scope="admin"] .shadow-earth-900\/20 { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important; }
+
+/* ==========================================================================
+   9) SUBTLE PAPER GRAIN (opt-in)
+   ========================================================================== */
+.paper-grain {
+  position: relative;
 }
-.dark [data-scope="admin"] .bg-earth-700\/80 {
-  background-color: rgba(42, 34, 28, 0.8) !important;
+.paper-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
 }
-.dark [data-scope="admin"] .bg-earth-700\/40 {
-  background-color: rgba(42, 34, 28, 0.4) !important;
-}
-.dark [data-scope="admin"] .hover\:bg-earth-700\/40:hover {
-  background-color: rgba(42, 34, 28, 0.4) !important;
-}
-.dark [data-scope="admin"] .hover\:bg-earth-700\/50:hover {
-  background-color: rgba(42, 34, 28, 0.5) !important;
-}
-.dark [data-scope="admin"] .bg-earth-700 {
-  background-color: #2a221c !important;
-}
-.dark [data-scope="admin"] .shadow-earth-900\/20 {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+.dark .paper-grain::after {
+  mix-blend-mode: screen;
+  opacity: 0.05;
 }

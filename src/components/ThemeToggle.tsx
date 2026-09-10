@@ -7,15 +7,12 @@ import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
-  // Fix: Use useEffect with a timeout to avoid the setState warning
   useEffect(() => {
-    // Using setTimeout ensures this runs after the render cycle
     const timer = setTimeout(() => {
       setMounted(true);
     }, 0);
-    
     return () => clearTimeout(timer);
   }, []);
 
@@ -23,13 +20,13 @@ export default function ThemeToggle() {
     return <div className="w-9 h-9" />;
   }
 
-  const isDark = theme === "dark";
+  const isDark = resolvedTheme === "dark";
 
   return (
     <motion.button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="p-2 rounded-lg hover:bg-cream-100 dark:hover:bg-earth-700 transition-colors relative"
-      aria-label="Toggle theme"
+      aria-label={isDark ? "Passer en mode clair" : "Passer en mode sombre"}
       whileTap={{ scale: 0.9 }}
     >
       <motion.div

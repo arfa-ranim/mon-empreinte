@@ -32,17 +32,16 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
 
   render() {
     if (this.state.hasError) {
-      // Custom fallback UI
       return (
         this.props.fallback || (
           <div className="flex flex-col items-center justify-center min-h-60 p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
-              <AlertCircle size={32} className="text-red-500" />
+            <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+              <AlertCircle size={32} className="text-red-600 dark:text-red-400" />
             </div>
-            <h3 className="font-serif text-xl font-semibold text-earth-800 mb-2">
+            <h3 className="font-serif text-xl font-semibold text-earth-800 dark:text-earth-200 mb-2">
               Une erreur est survenue
             </h3>
-            <p className="text-earth-500 text-sm max-w-md mb-6">
+            <p className="text-earth-500 dark:text-earth-400 text-sm max-w-md mb-6">
               {this.state.error?.message || "Une erreur inattendue s'est produite."}
             </p>
             <Button

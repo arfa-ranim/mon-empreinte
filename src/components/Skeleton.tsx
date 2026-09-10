@@ -53,7 +53,7 @@ export function WorkshopCardSkeleton() {
   return (
     <article className="workshop-card group flex flex-col md:flex-row">
       <div className="workshop-accent shrink-0 hidden md:block"></div>
-      <div className="relative md:w-2/5 aspect-4/3 md:aspect-auto min-h-[200px] overflow-hidden bg-cream-100">
+      <div className="relative md:w-2/5 aspect-4/3 md:aspect-auto min-h-50 overflow-hidden bg-cream-100">
         <Skeleton className="w-full h-full" />
       </div>
       <div className="p-6 md:w-3/5 flex flex-col space-y-4">

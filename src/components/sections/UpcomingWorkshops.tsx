@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Calendar, Clock, ChevronRight } from "lucide-react";
+import { Calendar, Clock, ChevronRight, Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatPrice } from "@/lib/utils";
 
@@ -38,11 +38,9 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
     return null;
   }
 
-  // Get current date
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  // Calculate days until workshop
   const getDaysUntil = (dateStr: string | null) => {
     if (!dateStr) return null;
     const workshopDate = new Date(dateStr);
@@ -51,7 +49,6 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
     return diffDays;
   };
 
-  // Format date
   const formatWorkshopDate = (dateStr: string | null) => {
     if (!dateStr) return "Date à définir";
     const date = new Date(dateStr);
@@ -65,9 +62,10 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
   return (
     <section className="py-16 sm:py-20 bg-linear-to-b from-cream-50 to-peach-light/20 dark:from-earth-900 dark:to-earth-800/50">
       <div className="container mx-auto px-4">
+        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-peach-light/30 dark:bg-peach/10 px-4 py-2 rounded-full text-sm text-earth-600 dark:text-earth-300 mb-4">
-            <Calendar size={16} className="text-peach" />
+            <Calendar size={16} className="text-peach-dark dark:text-peach" />
             <span>À venir</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-earth-800 dark:text-earth-200">
@@ -78,22 +76,26 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
           </p>
         </div>
 
+        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {workshops.slice(0, 3).map((workshop, index) => {
             const daysUntil = getDaysUntil(workshop.date);
             const isThisWeek = daysUntil !== null && daysUntil <= 7;
             const isTomorrow = daysUntil === 1;
+            const isAvailable =
+              workshop.availability !== "complet" &&
+              workshop.availability !== "annulé";
 
             return (
               <motion.div
                 key={workshop.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -6 }}
-                className="group relative bg-white dark:bg-earth-900 rounded-2xl overflow-hidden shadow-elevation-1 hover:shadow-elevation-3 transition-all duration-500 border border-earth-100 dark:border-earth-800"
+                transition={{ delay: index * 0.1, duration: 0.4 }}
+                whileHover={{ y: -4 }}
+                className="group relative bg-white dark:bg-earth-900 rounded-2xl overflow-hidden shadow-elevation-1 hover:shadow-elevation-3 transition-shadow duration-500 border border-earth-100 dark:border-earth-800"
               >
-                {/* "Bientôt" Badge */}
+                {/* "Bientôt" badge */}
                 {isThisWeek && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1.5 bg-gradient-warm text-earth-900 text-xs font-medium rounded-full shadow-lg flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-earth-900 animate-pulse" />
@@ -101,24 +103,46 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
                   </div>
                 )}
 
-                {/* Days count badge */}
-                {daysUntil !== null && daysUntil > 0 && (
-                  <div className="absolute top-4 right-4 z-10 px-3 py-1.5 bg-white/95 dark:bg-earth-800/95 backdrop-blur-sm text-earth-700 dark:text-earth-300 text-xs font-medium rounded-full shadow-lg">
-                    J-{daysUntil}
-                  </div>
-                )}
+                {/* Availability chip — icon + text, colorblind-safe */}
+                <div className="absolute top-4 right-4 z-10">
+                  <span
+                    className={`status-chip shadow-sm ${
+                      isAvailable
+                        ? "status-chip--available"
+                        : "status-chip--unavailable"
+                    }`}
+                  >
+                    {isAvailable ? (
+                      <Check size={12} strokeWidth={3} />
+                    ) : (
+                      <X size={12} strokeWidth={3} />
+                    )}
+                    {isAvailable ? "Disponible" : "Complet"}
+                  </span>
+                </div>
 
-                {/* Content */}
+                {/* Days count badge — moved below the status chip area, inline in content */}
                 <div className="p-6">
                   {/* Date */}
-                  <div className="flex items-center gap-2 text-sm text-earth-500 dark:text-earth-400">
-                    <Calendar size={14} className="text-peach" />
+                  <div className="flex items-center gap-2 text-sm text-earth-500 dark:text-earth-400 mt-2">
+                    <Calendar
+                      size={14}
+                      className="text-peach-dark dark:text-peach"
+                    />
                     <span>{formatWorkshopDate(workshop.date)}</span>
+                    {daysUntil !== null && daysUntil > 0 && (
+                      <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded-full bg-cream-100 dark:bg-earth-800 text-earth-600 dark:text-earth-300 text-xs font-medium">
+                        J-{daysUntil}
+                      </span>
+                    )}
                   </div>
 
                   {/* Title */}
-                  <Link href={`/ateliers/${workshop.id}`}>
-                    <h3 className="font-serif text-xl font-semibold text-earth-800 dark:text-earth-200 mt-3 hover:text-peach dark:hover:text-peach transition-colors line-clamp-2">
+                  <Link
+                    href={`/ateliers/${workshop.id}`}
+                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peach-dark focus-visible:ring-offset-2 rounded-md"
+                  >
+                    <h3 className="font-serif text-xl font-semibold text-earth-800 dark:text-earth-200 mt-3 hover:text-peach-dark dark:hover:text-peach transition-colors line-clamp-2">
                       {workshop.title}
                     </h3>
                   </Link>
@@ -128,17 +152,20 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
                     {workshop.description}
                   </p>
 
-                  {/* Details */}
+                  {/* Chips */}
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     {workshop.duration && (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-mint-light/50 dark:bg-mint/10 rounded-full text-xs text-earth-700 dark:text-earth-300">
-                        <Clock size={12} className="text-mint" />
+                        <Clock size={12} className="text-mint-dark dark:text-mint" />
                         {workshop.duration}
                       </span>
                     )}
                     {workshop.location && (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-lavender-light/50 dark:bg-lavender/10 rounded-full text-xs text-earth-700 dark:text-earth-300">
-                        📍 {workshop.location}
+                        <span aria-hidden="true">📍</span>
+                        <span className="truncate max-w-30">
+                          {workshop.location}
+                        </span>
                       </span>
                     )}
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gold-light/50 dark:bg-gold/10 rounded-full text-xs text-earth-700 dark:text-earth-300">
@@ -149,7 +176,7 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
                   {/* CTA */}
                   <Link
                     href={`/ateliers/${workshop.id}`}
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-peach hover:text-peach-dark transition-colors group/link"
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-peach-dark dark:text-peach hover:text-earth-800 dark:hover:text-earth-200 transition-colors group/link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peach-dark focus-visible:ring-offset-2 rounded-md"
                   >
                     Voir l&apos;atelier
                     <ChevronRight
@@ -163,11 +190,11 @@ export default function UpcomingWorkshops({ workshops }: UpcomingWorkshopsProps)
           })}
         </div>
 
-        {/* View All Link */}
+        {/* View All */}
         <div className="text-center mt-10">
           <Link
             href="/ateliers"
-            className="inline-flex items-center gap-2 px-6 py-3 border-2 border-earth-200 dark:border-earth-700 text-earth-700 dark:text-earth-300 rounded-full text-sm font-medium hover:bg-earth-50 dark:hover:bg-earth-800 transition-all group"
+            className="inline-flex items-center gap-2 px-6 py-3 border-2 border-earth-200 dark:border-earth-700 text-earth-700 dark:text-earth-300 rounded-full text-sm font-medium hover:bg-earth-50 dark:hover:bg-earth-800 transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peach-dark focus-visible:ring-offset-2"
           >
             Voir tous les ateliers
             <ChevronRight
